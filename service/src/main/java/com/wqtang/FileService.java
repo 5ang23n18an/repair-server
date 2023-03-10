@@ -47,19 +47,21 @@ public class FileService {
                 .body(bytes);
     }
 
-    public Response commonUpload(MultipartFile file) {
+    public FileCommonUploadResponse commonUpload(MultipartFile file) {
         // 保存文件, 并返回该文件的存储位置的绝对路径
         String filePath = FileUtils.save(file, rootDirectory);
         FileCommonUploadResponse response = new FileCommonUploadResponse();
         response.setFileName(FilenameUtils.getName(filePath));
-        return Response.success(response);
+        return response;
     }
 
-    public Response upload(MultipartFile file) {
+    public FileCommonUploadResponse upload(MultipartFile file) {
         // 保存文件, 并返回该文件的存储位置的绝对路径
         String filePath = FileUtils.save(file, rootDirectory);
         // todo
-        return Response.success();
+        FileCommonUploadResponse response = new FileCommonUploadResponse();
+        response.setFileName(FilenameUtils.getName(filePath));
+        return response;
     }
 
 }

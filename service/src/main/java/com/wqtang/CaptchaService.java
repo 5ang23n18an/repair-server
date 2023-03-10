@@ -2,7 +2,6 @@ package com.wqtang;
 
 import com.google.code.kaptcha.Producer;
 import com.wqtang.config.kaptcha.KaptchaConfig;
-import com.wqtang.object.vo.response.Response;
 import com.wqtang.object.vo.response.admin.GetCaptchaImageResponse;
 import com.wqtang.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,7 @@ public class CaptchaService {
     @Value("${captcha.type}")
     private String captchaType;
 
-    public Response getCaptchaImage() throws IOException {
+    public GetCaptchaImageResponse getCaptchaImage() throws IOException {
         String captchaText, captchaCode;
         BufferedImage image;
         if ("math".equals(captchaType)) {
@@ -58,7 +57,7 @@ public class CaptchaService {
             GetCaptchaImageResponse response = new GetCaptchaImageResponse();
             response.setUUID(uuid);
             response.setEncodedImage(Base64.getEncoder().encodeToString(outputStream.toByteArray()));
-            return Response.success(response);
+            return response;
         }
     }
 

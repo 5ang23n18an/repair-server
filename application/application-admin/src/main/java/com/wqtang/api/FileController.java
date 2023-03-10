@@ -5,6 +5,7 @@ import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.vo.request.admin.FileCommonDownloadRequest;
 import com.wqtang.object.vo.response.Response;
+import com.wqtang.object.vo.response.admin.FileCommonUploadResponse;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,14 @@ public class FileController {
      */
     @PostMapping("/common/upload")
     public synchronized Response commonUpload(MultipartFile file) {
-        return fileService.commonUpload(file);
+        FileCommonUploadResponse response = fileService.commonUpload(file);
+        return Response.success(response);
     }
 
     @PostMapping("/upload")
     public synchronized Response upload(MultipartFile file) {
-        return fileService.upload(file);
+        FileCommonUploadResponse response = fileService.upload(file);
+        return Response.success(response);
     }
 
 }
