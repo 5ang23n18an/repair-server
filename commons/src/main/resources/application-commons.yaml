@@ -12,6 +12,9 @@ logging:
   level:
     root: info
 
+# 验证码
 captcha:
+  # 有效时长(单位是分钟)
   timeout: 2
+  # 验证码的类型(数字计算型)
   type: math

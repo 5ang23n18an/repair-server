@@ -27,6 +27,11 @@ public class CaptchaController {
     @Resource(name = "systemConfigService")
     private SystemConfigService systemConfigService;
 
+    /**
+     * 获取验证码图片
+     *
+     * @return
+     */
     @GetMapping("/captchaImage")
     public Response getCaptchaImage() {
         if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA.getKey())) {
