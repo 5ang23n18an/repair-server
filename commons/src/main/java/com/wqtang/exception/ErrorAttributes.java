@@ -31,7 +31,7 @@ public class ErrorAttributes extends DefaultErrorAttributes {
         if (StringUtils.isBlank(path)) {
             path = webRequest.getContextPath();
         }
-        String errorStr = "", message = "", extraMessage = "";
+        String errorStr = StringUtils.EMPTY, message = StringUtils.EMPTY, extraMessage = StringUtils.EMPTY;
         int errorCode = 0;
         Throwable exception = getError(webRequest);
         if (exception instanceof BusinessException) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class JsonUtils {
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `JsonUtils.getJson`, object = {}, error message is {}",
                     object, e.getMessage(), e);
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
@@ -51,7 +52,7 @@ public class JsonUtils {
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `JsonUtils.getPrettyJson`, object = {}, error message is {}",
                     object, e.getMessage(), e);
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
@@ -61,7 +62,7 @@ public class JsonUtils {
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `JsonUtils.getPrettyJsonExcludeNullProperty`, object = {}, error message is {}",
                     object, e.getMessage(), e);
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
@@ -71,7 +72,7 @@ public class JsonUtils {
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `JsonUtils.getPrettyJsonExcludeEmptyProperty`, object = {}, error message is {}",
                     object, e.getMessage(), e);
-            return "";
+            return StringUtils.EMPTY;
         }
     }
 
