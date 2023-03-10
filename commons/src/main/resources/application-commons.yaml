@@ -18,3 +18,8 @@ captcha:
   timeout: 2
   # 验证码的类型(数字计算型)
   type: math
+
+# 文件
+file:
+  # 存储文件的根目录
+  rootDirectory: E:/Download/root
