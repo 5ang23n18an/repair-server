@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.repair.RepairPlaceMapper">
+
+    <select id="selectById" resultType="com.wqtang.object.po.repair.RepairPlace">
+
+    </select>
+
+    <select id="selectList" resultType="com.wqtang.object.po.repair.RepairPlace">
+        select *
+        from repair_place
+        <where>
+            <if test=""></if>
+        </where>
+    </select>
+
+    <select id="selectParentList" resultType="com.wqtang.object.po.repair.RepairPlace">
+
+    </select>
+
+</mapper>
