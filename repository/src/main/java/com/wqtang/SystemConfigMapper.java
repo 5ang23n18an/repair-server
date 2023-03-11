@@ -1,6 +1,6 @@
 package com.wqtang;
 
-import com.wqtang.object.po.SystemConfig;
+import com.wqtang.object.po.system.SystemConfig;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

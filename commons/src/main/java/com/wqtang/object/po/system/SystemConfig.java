@@ -1,4 +1,4 @@
-package com.wqtang.object.po;
+package com.wqtang.object.po.system;
 
 /**
  * @author Wenqian Tang
