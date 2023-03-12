@@ -2,7 +2,7 @@ package com.wqtang;
 
 import com.google.code.kaptcha.Producer;
 import com.wqtang.config.kaptcha.KaptchaConfig;
-import com.wqtang.object.vo.response.admin.GetCaptchaImageResponse;
+import com.wqtang.object.vo.response.GetCaptchaImageResponse;
 import com.wqtang.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

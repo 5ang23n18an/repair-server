@@ -1,4 +1,4 @@
-package com.wqtang.object.vo.response.admin;
+package com.wqtang.object.vo.response;
 
 /**
  * @author Wenqian Tang

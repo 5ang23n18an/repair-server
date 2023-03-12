@@ -1,7 +1,7 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.repair.RepairPlace;
-import com.wqtang.object.vo.request.mobile.repair.GetRepairPlaceListRequest;
+import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,8 +17,8 @@ public class RepairPlaceService {
     @Resource(name = "repairPlaceMapper")
     private RepairPlaceMapper repairPlaceMapper;
 
-    public RepairPlace getById(Long id) {
-        return repairPlaceMapper.getById(id);
+    public RepairPlace getByID(Long id) {
+        return repairPlaceMapper.getByID(id);
     }
 
     public List<RepairPlace> listByParams(GetRepairPlaceListRequest request) {

@@ -1,4 +1,4 @@
-package com.wqtang.object.vo.request.mobile.repair;
+package com.wqtang.object.vo.request.repair;
 
 import com.wqtang.object.po.BaseEntity;
 

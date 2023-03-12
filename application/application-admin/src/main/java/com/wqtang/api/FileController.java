@@ -3,9 +3,9 @@ package com.wqtang.api;
 import com.wqtang.FileService;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.vo.request.admin.FileCommonDownloadRequest;
+import com.wqtang.object.vo.request.FileCommonDownloadRequest;
 import com.wqtang.object.vo.response.Response;
-import com.wqtang.object.vo.response.admin.FileCommonUploadResponse;
+import com.wqtang.object.vo.response.FileCommonUploadResponse;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class FileController {
      * @return
      */
     @GetMapping("/common/download")
-    public ResponseEntity<byte[]> commonDownload(@RequestBody FileCommonDownloadRequest request) {
+    public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) {
         LOGGER.info("`FileController.commonDownload`, request = {}", JsonUtils.getPrettyJson(request));
         try {
             return fileService.commonDownload(request);

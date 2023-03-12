@@ -1,8 +1,7 @@
 package com.wqtang;
 
-import com.wqtang.object.vo.request.admin.FileCommonDownloadRequest;
-import com.wqtang.object.vo.response.Response;
-import com.wqtang.object.vo.response.admin.FileCommonUploadResponse;
+import com.wqtang.object.vo.request.FileCommonDownloadRequest;
+import com.wqtang.object.vo.response.FileCommonUploadResponse;
 import com.wqtang.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;

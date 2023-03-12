@@ -1,7 +1,7 @@
 package com.wqtang.api.repair;
 
 import com.wqtang.object.po.repair.RepairPlace;
-import com.wqtang.object.vo.request.mobile.repair.GetRepairPlaceListRequest;
+import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
 import com.wqtang.object.vo.response.Response;
 import com.wqtang.repair.RepairPlaceService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +25,15 @@ public class RepairPlaceController {
     @Resource(name = "repairPlaceService")
     private RepairPlaceService repairPlaceService;
 
+    /**
+     * 获取道岔号基础结构详细信息
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
-    public Response getById(@PathVariable("id") Long id) {
-        RepairPlace repairPlace = repairPlaceService.getById(id);
+    public Response getByID(@PathVariable("id") Long id) {
+        RepairPlace repairPlace = repairPlaceService.getByID(id);
         return Response.success(repairPlace);
     }
 

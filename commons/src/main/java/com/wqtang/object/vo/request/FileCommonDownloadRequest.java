@@ -1,4 +1,4 @@
-package com.wqtang.object.vo.request.admin;
+package com.wqtang.object.vo.request;
 
 /**
  * @author Wenqian Tang

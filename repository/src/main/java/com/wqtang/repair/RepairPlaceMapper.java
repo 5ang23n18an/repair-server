@@ -1,7 +1,7 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.repair.RepairPlace;
-import com.wqtang.object.vo.request.mobile.repair.GetRepairPlaceListRequest;
+import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface RepairPlaceMapper {
 
-    RepairPlace getById(Long id);
+    RepairPlace getByID(Long id);
 
     List<RepairPlace> listByParams(GetRepairPlaceListRequest request);
 

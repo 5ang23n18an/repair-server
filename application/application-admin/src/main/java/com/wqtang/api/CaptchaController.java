@@ -6,7 +6,7 @@ import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.vo.response.Response;
-import com.wqtang.object.vo.response.admin.GetCaptchaImageResponse;
+import com.wqtang.object.vo.response.GetCaptchaImageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
