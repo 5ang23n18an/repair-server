@@ -1,4 +1,4 @@
-package com.wqtang.api;
+package com.wqtang.api.repair;
 
 import com.wqtang.object.po.repair.RepairPlace;
 import com.wqtang.object.vo.request.mobile.repair.GetRepairPlaceListRequest;
