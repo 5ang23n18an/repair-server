@@ -16,7 +16,7 @@ public class SystemConfigService {
     private SystemConfigMapper systemConfigMapper;
 
     public boolean isSystemConfigAvailable(String key) {
-        SystemConfig systemConfig = systemConfigMapper.selectByKey(key);
+        SystemConfig systemConfig = systemConfigMapper.getByKey(key);
         return systemConfig != null && systemConfig.getAvailable();
     }
 

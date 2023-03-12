@@ -17,16 +17,16 @@ public class RepairPlaceService {
     @Resource(name = "repairPlaceMapper")
     private RepairPlaceMapper repairPlaceMapper;
 
-    public RepairPlace selectById(Long id) {
-        return repairPlaceMapper.selectById(id);
+    public RepairPlace getById(Long id) {
+        return repairPlaceMapper.getById(id);
     }
 
-    public List<RepairPlace> selectList(GetRepairPlaceListRequest request) {
-        return repairPlaceMapper.selectList(request);
+    public List<RepairPlace> listByParams(GetRepairPlaceListRequest request) {
+        return repairPlaceMapper.listByParams(request);
     }
 
-    public List<RepairPlace> selectParentList() {
-        return repairPlaceMapper.selectParentList();
+    public List<RepairPlace> listParents() {
+        return repairPlaceMapper.listParents();
     }
 
 }

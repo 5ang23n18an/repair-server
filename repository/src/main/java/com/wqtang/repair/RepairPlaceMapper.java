@@ -13,10 +13,10 @@ import java.util.List;
 @Mapper
 public interface RepairPlaceMapper {
 
-    RepairPlace selectById(Long id);
+    RepairPlace getById(Long id);
 
-    List<RepairPlace> selectList(GetRepairPlaceListRequest request);
+    List<RepairPlace> listByParams(GetRepairPlaceListRequest request);
 
-    List<RepairPlace> selectParentList();
+    List<RepairPlace> listParents();
 
 }

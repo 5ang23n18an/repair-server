@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SystemConfigMapper {
 
-    SystemConfig selectByKey(String key);
+    SystemConfig getByKey(String key);
 
 }

@@ -27,7 +27,7 @@ public class RepairPlaceController {
 
     @GetMapping("/{id}")
     public Response getById(@PathVariable("id") Long id) {
-        RepairPlace repairPlace = repairPlaceService.selectById(id);
+        RepairPlace repairPlace = repairPlaceService.getById(id);
         return Response.success(repairPlace);
     }
 
@@ -39,7 +39,7 @@ public class RepairPlaceController {
      */
     @GetMapping("/list")
     public Response getList(GetRepairPlaceListRequest request) {
-        List<RepairPlace> list = repairPlaceService.selectList(request);
+        List<RepairPlace> list = repairPlaceService.listByParams(request);
         return Response.success(list);
     }
 
@@ -50,7 +50,7 @@ public class RepairPlaceController {
      */
     @GetMapping("/parent")
     public Response parent() {
-        List<RepairPlace> list = repairPlaceService.selectParentList();
+        List<RepairPlace> list = repairPlaceService.listParents();
         return Response.success(list);
     }
 
@@ -61,7 +61,7 @@ public class RepairPlaceController {
      */
     @GetMapping("/groupByType")
     public Response groupByType() {
-        List<RepairPlace> list = repairPlaceService.selectList(null);
+        List<RepairPlace> list = repairPlaceService.listByParams(null);
         Map<String, List<RepairPlace>> groupedList = list.stream().collect(Collectors.groupingBy(RepairPlace::getType));
         return Response.success(groupedList);
     }
