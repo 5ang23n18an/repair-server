@@ -2,7 +2,6 @@ package com.wqtang.api.repair;
 
 import com.wqtang.object.po.repair.RepairPlace;
 import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
-import com.wqtang.object.vo.response.Response;
 import com.wqtang.repair.RepairPlaceService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +31,8 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/{id}")
-    public Response getByID(@PathVariable("id") Long id) {
-        RepairPlace repairPlace = repairPlaceService.getByID(id);
-        return Response.success(repairPlace);
+    public RepairPlace getByID(@PathVariable("id") Long id) {
+        return repairPlaceService.getByID(id);
     }
 
     /**
@@ -44,9 +42,8 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/list")
-    public Response getList(GetRepairPlaceListRequest request) {
-        List<RepairPlace> list = repairPlaceService.listByParams(request);
-        return Response.success(list);
+    public List<RepairPlace> getList(GetRepairPlaceListRequest request) {
+        return repairPlaceService.listByParams(request);
     }
 
     /**
@@ -55,9 +52,8 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/parent")
-    public Response parent() {
-        List<RepairPlace> list = repairPlaceService.listParents();
-        return Response.success(list);
+    public List<RepairPlace> parent() {
+        return repairPlaceService.listParents();
     }
 
     /**
@@ -66,10 +62,9 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/groupByType")
-    public Response groupByType() {
+    public Map<String, List<RepairPlace>> groupByType() {
         List<RepairPlace> list = repairPlaceService.listByParams(null);
-        Map<String, List<RepairPlace>> groupedList = list.stream().collect(Collectors.groupingBy(RepairPlace::getType));
-        return Response.success(groupedList);
+        return list.stream().collect(Collectors.groupingBy(RepairPlace::getType));
     }
 
 }
