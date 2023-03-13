@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: service, repo, commons
+
+server:
+  port: 8001
