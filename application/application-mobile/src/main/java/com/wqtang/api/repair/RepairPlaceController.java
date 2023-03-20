@@ -25,7 +25,7 @@ public class RepairPlaceController {
     private RepairPlaceService repairPlaceService;
 
     /**
-     * 获取道岔号基础结构详细信息
+     * 根据道岔号id获取基础结构详细信息
      *
      * @param id
      * @return

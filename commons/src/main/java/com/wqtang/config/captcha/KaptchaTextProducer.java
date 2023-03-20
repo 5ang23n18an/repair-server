@@ -1,4 +1,4 @@
-package com.wqtang.config.kaptcha;
+package com.wqtang.config.captcha;
 
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
 import org.apache.commons.lang3.RandomUtils;

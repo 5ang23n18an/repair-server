@@ -1,11 +1,11 @@
 package com.wqtang.api;
 
-import com.wqtang.CaptchaService;
-import com.wqtang.SystemConfigService;
+import com.wqtang.captcha.CaptchaService;
+import com.wqtang.system.SystemConfigService;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
-import com.wqtang.object.vo.response.GetCaptchaImageResponse;
+import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +35,7 @@ public class CaptchaController {
     @GetMapping("/captchaImage")
     public GetCaptchaImageResponse getCaptchaImage() {
         if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA.getKey())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE);
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The verification code is temporarily unavailable", "验证码功能暂不可用");
         }
         try {
             return captchaService.getCaptchaImage();

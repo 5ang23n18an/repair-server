@@ -1,1 +1,20 @@
+# 验证码
+captcha:
+  # 有效时长(单位是分钟)
+  timeout: 2
+  # 验证码的类型(数字计算型)
+  type: math
 
+# 文件
+file:
+  # 存储文件的根目录
+  rootDirectory: E:/Download/root
+
+# token配置
+token:
+  # 有效时长(单位是分钟)
+  timeout: 60
+  # 令牌密钥
+  signingKey: abcdefghijklmnopqrstuvwxyz
+  # 续签时间(单位是分钟)
+  renewThreshold: 20

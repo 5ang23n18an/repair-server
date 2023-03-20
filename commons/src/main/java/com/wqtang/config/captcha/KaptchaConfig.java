@@ -1,4 +1,4 @@
-package com.wqtang.config.kaptcha;
+package com.wqtang.config.captcha;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
@@ -15,9 +15,7 @@ import java.util.Properties;
 @Configuration
 public class KaptchaConfig {
 
-    public static final String REDIS_KEY_PREFIX = "captcha:";
-
-    @Bean(name = "textKaptcha")
+    @Bean
     public DefaultKaptcha textKaptcha() {
         Properties properties = new Properties();
         // 验证码图片是否有边框
@@ -48,7 +46,7 @@ public class KaptchaConfig {
         return defaultKaptcha;
     }
 
-    @Bean(name = "mathKaptcha")
+    @Bean
     public DefaultKaptcha mathKaptcha() {
         Properties properties = new Properties();
         // 验证码图片是否有边框

@@ -1,10 +1,10 @@
-package com.wqtang.api;
+package com.wqtang.api.file;
 
-import com.wqtang.FileService;
+import com.wqtang.file.FileService;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.vo.request.FileCommonDownloadRequest;
-import com.wqtang.object.vo.response.FileCommonUploadResponse;
+import com.wqtang.object.vo.request.file.FileCommonDownloadRequest;
+import com.wqtang.object.vo.response.file.FileCommonUploadResponse;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

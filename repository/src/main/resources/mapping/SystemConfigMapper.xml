@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.system.SystemConfigMapper">
+
+    <select id="getByID" resultType="com.wqtang.object.po.system.SystemConfig">
+
+    </select>
+
+    <select id="getByKey" resultType="com.wqtang.object.po.system.SystemConfig">
+        select *
+        from system_config
+        <where>
+            `key` = #{key}
+        </where>
+    </select>
+
+    <select id="listByParams" resultType="com.wqtang.object.po.system.SystemConfig">
+
+    </select>
+
+    <select id="pageByParams" resultType="com.wqtang.object.po.system.SystemConfig">
+
+    </select>
+
+    <insert id="insert">
+
+    </insert>
+
+    <update id="update">
+
+    </update>
+
+    <delete id="deleteByID">
+
+    </delete>
+
+</mapper>

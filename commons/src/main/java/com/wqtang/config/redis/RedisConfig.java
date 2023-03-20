@@ -1,4 +1,4 @@
-package com.wqtang.config;
+package com.wqtang.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +23,11 @@ public class RedisConfig {
     private Integer port;
     @Value("${spring.redis.password}")
     private String password;
+
+    public static final String KEY_CAPTCHA_PREFIX = "captcha:";
+    public static final String KEY_SYSTEM_CONFIG_PREFIX = "system_config:";
+    public static final String KEY_EMAIL_PREFIX = "email:";
+    public static final String KEY_LOGIN_TOKEN_PREFIX = "login_token:";
 
     @Bean
     public RedisStandaloneConfiguration redisConfiguration() {

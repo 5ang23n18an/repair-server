@@ -1,4 +1,4 @@
-package com.wqtang.object.vo.response;
+package com.wqtang.object.vo.response.file;
 
 /**
  * @author Wenqian Tang

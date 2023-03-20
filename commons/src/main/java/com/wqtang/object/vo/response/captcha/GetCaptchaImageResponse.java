@@ -1,4 +1,4 @@
-package com.wqtang.object.vo.response;
+package com.wqtang.object.vo.response.captcha;
 
 /**
  * @author Wenqian Tang
@@ -9,11 +9,11 @@ public class GetCaptchaImageResponse {
     private String uuid;
     private String encodedImage;
 
-    public String getUUID() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUUID(String uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

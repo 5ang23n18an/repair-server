@@ -1,16 +1,37 @@
 package com.wqtang.object.po.system;
 
+import com.wqtang.object.po.BaseEntity;
+
 /**
  * @author Wenqian Tang
  * @date 2023/3/9
  */
-public class SystemConfig {
+public class SystemConfig extends BaseEntity {
 
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 参数主键
+     */
     private Long id;
+
+    /**
+     * 参数键名
+     */
     private String key;
+
+    /**
+     * 参数键值
+     */
     private String value;
+
+    /**
+     * 参数名称
+     */
     private String name;
+
     private String type;
+
     private Boolean available;
 
     public Long getId() {

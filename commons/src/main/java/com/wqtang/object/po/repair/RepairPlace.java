@@ -3,7 +3,6 @@ package com.wqtang.object.po.repair;
 import com.wqtang.object.po.BaseEntity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -228,9 +227,6 @@ public class RepairPlace extends BaseEntity {
     }
 
     public List<?> getChildren() {
-        if (children == null) {
-            children = new ArrayList<>();
-        }
         return children;
     }
 
