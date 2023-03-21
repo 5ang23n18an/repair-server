@@ -1,4 +1,4 @@
-package com.wqtang.api;
+package com.wqtang.api.captcha;
 
 import com.wqtang.captcha.CaptchaService;
 import com.wqtang.system.SystemConfigService;
