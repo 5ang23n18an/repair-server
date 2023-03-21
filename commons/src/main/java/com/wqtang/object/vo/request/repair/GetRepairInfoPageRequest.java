@@ -6,5 +6,5 @@ import com.wqtang.object.po.repair.RepairInfo;
  * @author Wenqian Tang
  * @date 2023/3/12
  */
-public class GetRepairInfoListRequest extends RepairInfo {
+public class GetRepairInfoPageRequest extends RepairInfo {
 }

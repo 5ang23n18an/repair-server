@@ -1,10 +1,10 @@
 package com.wqtang.api.system;
 
-import com.wqtang.system.SystemConfigService;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.object.vo.request.system.AddSystemConfigRequest;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
 import com.wqtang.object.vo.request.system.UpdateSystemConfigRequest;
+import com.wqtang.system.SystemConfigService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,9 +38,11 @@ public class SystemConfigController {
      * @param request
      * @return
      */
-    @GetMapping("/list")
-    public List<SystemConfig> getList(GetSystemConfigListRequest request) {
-        return systemConfigService.pageByParams(request);
+    @GetMapping("/page")
+    public List<SystemConfig> getPage(GetSystemConfigListRequest request,
+                                      @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                      @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        return systemConfigService.pageByParams(request, pageNumber, pageSize);
     }
 
     /**

@@ -2,9 +2,10 @@ package com.wqtang.repair;
 
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.object.vo.request.repair.AddRepairInfoRequest;
-import com.wqtang.object.vo.request.repair.GetRepairInfoListRequest;
+import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
 import com.wqtang.object.vo.request.repair.UpdateRepairInfoRequest;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,11 @@ public interface RepairInfoMapper {
 
     RepairInfo getById(Long id);
 
-    List<RepairInfo> listByParams(GetRepairInfoListRequest request);
+    int countByParams(GetRepairInfoPageRequest param);
+
+    List<RepairInfo> pageByParams(@Param("param") GetRepairInfoPageRequest param,
+                                  @Param("offset") int offset,
+                                  @Param("limit") int limit);
 
     void insert(AddRepairInfoRequest request);
 

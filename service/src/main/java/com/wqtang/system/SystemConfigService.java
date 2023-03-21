@@ -33,8 +33,9 @@ public class SystemConfigService extends AbstractCacheRefresh {
         return systemConfigMapper.getByKey(key);
     }
 
-    public List<SystemConfig> pageByParams(GetSystemConfigListRequest request) {
-        return systemConfigMapper.pageByParams(request);
+    public List<SystemConfig> pageByParams(GetSystemConfigListRequest request, int pageNumber, int pageSize) {
+        int offset = (pageNumber - 1) * pageSize;
+        return systemConfigMapper.pageByParams(request, offset, pageSize);
     }
 
     public void insert(AddSystemConfigRequest request) {

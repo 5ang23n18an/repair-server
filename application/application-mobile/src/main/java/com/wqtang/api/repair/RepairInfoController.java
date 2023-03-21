@@ -1,8 +1,10 @@
 package com.wqtang.api.repair;
 
+import com.wqtang.controller.AbstractPager;
 import com.wqtang.object.po.repair.RepairInfo;
+import com.wqtang.object.vo.PageInfo;
 import com.wqtang.object.vo.request.repair.AddRepairInfoRequest;
-import com.wqtang.object.vo.request.repair.GetRepairInfoListRequest;
+import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
 import com.wqtang.object.vo.request.repair.UpdateRepairInfoRequest;
 import com.wqtang.repair.RepairInfoService;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/repair/info")
-public class RepairInfoController {
+public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest> {
 
     @Resource(name = "repairInfoService")
     private RepairInfoService repairInfoService;
@@ -38,9 +40,21 @@ public class RepairInfoController {
      * @param request
      * @return
      */
-    @GetMapping("/list")
-    public List<RepairInfo> getList(GetRepairInfoListRequest request) {
-        return repairInfoService.listByParams(request);
+    @GetMapping("/page")
+    public PageInfo getPage(GetRepairInfoPageRequest request,
+                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        return super.getPage(request, pageNumber, pageSize);
+    }
+
+    @Override
+    public int getPageTotal(GetRepairInfoPageRequest request) {
+        return repairInfoService.countByParams(request);
+    }
+
+    @Override
+    public List<?> getPageRecords(GetRepairInfoPageRequest request, int offset, int limit) {
+        return repairInfoService.pageByParams(request, offset, limit);
     }
 
     /**

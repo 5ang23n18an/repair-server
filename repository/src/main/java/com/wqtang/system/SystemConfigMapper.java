@@ -5,6 +5,7 @@ import com.wqtang.object.vo.request.system.AddSystemConfigRequest;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
 import com.wqtang.object.vo.request.system.UpdateSystemConfigRequest;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +22,9 @@ public interface SystemConfigMapper {
 
     List<SystemConfig> listByParams(SystemConfig param);
 
-    List<SystemConfig> pageByParams(GetSystemConfigListRequest request);
+    List<SystemConfig> pageByParams(@Param("param") GetSystemConfigListRequest param,
+                                    @Param("offset") int offset,
+                                    @Param("limit") int limit);
 
     void insert(AddSystemConfigRequest request);
 
