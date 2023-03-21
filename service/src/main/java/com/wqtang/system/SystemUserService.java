@@ -125,9 +125,9 @@ public class SystemUserService {
         systemUserMapper.updatePasswordByUsername(username, passwordEncoder.encode(rawPassword));
     }
 
-    private void recordLoginInfo(Long userID) {
+    private void recordLoginInfo(Long userId) {
         SystemUser systemUser = new SystemUser();
-        systemUser.setId(userID);
+        systemUser.setId(userId);
         systemUser.setLoginIp(IPAddressUtils.getIPAddress());
         systemUser.setLoginDate(Calendar.getInstance().getTime());
         systemUserMapper.updateLoginInfo(systemUser);

@@ -25,8 +25,8 @@ public class SystemConfigService extends AbstractCacheRefresh {
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
 
-    public SystemConfig getByID(Long id) {
-        return systemConfigMapper.getByID(id);
+    public SystemConfig getById(Long id) {
+        return systemConfigMapper.getById(id);
     }
 
     public SystemConfig getByKey(String key) {
@@ -45,8 +45,8 @@ public class SystemConfigService extends AbstractCacheRefresh {
         systemConfigMapper.update(request);
     }
 
-    public void deleteByID(Long id) {
-        systemConfigMapper.deleteByID(id);
+    public void deleteById(Long id) {
+        systemConfigMapper.deleteById(id);
     }
 
     public boolean isSystemConfigAvailable(String key) {

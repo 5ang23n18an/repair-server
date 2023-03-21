@@ -25,13 +25,13 @@ public class SystemRoleService {
         if (user.isAdmin()) {
             roles.add("admin");
         } else {
-            roles.addAll(getRolesByUserID(user.getId()));
+            roles.addAll(getRolesByUserId(user.getId()));
         }
         return roles;
     }
 
-    private Set<String> getRolesByUserID(Long userID) {
-        List<SystemRole> roleList = systemUserRoleMapper.listByUserID(userID);
+    private Set<String> getRolesByUserId(Long userId) {
+        List<SystemRole> roleList = systemUserRoleMapper.listByUserId(userId);
         Set<String> roles = new HashSet<>();
         for (SystemRole systemRole : roleList) {
             roles.addAll(Arrays.asList(systemRole.getKey().split(",")));

@@ -9,27 +9,27 @@ public class SystemUserRole {
     /**
      * 用户ID
      */
-    private Long userID;
+    private Long userId;
 
     /**
      * 角色ID
      */
-    private Long roleID;
+    private Long roleId;
 
-    public Long getUserID() {
-        return userID;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserID(Long userID) {
-        this.userID = userID;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getRoleID() {
-        return roleID;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRoleID(Long roleID) {
-        this.roleID = roleID;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
 }

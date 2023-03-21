@@ -28,8 +28,8 @@ public class SystemConfigController {
      * @return
      */
     @GetMapping("/{id}")
-    public SystemConfig getByID(@PathVariable("id") Long id) {
-        return systemConfigService.getByID(id);
+    public SystemConfig getById(@PathVariable("id") Long id) {
+        return systemConfigService.getById(id);
     }
 
     /**
@@ -76,8 +76,8 @@ public class SystemConfigController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void deleteByID(@PathVariable("id") Long id) {
-        systemConfigService.deleteByID(id);
+    public void deleteById(@PathVariable("id") Long id) {
+        systemConfigService.deleteById(id);
     }
 
     /**

@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface RepairInfoMapper {
 
-    RepairInfo getByID(Long id);
+    RepairInfo getById(Long id);
 
     List<RepairInfo> listByParams(GetRepairInfoListRequest request);
 
@@ -23,6 +23,6 @@ public interface RepairInfoMapper {
 
     void update(UpdateRepairInfoRequest request);
 
-    void deleteByID(Long id);
+    void deleteById(Long id);
 
 }

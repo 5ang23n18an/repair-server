@@ -24,13 +24,13 @@ public class SystemPermissionService {
         if (user.isAdmin()) {
             permissions.add("*:*:*");
         } else {
-            permissions.addAll(getPermissionsByUserID(user.getId()));
+            permissions.addAll(getPermissionsByUserId(user.getId()));
         }
         return permissions;
     }
 
-    private Set<String> getPermissionsByUserID(Long userID) {
-        List<String> permissionKeys = systemPermissionMapper.listKeyByUserID(userID);
+    private Set<String> getPermissionsByUserId(Long userId) {
+        List<String> permissionKeys = systemPermissionMapper.listKeyByUserId(userId);
         Set<String> permissions = new HashSet<>();
         for (String permissionKey : permissionKeys) {
             permissions.addAll(Arrays.asList(permissionKey.split(",")));

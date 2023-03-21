@@ -17,8 +17,8 @@ public class RepairPlaceService {
     @Resource(name = "repairPlaceMapper")
     private RepairPlaceMapper repairPlaceMapper;
 
-    public RepairPlace getByID(Long id) {
-        return repairPlaceMapper.getByID(id);
+    public RepairPlace getById(Long id) {
+        return repairPlaceMapper.getById(id);
     }
 
     public List<RepairPlace> listByParams(GetRepairPlaceListRequest request) {

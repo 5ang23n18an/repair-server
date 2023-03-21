@@ -19,8 +19,8 @@ public class RepairInfoService {
     @Resource(name = "repairInfoMapper")
     private RepairInfoMapper repairInfoMapper;
 
-    public RepairInfo getByID(Long id) {
-        return repairInfoMapper.getByID(id);
+    public RepairInfo getById(Long id) {
+        return repairInfoMapper.getById(id);
     }
 
     public List<RepairInfo> listByParams(GetRepairInfoListRequest request) {
@@ -35,8 +35,8 @@ public class RepairInfoService {
         repairInfoMapper.update(request);
     }
 
-    public void deleteByID(Long id) {
-        repairInfoMapper.deleteByID(id);
+    public void deleteById(Long id) {
+        repairInfoMapper.deleteById(id);
     }
 
 }

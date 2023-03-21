@@ -28,8 +28,8 @@ public class RepairInfoController {
      * @return
      */
     @GetMapping("/{id}")
-    public RepairInfo getByID(@PathVariable("id") Long id) {
-        return repairInfoService.getByID(id);
+    public RepairInfo getById(@PathVariable("id") Long id) {
+        return repairInfoService.getById(id);
     }
 
     /**
@@ -70,8 +70,8 @@ public class RepairInfoController {
      * @param id
      */
     @DeleteMapping("/{id}")
-    public void deleteByID(@PathVariable("id") Long id) {
-        repairInfoService.deleteByID(id);
+    public void deleteById(@PathVariable("id") Long id) {
+        repairInfoService.deleteById(id);
     }
 
     /*@GetMapping("/export")

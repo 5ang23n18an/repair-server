@@ -15,7 +15,7 @@ import java.util.List;
 @Mapper
 public interface SystemConfigMapper {
 
-    SystemConfig getByID(Long id);
+    SystemConfig getById(Long id);
 
     SystemConfig getByKey(String key);
 
@@ -27,6 +27,6 @@ public interface SystemConfigMapper {
 
     void update(UpdateSystemConfigRequest request);
 
-    void deleteByID(Long id);
+    void deleteById(Long id);
 
 }

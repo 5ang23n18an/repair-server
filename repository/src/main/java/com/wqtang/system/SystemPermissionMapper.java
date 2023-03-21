@@ -11,6 +11,6 @@ import java.util.List;
 @Mapper
 public interface SystemPermissionMapper {
 
-    List<String> listKeyByUserID(Long userID);
+    List<String> listKeyByUserId(Long userId);
 
 }

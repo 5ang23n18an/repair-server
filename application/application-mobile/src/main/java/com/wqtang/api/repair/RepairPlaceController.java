@@ -31,8 +31,8 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/{id}")
-    public RepairPlace getByID(@PathVariable("id") Long id) {
-        return repairPlaceService.getByID(id);
+    public RepairPlace getById(@PathVariable("id") Long id) {
+        return repairPlaceService.getById(id);
     }
 
     /**
