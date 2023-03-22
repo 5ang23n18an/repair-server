@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2023/3/9
  */
 @SpringBootApplication
-public class AdminApplication {
+public class RepairApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AdminApplication.class, args);
+        SpringApplication.run(RepairApplication.class, args);
     }
 
 }

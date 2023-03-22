@@ -8,8 +8,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>application-task</module>
-        <module>application-admin</module>
-        <module>application-mobile</module>
+        <module>application-repair</module>
     </modules>
 
     <parent>
