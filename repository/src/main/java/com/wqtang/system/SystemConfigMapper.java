@@ -28,6 +28,6 @@ public interface SystemConfigMapper {
 
     void update(SystemConfig request);
 
-    void deleteById(Long id);
+    void deleteByIds(Long[] ids);
 
 }

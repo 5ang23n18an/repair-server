@@ -79,11 +79,11 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
     /**
      * 删除道岔信息
      *
-     * @param id
+     * @param ids
      */
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
-        repairInfoService.deleteById(id);
+    @DeleteMapping("/{ids}")
+    public void deleteById(@PathVariable("ids") Long[] ids) {
+        repairInfoService.deleteByIds(ids);
     }
 
     /*@GetMapping("/export")

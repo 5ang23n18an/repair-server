@@ -44,8 +44,8 @@ public class SystemConfigService extends AbstractCacheRefresh {
         systemConfigMapper.update(request);
     }
 
-    public void deleteById(Long id) {
-        systemConfigMapper.deleteById(id);
+    public void deleteByIds(Long[] ids) {
+        systemConfigMapper.deleteByIds(ids);
     }
 
     public boolean isSystemConfigAvailable(String key) {

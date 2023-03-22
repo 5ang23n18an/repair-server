@@ -26,6 +26,6 @@ public interface RepairInfoMapper {
 
     void update(RepairInfo request);
 
-    void deleteById(Long id);
+    void deleteByIds(Long[] ids);
 
 }

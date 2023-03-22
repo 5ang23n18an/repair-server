@@ -30,7 +30,7 @@
 
     </update>
 
-    <delete id="deleteById">
+    <delete id="deleteByIds">
 
     </delete>
 

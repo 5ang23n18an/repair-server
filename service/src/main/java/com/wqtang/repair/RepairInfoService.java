@@ -37,8 +37,8 @@ public class RepairInfoService {
         repairInfoMapper.update(request);
     }
 
-    public void deleteById(Long id) {
-        repairInfoMapper.deleteById(id);
+    public void deleteByIds(Long[] ids) {
+        repairInfoMapper.deleteByIds(ids);
     }
 
 }

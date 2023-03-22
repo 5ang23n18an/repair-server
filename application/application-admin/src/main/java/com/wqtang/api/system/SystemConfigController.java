@@ -73,11 +73,11 @@ public class SystemConfigController {
     /**
      * 删除参数配置信息
      *
-     * @param id
+     * @param ids
      */
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
-        systemConfigService.deleteById(id);
+    @DeleteMapping("/{ids}")
+    public void deleteByIds(@PathVariable("ids") Long[] ids) {
+        systemConfigService.deleteByIds(ids);
     }
 
     /**
