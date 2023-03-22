@@ -81,6 +81,8 @@ public class RepairRecord extends BaseEntity {
 
     private List<RepairRecord> machines;
 
+    private List<RepairTest> machineList;
+
     public Long getId() {
         return id;
     }
@@ -223,6 +225,14 @@ public class RepairRecord extends BaseEntity {
 
     public void setMachines(List<RepairRecord> machines) {
         this.machines = machines;
+    }
+
+    public List<RepairTest> getMachineList() {
+        return machineList;
+    }
+
+    public void setMachineList(List<RepairTest> machineList) {
+        this.machineList = machineList;
     }
 
 }

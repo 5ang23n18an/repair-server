@@ -21,4 +21,10 @@ public interface RepairRecordMapper {
 
     List<RepairRecord> pageByParams(GetRepairRecordPageRequest param, int offset, int limit);
 
+    void insert(RepairRecord repairRecord);
+
+    void update(RepairRecord repairRecord);
+
+    void deleteByIds(Long[] ids);
+
 }

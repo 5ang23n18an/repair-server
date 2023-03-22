@@ -3,9 +3,7 @@ package com.wqtang.system;
 import com.wqtang.AbstractCacheRefresh;
 import com.wqtang.config.redis.RedisConfig;
 import com.wqtang.object.po.system.SystemConfig;
-import com.wqtang.object.vo.request.system.AddSystemConfigRequest;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
-import com.wqtang.object.vo.request.system.UpdateSystemConfigRequest;
 import com.wqtang.util.RedisUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +36,11 @@ public class SystemConfigService extends AbstractCacheRefresh {
         return systemConfigMapper.pageByParams(request, offset, pageSize);
     }
 
-    public void insert(AddSystemConfigRequest request) {
+    public void insert(SystemConfig request) {
         systemConfigMapper.insert(request);
     }
 
-    public void update(UpdateSystemConfigRequest request) {
+    public void update(SystemConfig request) {
         systemConfigMapper.update(request);
     }
 

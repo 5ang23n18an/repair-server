@@ -33,4 +33,16 @@ public class RepairRecordService {
         return repairRecordMapper.listByParams(request);
     }
 
+    public void insert(RepairRecord repairRecord) {
+        repairRecordMapper.insert(repairRecord);
+    }
+
+    public void update(RepairRecord repairRecord) {
+        repairRecordMapper.update(repairRecord);
+    }
+
+    public void deleteByIds(Long[] ids) {
+        repairRecordMapper.deleteByIds(ids);
+    }
+
 }

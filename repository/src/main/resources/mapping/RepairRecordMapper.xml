@@ -18,4 +18,16 @@
 
     </select>
 
+    <insert id="insert">
+
+    </insert>
+
+    <update id="update">
+
+    </update>
+
+    <delete id="deleteByIds">
+
+    </delete>
+
 </mapper>

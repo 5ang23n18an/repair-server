@@ -1,9 +1,7 @@
 package com.wqtang.api.system;
 
 import com.wqtang.object.po.system.SystemConfig;
-import com.wqtang.object.vo.request.system.AddSystemConfigRequest;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
-import com.wqtang.object.vo.request.system.UpdateSystemConfigRequest;
 import com.wqtang.system.SystemConfigService;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +58,7 @@ public class SystemConfigController {
      * 新增参数配置信息
      */
     @PostMapping("/add")
-    public void add(@RequestBody AddSystemConfigRequest request) {
+    public void add(@RequestBody SystemConfig request) {
         systemConfigService.insert(request);
     }
 
@@ -68,7 +66,7 @@ public class SystemConfigController {
      * 修改参数配置信息
      */
     @PutMapping("/edit")
-    public void edit(@RequestBody UpdateSystemConfigRequest request) {
+    public void edit(@RequestBody SystemConfig request) {
         systemConfigService.update(request);
     }
 

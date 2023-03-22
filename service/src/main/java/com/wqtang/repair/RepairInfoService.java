@@ -1,9 +1,7 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.repair.RepairInfo;
-import com.wqtang.object.vo.request.repair.AddRepairInfoRequest;
 import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
-import com.wqtang.object.vo.request.repair.UpdateRepairInfoRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,11 +29,11 @@ public class RepairInfoService {
         return repairInfoMapper.pageByParams(request, offset, limit);
     }
 
-    public void insert(AddRepairInfoRequest request) {
+    public void insert(RepairInfo request) {
         repairInfoMapper.insert(request);
     }
 
-    public void update(UpdateRepairInfoRequest request) {
+    public void update(RepairInfo request) {
         repairInfoMapper.update(request);
     }
 

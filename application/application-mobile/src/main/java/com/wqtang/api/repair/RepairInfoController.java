@@ -3,9 +3,7 @@ package com.wqtang.api.repair;
 import com.wqtang.controller.AbstractPager;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.object.vo.PageInfo;
-import com.wqtang.object.vo.request.repair.AddRepairInfoRequest;
 import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
-import com.wqtang.object.vo.request.repair.UpdateRepairInfoRequest;
 import com.wqtang.repair.RepairInfoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +62,7 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
      * @return
      */
     @PostMapping("/add")
-    public void add(@RequestBody AddRepairInfoRequest request) {
+    public void add(@RequestBody RepairInfo request) {
         repairInfoService.insert(request);
     }
 
@@ -74,7 +72,7 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
      * @param request
      */
     @PutMapping("/edit")
-    public void edit(@RequestBody UpdateRepairInfoRequest request) {
+    public void edit(@RequestBody RepairInfo request) {
         repairInfoService.update(request);
     }
 
