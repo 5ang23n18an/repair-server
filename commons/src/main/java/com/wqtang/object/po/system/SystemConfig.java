@@ -13,73 +13,63 @@ public class SystemConfig extends BaseEntity {
     /**
      * 参数主键
      */
-    private Long id;
+    private Long configId;
 
     /**
      * 参数键名
      */
-    private String key;
+    private String configKey;
 
     /**
      * 参数键值
      */
-    private String value;
+    private String configValue;
 
     /**
      * 参数名称
      */
-    private String name;
+    private String configName;
 
-    private String type;
+    private String configType;
 
-    private Boolean available;
-
-    public Long getId() {
-        return id;
+    public Long getConfigId() {
+        return configId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setConfigId(Long configId) {
+        this.configId = configId;
     }
 
-    public String getKey() {
-        return key;
+    public String getConfigKey() {
+        return configKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setConfigKey(String configKey) {
+        this.configKey = configKey;
     }
 
-    public String getValue() {
-        return value;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
     }
 
-    public String getName() {
-        return name;
+    public String getConfigName() {
+        return configName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 
-    public String getType() {
-        return type;
+    public String getConfigType() {
+        return configType;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
+    public void setConfigType(String configType) {
+        this.configType = configType;
     }
 
 }

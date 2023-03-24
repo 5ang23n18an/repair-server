@@ -5,6 +5,7 @@ import com.wqtang.config.redis.RedisConfig;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
 import com.wqtang.util.RedisUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,7 +54,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
 
     public boolean isSystemConfigAvailable(String key) {
         SystemConfig systemConfig = getByKey(key);
-        return systemConfig != null && systemConfig.getAvailable();
+        return systemConfig != null && BooleanUtils.toBoolean(systemConfig.getConfigValue());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
     public void loadIntoCache() {
         List<SystemConfig> list = systemConfigMapper.listByParams(null);
         for (SystemConfig systemConfig : list) {
-            redisUtils.set(systemConfig.getKey(), systemConfig.getValue());
+            redisUtils.set(systemConfig.getConfigKey(), systemConfig.getConfigValue());
         }
     }
 
