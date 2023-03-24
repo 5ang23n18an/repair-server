@@ -15,7 +15,7 @@ public class SystemDepartment extends BaseEntity {
     /**
      * 部门ID
      */
-    private Long id;
+    private Long deptId;
 
     /**
      * 父部门ID
@@ -30,7 +30,7 @@ public class SystemDepartment extends BaseEntity {
     /**
      * 部门名称
      */
-    private String name;
+    private String deptName;
 
     /**
      * 所在部门组名称
@@ -77,12 +77,12 @@ public class SystemDepartment extends BaseEntity {
      */
     private List<SystemDepartment> children;
 
-    public Long getId() {
-        return id;
+    public Long getDeptId() {
+        return deptId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDeptId(Long id) {
+        this.deptId = id;
     }
 
     public Long getParentId() {
@@ -101,12 +101,12 @@ public class SystemDepartment extends BaseEntity {
         this.ancestors = ancestors;
     }
 
-    public String getName() {
-        return name;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
     public String getGroupName() {

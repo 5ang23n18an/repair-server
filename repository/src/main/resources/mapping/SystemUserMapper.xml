@@ -14,4 +14,8 @@
 
     </update>
 
+    <select id="countByDeptIdAndDelFlag" resultType="java.lang.Integer">
+
+    </select>
+
 </mapper>

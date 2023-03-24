@@ -45,6 +45,7 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
      * @return
      */
     @GetMapping("/page")
+    @Override
     public PageInfo getPage(GetRepairRecordPageRequest request,
                             @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                             @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
@@ -83,6 +84,11 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
         return repairRecordService.getById(id);
     }
 
+    /**
+     * 新增检修记录(Web端)
+     *
+     * @param request
+     */
     @PostMapping("/add/web")
     @Transactional(rollbackFor = Exception.class)
     public void webAdd(@RequestBody RepairRecord request) {
@@ -94,6 +100,11 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
         saveRepairFileResult(request, true);
     }
 
+    /**
+     * 修改检修记录
+     *
+     * @param request
+     */
     @PutMapping("/edit")
     @Transactional(rollbackFor = Exception.class)
     public void edit(@RequestBody RepairRecord request) {
@@ -105,6 +116,11 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
         saveRepairFileResult(request, false);
     }
 
+    /**
+     * 新增检修记录(App端)
+     *
+     * @param request
+     */
     @PostMapping("/add/app")
     @Transactional(rollbackFor = Exception.class)
     public void appAdd(@RequestBody RepairRecord request) {
@@ -182,6 +198,11 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
         }
     }
 
+    /**
+     * 删除检修记录
+     *
+     * @param ids
+     */
     @DeleteMapping("/{ids}")
     public void delete(@PathVariable("ids") Long[] ids) {
         repairRecordService.deleteByIds(ids);

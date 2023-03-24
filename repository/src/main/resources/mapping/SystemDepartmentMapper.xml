@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.repair.SystemDepartmentMapper">
+
+    <select id="pageByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
+
+    </select>
+
+    <select id="countByParams" resultType="java.lang.Integer">
+
+    </select>
+
+    <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
+
+    </select>
+
+    <select id="getById" resultType="com.wqtang.object.po.system.SystemDepartment">
+
+    </select>
+
+    <select id="getByDeptNameAndParentId" resultType="com.wqtang.object.po.system.SystemDepartment">
+
+    </select>
+
+    <insert id="insert">
+
+    </insert>
+
+    <update id="update">
+
+    </update>
+
+    <select id="countChildrenDeptById" resultType="java.lang.Integer">
+
+    </select>
+
+    <select id="countNormalChildrenDeptById" resultType="java.lang.Integer">
+
+    </select>
+
+    <delete id="deleteById">
+
+    </delete>
+
+</mapper>

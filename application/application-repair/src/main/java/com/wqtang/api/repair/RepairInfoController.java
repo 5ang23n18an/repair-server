@@ -39,6 +39,7 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
      * @return
      */
     @GetMapping("/page")
+    @Override
     public PageInfo getPage(GetRepairInfoPageRequest request,
                             @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                             @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
@@ -82,7 +83,7 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
      * @param ids
      */
     @DeleteMapping("/{ids}")
-    public void deleteById(@PathVariable("ids") Long[] ids) {
+    public void delete(@PathVariable("ids") Long[] ids) {
         repairInfoService.deleteByIds(ids);
     }
 

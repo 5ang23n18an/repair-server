@@ -1,6 +1,8 @@
 package com.wqtang.api.system;
 
+import com.wqtang.controller.AbstractPager;
 import com.wqtang.object.po.system.SystemConfig;
+import com.wqtang.object.vo.PageInfo;
 import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
 import com.wqtang.system.SystemConfigService;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/config")
-public class SystemConfigController {
+public class SystemConfigController extends AbstractPager<GetSystemConfigListRequest> {
 
     @Resource(name = "systemConfigService")
     private SystemConfigService systemConfigService;
@@ -37,10 +39,21 @@ public class SystemConfigController {
      * @return
      */
     @GetMapping("/page")
-    public List<SystemConfig> getPage(GetSystemConfigListRequest request,
-                                      @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                                      @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        return systemConfigService.pageByParams(request, pageNumber, pageSize);
+    @Override
+    public PageInfo getPage(GetSystemConfigListRequest request,
+                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        return super.getPage(request, pageNumber, pageSize);
+    }
+
+    @Override
+    public int getPageTotal(GetSystemConfigListRequest request) {
+        return systemConfigService.countByParams(request);
+    }
+
+    @Override
+    public List<?> getPageRecords(GetSystemConfigListRequest request, int offset, int limit) {
+        return systemConfigService.pageByParams(request, offset, limit);
     }
 
     /**
@@ -76,7 +89,7 @@ public class SystemConfigController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
-    public void deleteByIds(@PathVariable("ids") Long[] ids) {
+    public void delete(@PathVariable("ids") Long[] ids) {
         systemConfigService.deleteByIds(ids);
     }
 

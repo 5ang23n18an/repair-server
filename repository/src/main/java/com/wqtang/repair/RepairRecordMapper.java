@@ -3,6 +3,7 @@ package com.wqtang.repair;
 import com.wqtang.object.po.repair.RepairRecord;
 import com.wqtang.object.vo.request.repair.GetRepairRecordPageRequest;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ public interface RepairRecordMapper {
 
     List<RepairRecord> listByParams(RepairRecord request);
 
-    List<RepairRecord> pageByParams(GetRepairRecordPageRequest param, int offset, int limit);
+    List<RepairRecord> pageByParams(@Param("param") GetRepairRecordPageRequest param,
+                                    @Param("offset") int offset,
+                                    @Param("limit") int limit);
 
     void insert(RepairRecord repairRecord);
 

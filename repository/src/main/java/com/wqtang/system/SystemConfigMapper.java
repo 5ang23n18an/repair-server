@@ -24,6 +24,8 @@ public interface SystemConfigMapper {
                                     @Param("offset") int offset,
                                     @Param("limit") int limit);
 
+    int countByParams(GetSystemConfigListRequest systemConfig);
+
     void insert(SystemConfig request);
 
     void update(SystemConfig request);
