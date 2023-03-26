@@ -115,7 +115,7 @@ public class SystemDepartmentController extends AbstractPager<GetSystemDepartmen
         if (!request.getDeptId().equals(request.getParentId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The superior department cannot be itself", "上级部门不能是自己");
         }
-        if (UserConstants.DEPT_DISABLE.equals(request.getStatus())
+        if (UserConstants.DEPT_DISABLED.equals(request.getStatus())
                 && systemDepartmentService.countNormalChildrenDeptById(request.getDeptId()) > 0) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department has been deactivated, but still contains normal subordinate departments", "该部门已停用, 但仍包含未停用的子部门");
         }
