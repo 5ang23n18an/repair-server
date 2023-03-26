@@ -13,22 +13,22 @@ public class SystemRole extends BaseEntity {
     /**
      * 角色ID
      */
-    private Long id;
+    private Long roleId;
 
     /**
      * 角色名称
      */
-    private String name;
+    private String roleName;
 
     /**
      * 角色权限
      */
-    private String key;
+    private String roleKey;
 
     /**
      * 角色排序
      */
-    private String sort;
+    private String roleSort;
 
     /**
      * 数据范围（1：所有数据权限；2：自定义数据权限；3：本部门数据权限；4：本部门及以下数据权限；5：仅本人数据权限）
@@ -70,36 +70,36 @@ public class SystemRole extends BaseEntity {
      */
     private Long[] deptIds;
 
-    public Long getId() {
-        return id;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public String getName() {
-        return name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public String getKey() {
-        return key;
+    public String getRoleKey() {
+        return roleKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setRoleKey(String roleKey) {
+        this.roleKey = roleKey;
     }
 
-    public String getSort() {
-        return sort;
+    public String getRoleSort() {
+        return roleSort;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setRoleSort(String roleSort) {
+        this.roleSort = roleSort;
     }
 
     public String getDataScope() {

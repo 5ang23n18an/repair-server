@@ -1,12 +1,12 @@
 package com.wqtang.system;
 
+import com.google.common.collect.Sets;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,20 +21,20 @@ public class SystemRoleService {
     private SystemUserRoleMapper systemUserRoleMapper;
 
     public Set<String> getRolesByUser(SystemUser user) {
-        Set<String> roles = new HashSet<>();
+        Set<String> roles = Sets.newHashSet();
         if (user.isAdmin()) {
             roles.add("admin");
         } else {
-            roles.addAll(getRolesByUserId(user.getId()));
+            roles.addAll(getRolesByUserId(user.getUserId()));
         }
         return roles;
     }
 
     private Set<String> getRolesByUserId(Long userId) {
         List<SystemRole> roleList = systemUserRoleMapper.listByUserId(userId);
-        Set<String> roles = new HashSet<>();
+        Set<String> roles = Sets.newHashSet();
         for (SystemRole systemRole : roleList) {
-            roles.addAll(Arrays.asList(systemRole.getKey().split(",")));
+            roles.addAll(Arrays.asList(systemRole.getRoleKey().split(",")));
         }
         return roles;
     }

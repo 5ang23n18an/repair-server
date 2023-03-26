@@ -8,7 +8,6 @@ import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
-import com.wqtang.object.vo.response.system.GetSystemUserInfoResponse;
 import com.wqtang.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,10 +34,6 @@ public class SystemUserService {
 
     @Resource(name = "tokenService")
     private TokenService tokenService;
-    @Resource(name = "systemRoleService")
-    private SystemRoleService systemRoleService;
-    @Resource(name = "systemPermissionService")
-    private SystemPermissionService systemPermissionService;
     @Resource(name = "systemConfigService")
     private SystemConfigService systemConfigService;
     @Resource(name = "systemUserMapper")
@@ -84,16 +78,6 @@ public class SystemUserService {
         }
     }
 
-    public GetSystemUserInfoResponse getInfo(SystemUser user) {
-        Set<String> roles = systemRoleService.getRolesByUser(user);
-        Set<String> permissions = systemPermissionService.getPermissionsByUser(user);
-        GetSystemUserInfoResponse response = new GetSystemUserInfoResponse();
-        response.setUser(user);
-        response.setRoles(roles);
-        response.setPermissions(permissions);
-        return response;
-    }
-
     public SystemUser getByUsername(String username) {
         return systemUserMapper.getByUsername(username);
     }
@@ -127,7 +111,7 @@ public class SystemUserService {
 
     private void recordLoginInfo(Long userId) {
         SystemUser systemUser = new SystemUser();
-        systemUser.setId(userId);
+        systemUser.setUserId(userId);
         systemUser.setLoginIp(IPAddressUtils.getIPAddress());
         systemUser.setLoginDate(Calendar.getInstance().getTime());
         systemUserMapper.updateLoginInfo(systemUser);

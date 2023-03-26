@@ -1,5 +1,6 @@
 package com.wqtang.auth;
 
+import com.google.common.collect.Maps;
 import com.wqtang.config.redis.RedisConfig;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.util.IPAddressUtils;
@@ -73,7 +74,7 @@ public class TokenService {
         loginUser.setToken(UUID.randomUUID().toString());
         setUserAgent(loginUser);
         refreshToken(loginUser);
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = Maps.newHashMapWithExpectedSize(1);
         claims.put("login_user_key", loginUser.getToken());
         return Jwts
                 .builder()

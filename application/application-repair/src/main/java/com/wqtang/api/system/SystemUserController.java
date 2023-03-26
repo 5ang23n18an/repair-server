@@ -6,12 +6,15 @@ import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
 import com.wqtang.object.vo.response.system.GetSystemUserInfoResponse;
+import com.wqtang.system.SystemMenuService;
+import com.wqtang.system.SystemRoleService;
 import com.wqtang.system.SystemUserService;
 import com.wqtang.util.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Set;
 
 /**
  * @author Wenqian Tang
@@ -23,6 +26,10 @@ public class SystemUserController {
 
     @Resource(name = "systemUserService")
     private SystemUserService systemUserService;
+    @Resource(name = "systemRoleService")
+    private SystemRoleService systemRoleService;
+    @Resource(name = "systemMenuService")
+    private SystemMenuService systemMenuService;
 
     /**
      * 后台用户的登录方法
@@ -43,7 +50,13 @@ public class SystemUserController {
     @GetMapping("/getInfo")
     public GetSystemUserInfoResponse getInfo() {
         SystemUser user = SecurityUtils.getLoginUser().getUser();
-        return systemUserService.getInfo(user);
+        Set<String> roles = systemRoleService.getRolesByUser(user);
+        Set<String> permissions = systemMenuService.getPermissionsByUser(user);
+        GetSystemUserInfoResponse response = new GetSystemUserInfoResponse();
+        response.setUser(user);
+        response.setRoles(roles);
+        response.setPermissions(permissions);
+        return response;
     }
 
     /**

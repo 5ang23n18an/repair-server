@@ -1,11 +1,11 @@
 package com.wqtang.object.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.Maps;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -105,7 +105,7 @@ public class BaseEntity implements Serializable {
 
     public Map<String, Object> getParams() {
         if (params == null) {
-            params = new HashMap<>();
+            params = Maps.newHashMap();
         }
         return params;
     }

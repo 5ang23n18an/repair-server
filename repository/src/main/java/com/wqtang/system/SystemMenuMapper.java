@@ -6,11 +6,11 @@ import java.util.List;
 
 /**
  * @author Wenqian Tang
- * @date 2023/3/14
+ * @date 2023/3/26
  */
 @Mapper
-public interface SystemPermissionMapper {
+public interface SystemMenuMapper {
 
-    List<String> listKeyByUserId(Long userId);
+    List<String> listPermissionsByUserId(Long userId);
 
 }

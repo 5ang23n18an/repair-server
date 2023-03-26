@@ -17,7 +17,7 @@ public class SystemUser extends BaseEntity {
     /**
      * 用户ID
      */
-    private Long id;
+    private Long userId;
 
     /**
      * 部门ID
@@ -111,12 +111,12 @@ public class SystemUser extends BaseEntity {
      */
     private Long[] postIds;
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getDeptId() {
@@ -273,7 +273,7 @@ public class SystemUser extends BaseEntity {
 
     @JsonIgnore
     public boolean isAdmin() {
-        return Long.valueOf(1L).equals(id);
+        return Long.valueOf(1L).equals(userId);
     }
 
 }

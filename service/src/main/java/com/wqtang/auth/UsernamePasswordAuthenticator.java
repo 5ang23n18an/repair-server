@@ -5,7 +5,7 @@ import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.UserStatus;
 import com.wqtang.object.po.system.SystemUser;
-import com.wqtang.system.SystemPermissionService;
+import com.wqtang.system.SystemMenuService;
 import com.wqtang.system.SystemUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +34,8 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
 
     @Resource(name = "systemUserService")
     private SystemUserService systemUserService;
-    @Resource(name = "systemPermissionService")
-    private SystemPermissionService systemPermissionService;
+    @Resource(name = "systemMenuService")
+    private SystemMenuService systemMenuService;
     @Resource(name = "passwordEncoder")
     private PasswordEncoder passwordEncoder;
 
@@ -69,7 +69,7 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
 
     private List<GrantedAuthority> getAuthoritiesByUser(SystemUser user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        Set<String> permissions = systemPermissionService.getPermissionsByUser(user);
+        Set<String> permissions = systemMenuService.getPermissionsByUser(user);
         for (String permission : permissions) {
             authorities.add(new SimpleGrantedAuthority(SecurityConfig.AUTHORITY_PREFIX + permission));
         }
