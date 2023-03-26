@@ -18,17 +18,17 @@ public interface SystemConfigMapper {
 
     SystemConfig getByKey(String key);
 
-    List<SystemConfig> listByParams(SystemConfig param);
+    List<SystemConfig> listByParams(SystemConfig config);
 
-    List<SystemConfig> pageByParams(@Param("param") GetSystemConfigListRequest param,
+    List<SystemConfig> pageByParams(@Param("request") GetSystemConfigListRequest request,
                                     @Param("offset") int offset,
                                     @Param("limit") int limit);
 
-    int countByParams(GetSystemConfigListRequest systemConfig);
+    int countByParams(GetSystemConfigListRequest request);
 
-    void insert(SystemConfig request);
+    void insert(SystemConfig config);
 
-    void update(SystemConfig request);
+    void update(SystemConfig config);
 
     void deleteByIds(Long[] ids);
 

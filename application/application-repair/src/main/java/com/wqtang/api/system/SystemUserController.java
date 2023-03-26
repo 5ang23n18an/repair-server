@@ -49,7 +49,7 @@ public class SystemUserController {
      */
     @GetMapping("/getInfo")
     public GetSystemUserInfoResponse getInfo() {
-        SystemUser user = SecurityUtils.getLoginUser().getUser();
+        SystemUser user = SecurityUtils.getCurrentUser();
         Set<String> roles = systemRoleService.getRolesByUser(user);
         Set<String> permissions = systemMenuService.getPermissionsByUser(user);
         GetSystemUserInfoResponse response = new GetSystemUserInfoResponse();

@@ -49,7 +49,7 @@ public class SystemUserService {
         String token = StringUtils.isNotEmpty(request.getApp()) ?
                 loginFromApp(request.getUsername(), request.getPassword(), request.getApp()) :
                 loginFromWeb(request.getUsername(), request.getPassword(), request.getCode(), request.getUuid());
-        recordLoginInfo(SecurityUtils.getLoginUser().getId());
+        recordLoginInfo(SecurityUtils.getCurrentUserId());
         return token;
     }
 

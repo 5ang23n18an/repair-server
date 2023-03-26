@@ -17,8 +17,8 @@ import java.util.Set;
 @Service
 public class SystemRoleService {
 
-    @Resource(name = "systemUserRoleMapper")
-    private SystemUserRoleMapper systemUserRoleMapper;
+    @Resource(name = "systemRoleMapper")
+    private SystemRoleMapper systemRoleMapper;
 
     public Set<String> getRolesByUser(SystemUser user) {
         Set<String> roles = Sets.newHashSet();
@@ -31,7 +31,7 @@ public class SystemRoleService {
     }
 
     private Set<String> getRolesByUserId(Long userId) {
-        List<SystemRole> roleList = systemUserRoleMapper.listByUserId(userId);
+        List<SystemRole> roleList = systemRoleMapper.listByUserId(userId);
         Set<String> roles = Sets.newHashSet();
         for (SystemRole systemRole : roleList) {
             roles.addAll(Arrays.asList(systemRole.getRoleKey().split(",")));

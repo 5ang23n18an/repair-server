@@ -20,7 +20,7 @@ public class LoginUser implements UserDetails {
     /**
      * 用户ID
      */
-    private Long id;
+    private Long userId;
 
     /**
      * 部门ID
@@ -80,19 +80,19 @@ public class LoginUser implements UserDetails {
         this.permissions = permissions;
     }
 
-    public LoginUser(Long id, Long deptId, SystemUser user, Set<String> permissions) {
-        this.id = id;
+    public LoginUser(Long userId, Long deptId, SystemUser user, Set<String> permissions) {
+        this.userId = userId;
         this.deptId = deptId;
         this.user = user;
         this.permissions = permissions;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getDeptId() {

@@ -7,6 +7,7 @@ import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemDepartment;
 import com.wqtang.object.vo.PageInfo;
 import com.wqtang.object.vo.TreeInfo;
+import com.wqtang.object.vo.TreeListInfo;
 import com.wqtang.object.vo.request.system.GetSystemDepartmentListRequest;
 import com.wqtang.system.SystemDepartmentService;
 import com.wqtang.util.SecurityUtils;
@@ -98,12 +99,24 @@ public class SystemDepartmentController extends AbstractPager<GetSystemDepartmen
         return departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
     }
 
+    @GetMapping("/tree/{roleId}")
+    public TreeListInfo deptTreeListInfo(@PathVariable("roleId") Long roleId) {
+        List<Long> deptIds = systemDepartmentService.listIdsByRoleId(roleId);
+        List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
+        systemDepartmentService.refactorAsTree(departmentList);
+        List<TreeInfo> treeInfo = departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
+        TreeListInfo treeListInfo = new TreeListInfo();
+        treeListInfo.setKeys(deptIds);
+        treeListInfo.setInfo(treeInfo);
+        return treeListInfo;
+    }
+
     @PostMapping("/add")
     public void add(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "该部门名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department name already exists", "该部门名称已经存在");
         }
-        request.setCreateBy(SecurityUtils.getLoginUser().getUsername());
+        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.insert(request);
     }
 
@@ -119,7 +132,7 @@ public class SystemDepartmentController extends AbstractPager<GetSystemDepartmen
                 && systemDepartmentService.countNormalChildrenDeptById(request.getDeptId()) > 0) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department has been deactivated, but still contains normal subordinate departments", "该部门已停用, 但仍包含未停用的子部门");
         }
-        request.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
+        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.update(request);
     }
 

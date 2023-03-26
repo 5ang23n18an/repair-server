@@ -1,6 +1,7 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.system.SystemDepartment;
+import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.vo.request.system.GetSystemDepartmentListRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,13 +15,13 @@ import java.util.List;
 @Mapper
 public interface SystemDepartmentMapper {
 
-    List<SystemDepartment> pageByParams(@Param("param") GetSystemDepartmentListRequest param,
+    List<SystemDepartment> pageByParams(@Param("request") GetSystemDepartmentListRequest request,
                                         @Param("offset") int offset,
                                         @Param("limit") int limit);
 
-    int countByParams(SystemDepartment param);
+    int countByParams(SystemDepartment department);
 
-    List<SystemDepartment> listByParams(SystemDepartment param);
+    List<SystemDepartment> listByParams(SystemDepartment department);
 
     SystemDepartment getById(Long deptId);
 
@@ -36,5 +37,8 @@ public interface SystemDepartmentMapper {
     int countNormalChildrenDeptById(Long deptId);
 
     void deleteById(Long deptId);
+
+    List<Long> listIdsByRoleId(@Param("role") SystemRole role,
+                               @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
 }

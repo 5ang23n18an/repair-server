@@ -42,4 +42,8 @@
 
     </delete>
 
+    <select id="listIdsByRoleId" resultType="java.lang.Long">
+
+    </select>
+
 </mapper>

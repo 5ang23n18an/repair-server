@@ -3,6 +3,7 @@ package com.wqtang.system;
 import com.google.common.collect.Lists;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.po.system.SystemDepartment;
+import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.vo.request.system.GetSystemDepartmentListRequest;
 import com.wqtang.repair.SystemDepartmentMapper;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class SystemDepartmentService {
     private SystemDepartmentMapper systemDepartmentMapper;
     @Resource(name = "systemUserMapper")
     private SystemUserMapper systemUserMapper;
+    @Resource(name = "systemRoleMapper")
+    private SystemRoleMapper systemRoleMapper;
 
     public int countByParams(SystemDepartment systemDepartment) {
         return systemDepartmentMapper.countByParams(systemDepartment);
@@ -99,6 +102,11 @@ public class SystemDepartmentService {
 
     public void deleteById(Long deptId) {
         systemDepartmentMapper.deleteById(deptId);
+    }
+
+    public List<Long> listIdsByRoleId(Long roleId) {
+        SystemRole role = systemRoleMapper.getById(roleId);
+        return systemDepartmentMapper.listIdsByRoleId(role, role.isDeptCheckStrictly());
     }
 
 }

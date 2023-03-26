@@ -16,11 +16,11 @@ public interface RepairRecordMapper {
 
     RepairRecord getById(Long id);
 
-    int countByParams(GetRepairRecordPageRequest param);
+    int countByParams(GetRepairRecordPageRequest request);
 
-    List<RepairRecord> listByParams(RepairRecord request);
+    List<RepairRecord> listByParams(RepairRecord record);
 
-    List<RepairRecord> pageByParams(@Param("param") GetRepairRecordPageRequest param,
+    List<RepairRecord> pageByParams(@Param("request") GetRepairRecordPageRequest request,
                                     @Param("offset") int offset,
                                     @Param("limit") int limit);
 

@@ -273,6 +273,10 @@ public class SystemUser extends BaseEntity {
 
     @JsonIgnore
     public boolean isAdmin() {
+        return isAdmin(this.userId);
+    }
+
+    public static boolean isAdmin(Long userId) {
         return Long.valueOf(1L).equals(userId);
     }
 

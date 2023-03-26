@@ -2,6 +2,7 @@ package com.wqtang.util;
 
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.user.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,18 @@ public class SecurityUtils {
             LOGGER.error("Exception occurs in `SecurityUtils.getLoginUser`, error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.UNAUTHORIZED, "Failed to get login user data", "无法获取登录用户的信息");
         }
+    }
+
+    public static Long getCurrentUserId() {
+        return getLoginUser().getUserId();
+    }
+
+    public static String getCurrentUsername() {
+        return getLoginUser().getUsername();
+    }
+
+    public static SystemUser getCurrentUser() {
+        return getLoginUser().getUser();
     }
 
 }

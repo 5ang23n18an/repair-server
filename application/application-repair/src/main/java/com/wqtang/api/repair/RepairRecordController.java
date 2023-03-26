@@ -138,7 +138,7 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
                 repairRecord.setFile1(null);
                 repairRecord.setFile2(null);
             }
-            repairRecord.setCreateBy(SecurityUtils.getLoginUser().getUsername());
+            repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
             repairRecordService.insert(repairRecord);
             // 保存测试记录
             saveRepairTest(repairRecord, true);
@@ -157,7 +157,7 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
             repairRecord.setStationId(stationList.get(1));
             repairRecord.setSwitchId(stationList.get(2));
         }
-        repairRecord.setCreateBy(SecurityUtils.getLoginUser().getUsername());
+        repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
         if (isAdd) {
             repairRecordService.insert(repairRecord);
         } else {
