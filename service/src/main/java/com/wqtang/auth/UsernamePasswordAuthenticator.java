@@ -1,5 +1,6 @@
 package com.wqtang.auth;
 
+import com.google.common.collect.Lists;
 import com.wqtang.config.security.SecurityConfig;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -68,8 +68,8 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
     }
 
     private List<GrantedAuthority> getAuthoritiesByUser(SystemUser user) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
         Set<String> permissions = systemMenuService.getPermissionsByUser(user);
+        List<GrantedAuthority> authorities = Lists.newArrayListWithExpectedSize(permissions.size());
         for (String permission : permissions) {
             authorities.add(new SimpleGrantedAuthority(SecurityConfig.AUTHORITY_PREFIX + permission));
         }

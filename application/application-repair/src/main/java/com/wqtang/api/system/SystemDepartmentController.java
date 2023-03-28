@@ -67,7 +67,8 @@ public class SystemDepartmentController extends AbstractPager<GetSystemDepartmen
         List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
         for (Iterator<SystemDepartment> iterator = departmentList.iterator(); iterator.hasNext(); ) {
             SystemDepartment department = iterator.next();
-            boolean match = department.getDeptId().equals(deptId) || ArrayUtils.contains(department.getAncestors().split(","), deptId.toString());
+            boolean match = department.getDeptId().equals(deptId)
+                    || ArrayUtils.contains(department.getAncestors().split(","), deptId.toString());
             if (match) {
                 iterator.remove();
             }
