@@ -1,9 +1,8 @@
 package com.wqtang.api.system;
 
-import com.wqtang.controller.AbstractPager;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wqtang.object.po.system.SystemConfig;
-import com.wqtang.object.vo.PageInfo;
-import com.wqtang.object.vo.request.system.GetSystemConfigListRequest;
 import com.wqtang.system.SystemConfigService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/config")
-public class SystemConfigController extends AbstractPager<GetSystemConfigListRequest> {
+public class SystemConfigController {
 
     @Resource(name = "systemConfigService")
     private SystemConfigService systemConfigService;
@@ -39,21 +38,12 @@ public class SystemConfigController extends AbstractPager<GetSystemConfigListReq
      * @return
      */
     @GetMapping("/page")
-    @Override
-    public PageInfo getPage(GetSystemConfigListRequest request,
-                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        return super.getPage(request, pageNumber, pageSize);
-    }
-
-    @Override
-    public int getPageTotal(GetSystemConfigListRequest request) {
-        return systemConfigService.countByParams(request);
-    }
-
-    @Override
-    public List<?> getPageRecords(GetSystemConfigListRequest request, int offset, int limit) {
-        return systemConfigService.pageByParams(request, offset, limit);
+    public PageInfo<SystemConfig> getPage(SystemConfig request,
+                                          @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                          @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<SystemConfig> list = systemConfigService.listByParams(request);
+        return new PageInfo<>(list);
     }
 
     /**

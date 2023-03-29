@@ -1,14 +1,13 @@
 package com.wqtang.api.system;
 
-import com.wqtang.controller.AbstractPager;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemDepartment;
-import com.wqtang.object.vo.PageInfo;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
-import com.wqtang.object.vo.request.system.GetSystemDepartmentListRequest;
 import com.wqtang.system.SystemDepartmentService;
 import com.wqtang.util.SecurityUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/system/department")
-public class SystemDepartmentController extends AbstractPager<GetSystemDepartmentListRequest> {
+public class SystemDepartmentController {
 
     @Resource(name = "systemDepartmentService")
     private SystemDepartmentService systemDepartmentService;
@@ -39,21 +38,12 @@ public class SystemDepartmentController extends AbstractPager<GetSystemDepartmen
      * @return
      */
     @GetMapping("/page")
-    @Override
-    public PageInfo getPage(GetSystemDepartmentListRequest request,
-                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        return super.getPage(request, pageNumber, pageSize);
-    }
-
-    @Override
-    public int getPageTotal(GetSystemDepartmentListRequest request) {
-        return systemDepartmentService.countByParams(request);
-    }
-
-    @Override
-    public List<SystemDepartment> getPageRecords(GetSystemDepartmentListRequest request, int offset, int limit) {
-        return systemDepartmentService.pageByParams(request, offset, limit);
+    public PageInfo<SystemDepartment> getPage(SystemDepartment request,
+                                              @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                              @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<SystemDepartment> list = systemDepartmentService.listByParams(request);
+        return new PageInfo<>(list);
     }
 
     /**

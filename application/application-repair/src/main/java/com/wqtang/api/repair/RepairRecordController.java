@@ -1,14 +1,13 @@
 package com.wqtang.api.repair;
 
-import com.wqtang.controller.AbstractPager;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.RepairConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.repair.RepairFileResult;
 import com.wqtang.object.po.repair.RepairRecord;
 import com.wqtang.object.po.repair.RepairTest;
-import com.wqtang.object.vo.PageInfo;
-import com.wqtang.object.vo.request.repair.GetRepairRecordPageRequest;
 import com.wqtang.object.vo.response.repair.GetRepairRecordCountOfDayResponse;
 import com.wqtang.repair.RepairFileResultService;
 import com.wqtang.repair.RepairRecordService;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/repair/record")
-public class RepairRecordController extends AbstractPager<GetRepairRecordPageRequest> {
+public class RepairRecordController {
 
     @Resource(name = "repairRecordService")
     private RepairRecordService repairRecordService;
@@ -45,21 +44,12 @@ public class RepairRecordController extends AbstractPager<GetRepairRecordPageReq
      * @return
      */
     @GetMapping("/page")
-    @Override
-    public PageInfo getPage(GetRepairRecordPageRequest request,
-                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        return super.getPage(request, pageNumber, pageSize);
-    }
-
-    @Override
-    public int getPageTotal(GetRepairRecordPageRequest request) {
-        return repairRecordService.countByParams(request);
-    }
-
-    @Override
-    public List<?> getPageRecords(GetRepairRecordPageRequest request, int offset, int limit) {
-        return repairRecordService.pageByParams(request, offset, limit);
+    public PageInfo<RepairRecord> getPage(RepairRecord request,
+                                          @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                          @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<RepairRecord> list = repairRecordService.listByParams(request);
+        return new PageInfo<>(list);
     }
 
     /**

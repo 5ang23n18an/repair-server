@@ -12,8 +12,20 @@ import java.util.List;
 @Mapper
 public interface SystemRoleMapper {
 
-    SystemRole getById(Long roleId);
+    SystemRole getByRoleId(Long roleId);
 
     List<SystemRole> listByUserId(Long userId);
+
+    List<SystemRole> listByParams(SystemRole role);
+
+    void insert(SystemRole role);
+
+    SystemRole getByRoleName(String roleName);
+
+    SystemRole getByRoleKey(String roleKey);
+
+    void update(SystemRole role);
+
+    void batchDeleteByRoleIds(Long[] roleIds);
 
 }

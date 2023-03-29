@@ -114,7 +114,7 @@ public class SystemMenuService {
     }
 
     public List<Long> listMenuIdsByRoleId(Long roleId) {
-        SystemRole role = systemRoleMapper.getById(roleId);
+        SystemRole role = systemRoleMapper.getByRoleId(roleId);
         return systemMenuMapper.listMenuIdsByRoleId(roleId, role.isMenuCheckStrictly());
     }
 

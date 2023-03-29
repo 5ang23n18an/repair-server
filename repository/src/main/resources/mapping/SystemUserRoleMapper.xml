@@ -6,4 +6,8 @@
 
     </select>
 
+    <select id="countByRoleId" resultType="java.lang.Integer">
+
+    </select>
+
 </mapper>

@@ -14,4 +14,6 @@ public interface SystemUserRoleMapper {
 
     List<SystemRole> listByUserId(Long userId);
 
+    int countByRoleId(Long roleId);
+
 }

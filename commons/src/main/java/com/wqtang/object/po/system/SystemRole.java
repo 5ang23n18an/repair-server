@@ -1,5 +1,6 @@
 package com.wqtang.object.po.system;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wqtang.object.po.BaseEntity;
 
 /**
@@ -164,6 +165,15 @@ public class SystemRole extends BaseEntity {
 
     public void setDeptIds(Long[] deptIds) {
         this.deptIds = deptIds;
+    }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return isAdmin(this.roleId);
+    }
+
+    public static boolean isAdmin(Long roleId) {
+        return Long.valueOf(1L).equals(roleId);
     }
 
 }

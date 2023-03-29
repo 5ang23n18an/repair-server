@@ -1,7 +1,6 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.repair.RepairInfo;
-import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,12 +20,8 @@ public class RepairInfoService {
         return repairInfoMapper.getById(id);
     }
 
-    public int countByParams(GetRepairInfoPageRequest request) {
-        return repairInfoMapper.countByParams(request);
-    }
-
-    public List<RepairInfo> pageByParams(GetRepairInfoPageRequest request, int offset, int limit) {
-        return repairInfoMapper.pageByParams(request, offset, limit);
+    public List<RepairInfo> listByParams(RepairInfo repairInfo) {
+        return repairInfoMapper.listByParams(repairInfo);
     }
 
     public void insert(RepairInfo request) {
@@ -40,5 +35,4 @@ public class RepairInfoService {
     public void deleteByIds(Long[] ids) {
         repairInfoMapper.deleteByIds(ids);
     }
-
 }

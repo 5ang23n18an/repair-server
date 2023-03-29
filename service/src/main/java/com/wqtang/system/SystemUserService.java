@@ -6,6 +6,7 @@ import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemUser;
+import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
 import com.wqtang.util.*;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +36,8 @@ public class SystemUserService {
 
     @Resource(name = "tokenService")
     private TokenService tokenService;
+    @Resource(name = "systemMenuService")
+    private SystemMenuService systemMenuService;
     @Resource(name = "systemConfigService")
     private SystemConfigService systemConfigService;
     @Resource(name = "systemUserMapper")
@@ -115,6 +119,23 @@ public class SystemUserService {
         systemUser.setLoginIp(IPAddressUtils.getIPAddress());
         systemUser.setLoginDate(Calendar.getInstance().getTime());
         systemUserMapper.updateLoginInfo(systemUser);
+    }
+
+    public void refreshLoginUserPermissions() {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (loginUser.getUser() != null && !loginUser.getUser().isAdmin()) {
+            loginUser.setPermissions(systemMenuService.getPermissionsByUser(loginUser.getUser()));
+            loginUser.setUser(getByUsername(loginUser.getUser().getUsername()));
+            tokenService.setLoginUser(loginUser);
+        }
+    }
+
+    public List<SystemUser> listAllocatedRolesByUser(SystemUser user) {
+        return null;
+    }
+
+    public List<SystemUser> listUnallocatedRolesByUser(SystemUser user) {
+        return null;
     }
 
 }

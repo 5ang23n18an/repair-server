@@ -1,9 +1,8 @@
 package com.wqtang.api.repair;
 
-import com.wqtang.controller.AbstractPager;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wqtang.object.po.repair.RepairInfo;
-import com.wqtang.object.vo.PageInfo;
-import com.wqtang.object.vo.request.repair.GetRepairInfoPageRequest;
 import com.wqtang.repair.RepairInfoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/repair/info")
-public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest> {
+public class RepairInfoController {
 
     @Resource(name = "repairInfoService")
     private RepairInfoService repairInfoService;
@@ -39,21 +38,12 @@ public class RepairInfoController extends AbstractPager<GetRepairInfoPageRequest
      * @return
      */
     @GetMapping("/page")
-    @Override
-    public PageInfo getPage(GetRepairInfoPageRequest request,
-                            @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                            @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        return super.getPage(request, pageNumber, pageSize);
-    }
-
-    @Override
-    public int getPageTotal(GetRepairInfoPageRequest request) {
-        return repairInfoService.countByParams(request);
-    }
-
-    @Override
-    public List<?> getPageRecords(GetRepairInfoPageRequest request, int offset, int limit) {
-        return repairInfoService.pageByParams(request, offset, limit);
+    public PageInfo<RepairInfo> getPage(RepairInfo request,
+                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                        @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<RepairInfo> list = repairInfoService.listByParams(request);
+        return new PageInfo<>(list);
     }
 
     /**

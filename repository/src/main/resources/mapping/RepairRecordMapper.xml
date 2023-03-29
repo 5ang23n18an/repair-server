@@ -6,15 +6,7 @@
 
     </select>
 
-    <select id="countByParams" resultType="java.lang.Integer">
-
-    </select>
-
     <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairRecord">
-
-    </select>
-
-    <select id="pageByParams" resultType="com.wqtang.object.po.repair.RepairRecord">
 
     </select>
 

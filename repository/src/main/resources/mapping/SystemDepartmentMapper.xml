@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wqtang.repair.SystemDepartmentMapper">
 
-    <select id="pageByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
-
-    </select>
-
-    <select id="countByParams" resultType="java.lang.Integer">
-
-    </select>
-
     <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
 
     </select>
