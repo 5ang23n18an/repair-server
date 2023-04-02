@@ -1,10 +1,8 @@
 package com.wqtang.util;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import com.alibaba.excel.write.metadata.WriteSheet;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,11 +30,7 @@ public class ExcelUtils<T> {
      */
     public File export(List<T> list, String sheetName) {
         File file = FileUtils.fileUniquenessProcessing(rootDirectory, sheetName + ".xlsx");
-        try (ExcelWriter excelWriter = EasyExcel.write(file.getPath()).build()) {
-            WriteSheet writeSheet = EasyExcel.writerSheet(0, sheetName).build();
-            excelWriter.write(list, writeSheet);
-            excelWriter.finish();
-        }
+        EasyExcel.write().sheet(0, sheetName).doWrite(list);
         return file;
     }
 
