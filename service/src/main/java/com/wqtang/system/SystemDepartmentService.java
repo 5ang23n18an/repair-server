@@ -66,9 +66,9 @@ public class SystemDepartmentService {
     }
 
     public boolean isDeptNameDuplicated(SystemDepartment department) {
-        SystemDepartment info = systemDepartmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
+        SystemDepartment departmentFromDb = systemDepartmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
         Long deptId = Optional.of(department.getDeptId()).orElse(-1L);
-        return info != null && !deptId.equals(info.getDeptId());
+        return departmentFromDb != null && !deptId.equals(departmentFromDb.getDeptId());
     }
 
     public void insert(SystemDepartment department) {

@@ -38,6 +38,7 @@
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <jjwt-api.version>0.10.5</jjwt-api.version>
         <mail.version>1.4.4</mail.version>
+        <easyexcel.version>3.1.1</easyexcel.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +98,11 @@
                 <groupId>javax.mail</groupId>
                 <artifactId>mail</artifactId>
                 <version>${mail.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

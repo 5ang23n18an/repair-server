@@ -123,15 +123,15 @@ public class SystemRoleService {
     }
 
     public boolean isRoleNameDuplicated(SystemRole role) {
-        SystemRole info = systemRoleMapper.getByRoleName(role.getRoleName());
+        SystemRole roleFromDb = systemRoleMapper.getByRoleName(role.getRoleName());
         Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
-        return info != null && !roleId.equals(info.getRoleId());
+        return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
     public boolean isRoleKeyDuplicated(SystemRole role) {
-        SystemRole info = systemRoleMapper.getByRoleKey(role.getRoleKey());
+        SystemRole roleFromDb = systemRoleMapper.getByRoleKey(role.getRoleKey());
         Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
-        return info != null && !roleId.equals(info.getRoleId());
+        return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
 }

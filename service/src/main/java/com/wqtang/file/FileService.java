@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,7 +27,7 @@ public class FileService {
     @Value("${file.rootDirectory}")
     private String rootDirectory;
 
-    public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) throws IOException {
+    public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) throws Exception {
         String fileName = request.getFileName(), filePath = FilenameUtils.concat(rootDirectory, fileName);
         byte[] bytes = FileUtils.readAsBytes(filePath);
         HttpHeaders headers = new HttpHeaders();

@@ -22,7 +22,6 @@ public class FileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
     private static final StringBuffer STRING_BUFFER = new StringBuffer();
     private static final int WRITE_BUFFER_SIZE = 8192;
-    private static final String SEPARATOR = "_";
 
     public static boolean isEmpty(MultipartFile multipartFile) {
         return multipartFile == null || multipartFile.isEmpty();
@@ -45,13 +44,7 @@ public class FileUtils {
             return StringUtils.EMPTY;
         }
         try {
-            File dir = new File(targetDirPath);
-            if (!dir.exists() && !dir.mkdirs()) {
-                LOGGER.error("Exception occurs in `FileUtils.save`, due to target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
-                throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
-            }
-            String processedFileName = fileNameUniquenessProcessing(multipartFile.getOriginalFilename());
-            File file = new File(FilenameUtils.concat(targetDirPath, processedFileName));
+            File file = fileUniquenessProcessing(targetDirPath, multipartFile.getOriginalFilename());
             try (InputStream inputStream = multipartFile.getInputStream(); OutputStream outputStream = Files.newOutputStream(file.toPath())) {
                 byte[] writeBuffer = new byte[WRITE_BUFFER_SIZE];
                 int byteRead;
@@ -70,6 +63,24 @@ public class FileUtils {
     }
 
     /**
+     * <p>1. 对目标文件夹进行判断, 如果该文件夹不存在会先进行创建</p>
+     * <p>2. 对原文件名进行唯一化处理, 使得不会因"重名"等原因导致保存失败</p>
+     *
+     * @param targetDirPath
+     * @param originalFileName
+     * @return 唯一化处理后的File对象
+     */
+    public static File fileUniquenessProcessing(String targetDirPath, String originalFileName) {
+        File targetDir = new File(targetDirPath);
+        if (!targetDir.exists() && !targetDir.mkdirs()) {
+            LOGGER.error("Exception occurs in `FileUtils.fileUniquenessProcessing`, due to target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
+            throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
+        }
+        String processedFileName = fileNameUniquenessProcessing(originalFileName);
+        return new File(FilenameUtils.concat(targetDirPath, processedFileName));
+    }
+
+    /**
      * 对原文件名进行唯一化处理, 使得不会因"重名"等原因导致保存失败
      *
      * @param originalFileName
@@ -77,11 +88,17 @@ public class FileUtils {
      */
     private static String fileNameUniquenessProcessing(String originalFileName) {
         STRING_BUFFER.setLength(0);
+        // 假设原文件名: test.txt
         STRING_BUFFER
+                // test
                 .append(FilenameUtils.getBaseName(originalFileName))
-                .append(SEPARATOR)
+                // test_
+                .append("_")
+                // test_1680421924166
                 .append(System.currentTimeMillis())
+                // test_1680421924166.
                 .append(FilenameUtils.EXTENSION_SEPARATOR)
+                // test_1680421924166.txt
                 .append(FilenameUtils.getExtension(originalFileName));
         return STRING_BUFFER.toString();
     }

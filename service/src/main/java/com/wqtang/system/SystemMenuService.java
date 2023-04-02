@@ -100,9 +100,9 @@ public class SystemMenuService {
     }
 
     public boolean isMenuNameDuplicated(SystemMenu menu) {
-        SystemMenu info = systemMenuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
+        SystemMenu menuFromDb = systemMenuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
         Long menuId = Optional.of(menu.getMenuId()).orElse(-1L);
-        return info != null && !menuId.equals(info.getMenuId());
+        return menuFromDb != null && !menuId.equals(menuFromDb.getMenuId());
     }
 
     public int countChildrenMenuById(Long menuId) {

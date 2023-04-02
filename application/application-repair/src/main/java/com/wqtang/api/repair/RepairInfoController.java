@@ -2,9 +2,16 @@ package com.wqtang.api.repair;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wqtang.exception.BusinessException;
+import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.repair.RepairInfoService;
+import com.wqtang.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,6 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/repair/info")
 public class RepairInfoController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepairInfoController.class);
 
     @Resource(name = "repairInfoService")
     private RepairInfoService repairInfoService;
@@ -77,10 +86,32 @@ public class RepairInfoController {
         repairInfoService.deleteByIds(ids);
     }
 
-    /*@GetMapping("/export")
-    public ResponseEntity<org.springframework.core.io.Resource> export(GetRepairInfoListRequest request) {
-        List<RepairInfo> list = repairInfoService.listByParams(request);
+    /**
+     * 导出道岔信息列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> export(RepairInfo request) {
+        LOGGER.info("`RepairInfoController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        try {
+            return repairInfoService.export(request);
+        } catch (Exception e) {
+            LOGGER.error("Exception occurs in `RepairInfoController.export`, error message is {}", e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
+        }
+    }
 
-    }*/
+    /**
+     * 导入道岔信息
+     *
+     * @param file
+     * @param updateSupport
+     */
+    @PostMapping("/importData")
+    public void importData(MultipartFile file, boolean updateSupport) {
+        repairInfoService.importData(file, updateSupport);
+    }
 
 }

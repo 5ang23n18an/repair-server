@@ -22,4 +22,8 @@
 
     </delete>
 
+    <select id="getBySwitchNo" resultType="com.wqtang.object.po.repair.RepairInfo">
+
+    </select>
+
 </mapper>

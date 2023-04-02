@@ -1,5 +1,6 @@
 package com.wqtang.object.po.repair;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wqtang.object.po.BaseEntity;
 
@@ -21,173 +22,207 @@ public class RepairInfo extends BaseEntity {
     /**
      * 道岔编号
      */
+    @ExcelProperty("道岔编号")
     private String switchNo;
 
     /**
      * 线路
      */
+    @ExcelProperty("线路")
     private String route;
 
     /**
      * 车站
      */
+    @ExcelProperty("车站")
     private String station;
 
     /**
      * 维护部
      */
+    @ExcelProperty("维护部")
     private String dep;
 
     /**
      * 维护组
      */
+    @ExcelProperty("维护组")
     private String org;
 
     /**
      * 道岔名称
      */
+    @ExcelProperty("道岔名称")
     private String name;
 
     /**
      * 道岔类型
      */
+    @ExcelProperty("道岔类型")
     private String eqtType;
 
     /**
      * 道岔型号
      */
+    @ExcelProperty("道岔型号")
     private String eqtMode;
 
     /**
      * 道岔等级
      */
+    @ExcelProperty("道岔等级")
     private String eqtLevel;
 
     /**
      * 开向位置
      */
+    @ExcelProperty("开向位置")
     private String admitLocation;
 
     /**
      * 定位闭合
      */
+    @ExcelProperty("定位闭合")
     private String positionColsed;
 
     /**
      * 动作
      */
+    @ExcelProperty("动作")
     private String action;
 
     /**
      * 顺序
      */
+    @ExcelProperty("顺序")
     private String sequence;
 
     /**
      * 锁闭方式
      */
+    @ExcelProperty("锁闭方式")
     private String lockMode;
 
     /**
      * 安装方式
      */
+    @ExcelProperty("安装方式")
     private String installationMode;
 
     /**
      * 安装装置图号
      */
+    @ExcelProperty("安装装置图号")
     private String installationDrawingNo;
 
     /**
      * 外锁闭装置
      */
+    @ExcelProperty("外锁闭装置")
     private String externalLockingDevice;
 
     /**
      * 密贴检查器
      */
+    @ExcelProperty("密贴检查器")
     private String pasteChecker;
 
     /**
      * 电路制式
      */
+    @ExcelProperty("电路制式")
     private String circuitStandard;
 
     /**
      * 表示
      */
+    @ExcelProperty("表示")
     private String express;
 
     /**
      * 道岔安装
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @ExcelProperty("道岔安装")
     private Date installDate;
 
     /**
      * 道岔拆卸
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @ExcelProperty("道岔拆卸")
     private Date unloadingDate;
 
     /**
      * 线路坐标
      */
+    @ExcelProperty("线路坐标")
     private String lineCoordinates;
 
     /**
      * 线路环境
      */
+    @ExcelProperty("线路环境")
     private String lineEnviroment;
 
     /**
      * 道床类型
      */
+    @ExcelProperty("道床类型")
     private String ballastBedType;
 
     /**
-     * 道岔类型
+     * 道岔轨道类型
      */
+    @ExcelProperty("道岔轨道类型")
     private String switchType;
 
     /**
      * 钢轨类型
      */
+    @ExcelProperty("钢轨类型")
     private String railType;
 
     /**
      * 道岔号数
      */
+    @ExcelProperty("道岔号数")
     private String switchNum;
 
     /**
      * 工务图号
      */
+    @ExcelProperty("工务图号")
     private String drawingNum;
 
     /**
      * 包保人
      */
+    @ExcelProperty("包保人")
     private String responsible;
 
     /**
      * 锁定
      */
+    @ExcelProperty("锁定")
     private String locked;
 
     /**
      * 道岔图
      */
+    @ExcelProperty("道岔图")
     private String pic;
 
     /**
      * 横坐标
      */
+    @ExcelProperty("横坐标")
     private String coordinateX;
 
     /**
      * 纵坐标
      */
+    @ExcelProperty("纵坐标")
     private String coordinateY;
 
     public Long getId() {

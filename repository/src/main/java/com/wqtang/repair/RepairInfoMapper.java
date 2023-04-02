@@ -22,4 +22,6 @@ public interface RepairInfoMapper {
 
     void deleteByIds(Long[] ids);
 
+    RepairInfo getBySwitchNo(String switchNo);
+
 }

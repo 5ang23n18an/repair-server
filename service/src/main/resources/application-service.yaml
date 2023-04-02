@@ -5,11 +5,6 @@ captcha:
   # 验证码的类型(数字计算型)
   type: math
 
-# 文件
-file:
-  # 存储文件的根目录
-  rootDirectory: E:/Download/root
-
 # token配置
 token:
   # 有效时长(单位是分钟)

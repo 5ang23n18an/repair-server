@@ -16,3 +16,8 @@ logging:
     console: "${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:${logging.pattern.level}}) %clr([%t]){faint} %clr(%logger{39}){cyan}:%L %clr(-){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}"
   level:
     root: info
+
+# 文件
+file:
+  # 存储文件的根目录
+  rootDirectory: E:/Download/root

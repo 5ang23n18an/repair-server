@@ -40,7 +40,7 @@ public class FileController {
             return fileService.commonDownload(request);
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `FileController.commonDownload`, error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.FILE_READ_FAIL, "Failed to download file", "下载文件失败");
+            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
 

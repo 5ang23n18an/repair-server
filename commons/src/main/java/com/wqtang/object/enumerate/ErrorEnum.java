@@ -12,6 +12,8 @@ public enum ErrorEnum {
     ERROR(500000, HttpStatus.INTERNAL_SERVER_ERROR, "Oops...Seems to occur a server error", "啊哦...看起来服务器产生了异常"),
     FILE_WRITE_FAIL(500100, HttpStatus.INTERNAL_SERVER_ERROR, "Failed to write file", "文件写入失败"),
     FILE_READ_FAIL(500101, HttpStatus.INTERNAL_SERVER_ERROR, "Failed to read file", "文件读取失败"),
+    FILE_DOWNLOAD_FAIL(500101, HttpStatus.INTERNAL_SERVER_ERROR, "Failed to download file", "文件下载失败"),
+    FILE_UPLOAD_FAIL(500101, HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload file", "文件上传失败"),
 
     // 401xxx
     UNAUTHORIZED(401000, HttpStatus.UNAUTHORIZED, "Unauthorized", "未经授权"),
