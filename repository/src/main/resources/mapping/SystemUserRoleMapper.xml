@@ -10,4 +10,8 @@
 
     </select>
 
+    <delete id="batchDeleteByRoleIdAndUserIds">
+
+    </delete>
+
 </mapper>

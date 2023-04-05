@@ -2,10 +2,7 @@ package com.wqtang.system;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.wqtang.object.po.system.SystemRole;
-import com.wqtang.object.po.system.SystemRoleDepartment;
-import com.wqtang.object.po.system.SystemRoleMenu;
-import com.wqtang.object.po.system.SystemUser;
+import com.wqtang.object.po.system.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -132,6 +129,14 @@ public class SystemRoleService {
         SystemRole roleFromDb = systemRoleMapper.getByRoleKey(role.getRoleKey());
         Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
+    }
+
+    public void batchDeleteUserRole(Long roleId, Long[] userIds) {
+        systemUserRoleMapper.batchDeleteByRoleIdAndUserIds(roleId, userIds);
+    }
+
+    public void batchInsertUserRole(List<SystemUserRole> userRoleList) {
+        systemUserRoleMapper.batchInsert(userRoleList);
     }
 
 }

@@ -2,10 +2,12 @@ package com.wqtang.api.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
+import com.wqtang.object.po.system.SystemUserRole;
 import com.wqtang.system.SystemRoleService;
 import com.wqtang.system.SystemUserService;
 import com.wqtang.util.SecurityUtils;
@@ -171,6 +173,35 @@ public class SystemRoleController {
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(user);
         return new PageInfo<>(unallocatedRoles);
+    }
+
+    /**
+     * 取消用户角色授权, 支持批量userId
+     *
+     * @param roleId
+     * @param userIds
+     */
+    @PutMapping("/cancelAuth")
+    public void batchCancelUserRole(Long roleId, Long[] userIds) {
+        systemRoleService.batchDeleteUserRole(roleId, userIds);
+    }
+
+    /**
+     * 批量授权用户角色, 支持批量userId
+     *
+     * @param roleId
+     * @param userIds
+     */
+    @PutMapping("/selectAuth")
+    public void selectUserRole(Long roleId, Long[] userIds) {
+        List<SystemUserRole> list = Lists.newArrayListWithExpectedSize(userIds.length);
+        for (Long userId : userIds) {
+            SystemUserRole userRole = new SystemUserRole();
+            userRole.setRoleId(roleId);
+            userRole.setUserId(userId);
+            list.add(userRole);
+        }
+        systemRoleService.batchInsertUserRole(list);
     }
 
 }
