@@ -29,7 +29,7 @@ public class FileService {
 
     public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) throws Exception {
         String fileName = request.getFileName(), filePath = FilenameUtils.concat(rootDirectory, fileName);
-        byte[] bytes = FileUtils.readAsBytes(filePath);
+        byte[] fileBytes = FileUtils.readAsBytes(filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
@@ -41,8 +41,8 @@ public class FileService {
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .contentLength(bytes.length)
-                .body(bytes);
+                .contentLength(fileBytes.length)
+                .body(fileBytes);
     }
 
     public FileCommonUploadResponse commonUpload(MultipartFile file) {

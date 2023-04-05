@@ -57,15 +57,15 @@ public class RepairInfoService {
     public ResponseEntity<byte[]> export(RepairInfo repairInfo) throws Exception {
         List<RepairInfo> list = listByParams(repairInfo);
         File file = excelUtils.export(list, "道岔信息数据");
-        byte[] bytes = FileUtils.readAsBytes(file);
+        byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .contentLength(bytes.length)
-                .body(bytes);
+                .contentLength(fileBytes.length)
+                .body(fileBytes);
     }
 
     public void importData(MultipartFile file, boolean updateSupport) {
