@@ -3,6 +3,7 @@ package com.wqtang.system;
 import com.wqtang.auth.TokenService;
 import com.wqtang.config.redis.RedisConfig;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemUser;
@@ -49,27 +50,56 @@ public class SystemUserService {
     @Resource(name = "passwordEncoder")
     private PasswordEncoder passwordEncoder;
 
+    public void register(SystemUserLoginRequest request) {
+        if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.REGISTER)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The system is not open for registration currently", "目前系统没有开放注册功能");
+        }
+        if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
+            validateCaptcha(request.getCode(), RedisConfig.KEY_CAPTCHA_PREFIX + request.getUuid());
+        }
+        checkRegisterRequest(request);
+        SystemUser user = new SystemUser();
+        user.setUsername(request.getUsername());
+        user.setNickname(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        systemUserMapper.insert(user);
+    }
+
+    private void checkRegisterRequest(SystemUserLoginRequest request) {
+        String username = request.getUsername(), password = request.getPassword();
+        if (StringUtils.isBlank(username)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "用户名不能为空");
+        }
+        if (StringUtils.isBlank(password)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "密码不能为空");
+        }
+        if (username.length() < UserConstants.USERNAME_MIN_LENGTH || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "用户名的长度必须在" + UserConstants.USERNAME_MIN_LENGTH + "到" + UserConstants.USERNAME_MAX_LENGTH + "个字符之间");
+        }
+        if (password.length() < UserConstants.PASSWORD_MIN_LENGTH || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "密码的长度必须在" + UserConstants.PASSWORD_MIN_LENGTH + "到" + UserConstants.PASSWORD_MAX_LENGTH + "个字符之间");
+        }
+        if (getByUsername(username) != null) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "该用户名已存在");
+        }
+    }
+
     public String login(SystemUserLoginRequest request) {
-        String token = StringUtils.isNotEmpty(request.getApp()) ?
-                loginFromApp(request.getUsername(), request.getPassword(), request.getApp()) :
-                loginFromWeb(request.getUsername(), request.getPassword(), request.getCode(), request.getUuid());
+        if (StringUtils.isNotEmpty(request.getApp())) {
+            // login from app
+            if (!"repair".equals(request.getApp())) {
+                LOGGER.error("Invalid parameter is received in `SystemUserService.login`, app = {}", request.getApp());
+                throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Illegal login information from application, login prohibited", "非法的APP登录信息，禁止登录");
+            }
+        } else {
+            // login from web
+            if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
+                validateCaptcha(request.getCode(), RedisConfig.KEY_CAPTCHA_PREFIX + request.getUuid());
+            }
+        }
+        String token = tokenService.authenticateAndCreateAccessToken(request.getUsername(), request.getPassword());
         recordLoginInfo(SecurityUtils.getCurrentUserId());
         return token;
-    }
-
-    private String loginFromApp(String username, String password, String app) {
-        if (!"repair".equals(app)) {
-            LOGGER.error("Invalid parameter is received in `SystemUserService.loginFromApp`, app = {}", app);
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Illegal login information from application, login prohibited", "非法的APP登录信息，禁止登录");
-        }
-        return tokenService.authenticateAndCreateAccessToken(username, password);
-    }
-
-    private String loginFromWeb(String username, String password, String code, String uuid) {
-        if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA.getKey())) {
-            validateCaptcha(code, RedisConfig.KEY_CAPTCHA_PREFIX + uuid);
-        }
-        return tokenService.authenticateAndCreateAccessToken(username, password);
     }
 
     private void validateCaptcha(String inputCode, String redisKey) {

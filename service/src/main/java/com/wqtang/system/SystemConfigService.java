@@ -2,6 +2,7 @@ package com.wqtang.system;
 
 import com.wqtang.AbstractCacheRefresh;
 import com.wqtang.config.redis.RedisConfig;
+import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.util.RedisUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -47,9 +48,9 @@ public class SystemConfigService extends AbstractCacheRefresh {
         systemConfigMapper.deleteByIds(ids);
     }
 
-    public boolean isSystemConfigAvailable(String key) {
-        SystemConfig systemConfig = getByKey(key);
-        return systemConfig != null && BooleanUtils.toBoolean(systemConfig.getConfigValue());
+    public boolean isSystemConfigAvailable(SystemConfigKeyEnum configKeyEnum) {
+        SystemConfig config = getByKey(configKeyEnum.getKey());
+        return config != null && BooleanUtils.toBoolean(config.getConfigValue());
     }
 
     @Override

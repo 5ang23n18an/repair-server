@@ -27,4 +27,6 @@ public interface SystemUserMapper {
 
     List<SystemUser> listUnallocatedRolesByUser(SystemUser user);
 
+    void insert(SystemUser user);
+
 }

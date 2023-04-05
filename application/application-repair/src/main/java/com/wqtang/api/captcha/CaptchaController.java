@@ -34,7 +34,7 @@ public class CaptchaController {
      */
     @GetMapping("/captchaImage")
     public GetCaptchaImageResponse getCaptchaImage() {
-        if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA.getKey())) {
+        if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The verification code is temporarily unavailable", "验证码功能暂不可用");
         }
         try {

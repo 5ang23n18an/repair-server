@@ -32,6 +32,16 @@ public class SystemUserController {
     private SystemMenuService systemMenuService;
 
     /**
+     * 用户注册
+     *
+     * @param request
+     */
+    @PostMapping("/register")
+    public void register(@RequestBody SystemUserLoginRequest request) {
+        systemUserService.register(request);
+    }
+
+    /**
      * 后台用户的登录方法
      *
      * @param request
