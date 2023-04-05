@@ -131,11 +131,11 @@ public class SystemUserService {
     }
 
     public List<SystemUser> listAllocatedRolesByUser(SystemUser user) {
-        return null;
+        return systemUserMapper.listAllocatedRolesByUser(user);
     }
 
     public List<SystemUser> listUnallocatedRolesByUser(SystemUser user) {
-        return null;
+        return systemUserMapper.listUnallocatedRolesByUser(user);
     }
 
 }

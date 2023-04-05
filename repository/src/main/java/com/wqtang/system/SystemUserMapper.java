@@ -4,6 +4,8 @@ import com.wqtang.object.po.system.SystemUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author Wenqian Tang
  * @date 2023/3/14
@@ -16,9 +18,13 @@ public interface SystemUserMapper {
     void updatePasswordByUsername(@Param("username") String username,
                                   @Param("password") String password);
 
-    void updateLoginInfo(SystemUser systemUser);
+    void updateLoginInfo(SystemUser user);
 
     int countByDeptIdAndDelFlag(@Param("deptId") Long deptId,
                                 @Param("delFlag") String delFlag);
+
+    List<SystemUser> listAllocatedRolesByUser(SystemUser user);
+
+    List<SystemUser> listUnallocatedRolesByUser(SystemUser user);
 
 }

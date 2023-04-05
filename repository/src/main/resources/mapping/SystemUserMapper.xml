@@ -18,4 +18,12 @@
 
     </select>
 
+    <select id="listAllocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">
+
+    </select>
+
+    <select id="listUnallocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">
+
+    </select>
+
 </mapper>
