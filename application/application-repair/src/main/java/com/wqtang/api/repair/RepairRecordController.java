@@ -115,7 +115,7 @@ public class RepairRecordController {
     @Transactional(rollbackFor = Exception.class)
     public void appAdd(@RequestBody RepairRecord request) {
         if (CollectionUtils.isEmpty(request.getMachines())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "");
         }
         for (RepairRecord repairRecord : request.getMachines()) {
             // 保存基础信息
@@ -140,7 +140,7 @@ public class RepairRecordController {
     private void saveRepairRecord(RepairRecord repairRecord, boolean isAdd) {
         List<Long> stationList = repairRecord.getStationList();
         if (CollectionUtils.isEmpty(stationList)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Please select a switch", "请选择道岔");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请选择道岔");
         }
         if (stationList.size() == 3) {
             repairRecord.setRouteId(stationList.get(0));

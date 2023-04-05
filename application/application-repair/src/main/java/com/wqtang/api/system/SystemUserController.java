@@ -83,7 +83,7 @@ public class SystemUserController {
         }
         String email = user.getEmail();
         if (StringUtils.isEmpty(email)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The current user is not bound to any emails, please contact the administrator for help", "当前用户暂未绑定邮箱, 请联系管理员寻求帮助");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前用户暂未绑定邮箱, 请联系管理员寻求帮助");
         }
         return email;
     }

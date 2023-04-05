@@ -58,11 +58,11 @@ public class SystemMenuController {
     @PostMapping("/add")
     public void add(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The menu name already exists", "该菜单名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }
         if (UserConstants.YES_FRAME.equals(request.getIsFrame())
                 && !StringUtils.startsWithAny(request.getPath(), "http://", "https://")) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The external link menu must be a valid link address, starting with \"http (s)://\"", "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
         }
         request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemMenuService.insert(request);
@@ -71,14 +71,14 @@ public class SystemMenuController {
     @PutMapping("/edit")
     public void edit(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The menu name already exists", "该菜单名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }
         if (UserConstants.YES_FRAME.equals(request.getIsFrame())
                 && !StringUtils.startsWithAny(request.getPath(), "http://", "https://")) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The external link menu must be a valid link address, starting with \"http (s)://\"", "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
         }
         if (request.getMenuId().equals(request.getParentId())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The superior menu cannot be itself", "上级菜单不能是自己");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级菜单不能是自己");
         }
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemMenuService.update(request);
@@ -87,10 +87,10 @@ public class SystemMenuController {
     @DeleteMapping("/{menuId}")
     public void delete(@PathVariable("menuId") Long menuId) {
         if (systemMenuService.countChildrenMenuById(menuId) > 0) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "There are still submenus in the current menu, and deletion is not allowed", "当前菜单仍存在子菜单, 不允许删除");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单仍存在子菜单, 不允许删除");
         }
         if (systemMenuService.countRoleById(menuId) > 0) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The current menu has been assigned, and deletion is not allowed", "当前菜单已被分配, 不允许删除");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单已被分配, 不允许删除");
         }
         systemMenuService.deleteById(menuId);
     }

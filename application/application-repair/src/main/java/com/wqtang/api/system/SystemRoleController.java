@@ -57,10 +57,10 @@ public class SystemRoleController {
     @PostMapping("/add")
     public void add(@RequestBody SystemRole request) {
         if (systemRoleService.isRoleNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The role name already exists", "该角色名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
         if (systemRoleService.isRoleKeyDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The role key already exists", "该角色权限已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
         request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemRoleService.insert(request);
@@ -75,10 +75,10 @@ public class SystemRoleController {
     public void edit(@RequestBody SystemRole request) {
         checkRoleAllowed(request.getRoleId());
         if (systemRoleService.isRoleNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The role name already exists", "该角色名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
         if (systemRoleService.isRoleKeyDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The role key already exists", "该角色权限已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemRoleService.update(request);
@@ -119,7 +119,7 @@ public class SystemRoleController {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
             if (systemRoleService.countUserRoleByRoleId(roleId) > 0) {
-                throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "角色已分配, 不允许删除");
+                throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "角色已分配, 不允许删除");
             }
         }
         systemRoleService.deleteByRoleIds(roleIds);
@@ -127,7 +127,7 @@ public class SystemRoleController {
 
     private void checkRoleAllowed(Long roleId) {
         if (SystemRole.isAdmin(roleId)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "不允许操作管理员角色");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "不允许操作管理员角色");
         }
     }
 

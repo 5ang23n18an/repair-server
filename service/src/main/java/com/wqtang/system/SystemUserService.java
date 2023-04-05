@@ -52,7 +52,7 @@ public class SystemUserService {
 
     public void register(SystemUserLoginRequest request) {
         if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.REGISTER)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The system is not open for registration currently", "目前系统没有开放注册功能");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "目前系统没有开放注册功能");
         }
         if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
             validateCaptcha(request.getCode(), RedisConfig.KEY_CAPTCHA_PREFIX + request.getUuid());
@@ -68,19 +68,19 @@ public class SystemUserService {
     private void checkRegisterRequest(SystemUserLoginRequest request) {
         String username = request.getUsername(), password = request.getPassword();
         if (StringUtils.isBlank(username)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "用户名不能为空");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "用户名不能为空");
         }
         if (StringUtils.isBlank(password)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "密码不能为空");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "密码不能为空");
         }
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "用户名的长度必须在" + UserConstants.USERNAME_MIN_LENGTH + "到" + UserConstants.USERNAME_MAX_LENGTH + "个字符之间");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "用户名的长度必须在" + UserConstants.USERNAME_MIN_LENGTH + "到" + UserConstants.USERNAME_MAX_LENGTH + "个字符之间");
         }
         if (password.length() < UserConstants.PASSWORD_MIN_LENGTH || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "密码的长度必须在" + UserConstants.PASSWORD_MIN_LENGTH + "到" + UserConstants.PASSWORD_MAX_LENGTH + "个字符之间");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "密码的长度必须在" + UserConstants.PASSWORD_MIN_LENGTH + "到" + UserConstants.PASSWORD_MAX_LENGTH + "个字符之间");
         }
         if (getByUsername(username) != null) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "", "该用户名已存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该用户名已存在");
         }
     }
 
@@ -89,7 +89,7 @@ public class SystemUserService {
             // login from app
             if (!"repair".equals(request.getApp())) {
                 LOGGER.error("Invalid parameter is received in `SystemUserService.login`, app = {}", request.getApp());
-                throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Illegal login information from application, login prohibited", "非法的APP登录信息，禁止登录");
+                throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "非法的APP登录信息，禁止登录");
             }
         } else {
             // login from web
@@ -105,10 +105,10 @@ public class SystemUserService {
     private void validateCaptcha(String inputCode, String redisKey) {
         String expectedCode = redisUtils.getAndCast(redisKey, String.class);
         if (expectedCode == null) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The verification code has expired, please get it again", "验证码已过期，请重新获取");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码已过期，请重新获取");
         }
         if (!expectedCode.equals(inputCode)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Wrong verification code", "验证码错误");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码错误");
         }
     }
 
@@ -136,7 +136,7 @@ public class SystemUserService {
         }
         String email = request.getEmail();
         if (!systemUser.getEmail().equals(email)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Please fill in your email when registering", "请输入注册时填写的邮箱号");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请输入注册时填写的邮箱号");
         }
         validateCaptcha(request.getVerificationCode(), RedisConfig.KEY_EMAIL_PREFIX + email);
         String rawPassword = request.getPassword();

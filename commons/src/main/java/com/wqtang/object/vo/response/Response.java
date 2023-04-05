@@ -35,7 +35,7 @@ public class Response {
     }
 
     public static Response error(ErrorEnum errorEnum, Object extraMessage) {
-        return new Response(errorEnum.getErrorCode(), errorEnum.getMessageEn(), extraMessage);
+        return new Response(errorEnum.getErrorCode(), errorEnum.getMessage(), extraMessage);
     }
 
     public int getCode() {

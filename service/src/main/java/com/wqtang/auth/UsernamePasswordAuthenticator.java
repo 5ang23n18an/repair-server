@@ -49,15 +49,15 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
         }
         if (UserStatus.DISABLED.getCode().equals(user.getDelFlag())) {
             LOGGER.info("`UsernamePasswordAuthenticator.authenticate`, user is disabled, username = {}", username);
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The user has been disabled", "该用户已被停用");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该用户已被停用");
         }
         if (UserStatus.DELETED.getCode().equals(user.getDelFlag())) {
             LOGGER.info("`UsernamePasswordAuthenticator.authenticate`, user is deleted, username = {}", username);
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The user has been deleted", "该用户已被删除");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该用户已被删除");
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             LOGGER.info("`UsernamePasswordAuthenticator.authenticate`, password is wrong, username = {}", username);
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "Wrong username or password", "用户名或密码错误");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "用户名或密码错误");
         }
         return new UsernamePasswordAuthenticationToken(username, password, getAuthoritiesByUser(user));
     }

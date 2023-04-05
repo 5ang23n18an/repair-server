@@ -105,7 +105,7 @@ public class SystemDepartmentController {
     @PostMapping("/add")
     public void add(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department name already exists", "该部门名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }
         request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.insert(request);
@@ -114,14 +114,14 @@ public class SystemDepartmentController {
     @PutMapping("/edit")
     public void edit(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department name already exists", "该部门名称已经存在");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }
         if (!request.getDeptId().equals(request.getParentId())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The superior department cannot be itself", "上级部门不能是自己");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级部门不能是自己");
         }
         if (UserConstants.DEPT_DISABLED.equals(request.getStatus())
                 && systemDepartmentService.countNormalChildrenDeptById(request.getDeptId()) > 0) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The department has been deactivated, but still contains normal subordinate departments", "该部门已停用, 但仍包含未停用的子部门");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门已停用, 但仍包含未停用的子部门");
         }
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.update(request);
@@ -130,10 +130,10 @@ public class SystemDepartmentController {
     @DeleteMapping("/{deptId}")
     public void delete(@PathVariable("deptId") Long deptId) {
         if (systemDepartmentService.countChildrenDeptById(deptId) > 0) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "The current department still has subordinate departments, and deletion is not allowed.", "当前部门仍存在下级部门, 不允许删除");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在下级部门, 不允许删除");
         }
         if (systemDepartmentService.countDeptUserById(deptId) > 0) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "There are still users in the current department, and deletion is not allowed", "当前部门仍存在用户, 不允许删除");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在用户, 不允许删除");
         }
         systemDepartmentService.deleteById(deptId);
     }
