@@ -1,5 +1,6 @@
 package com.wqtang.util;
 
+import com.wqtang.object.enumerate.RedisKeyEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisUtils.class);
-
-    public static final String SEPARATOR = "_";
 
     @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
@@ -215,6 +214,10 @@ public class RedisUtils {
             LOGGER.error("Exception occurs in `RedisUtils.delete`, error message is {}", e.getMessage(), e);
             return false;
         }
+    }
+
+    public static String getRedisKey(RedisKeyEnum redisKeyEnum, String key) {
+        return redisKeyEnum.getPrefix() + ":" + key;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.wqtang.auth;
 
 import com.google.common.collect.Maps;
-import com.wqtang.config.redis.RedisConfig;
+import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.util.IPAddressUtils;
 import com.wqtang.util.RedisUtils;
@@ -24,7 +24,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -108,7 +111,7 @@ public class TokenService {
         loginUser.setLoginTime(loginTime);
         loginUser.setExpireTime(expireTime);
         String loginToken = loginUser.getToken();
-        String redisKey = RedisConfig.KEY_LOGIN_TOKEN_PREFIX + loginToken;
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, loginToken);
         redisUtils.set(redisKey, loginUser, timeout, TimeUnit.MINUTES);
     }
 
@@ -129,7 +132,7 @@ public class TokenService {
             Claims claims = parseToken(token);
             // 解析对应的权限以及用户信息
             String userKey = MapUtils.getString(claims, "login_user_key");
-            String redisKey = RedisConfig.KEY_LOGIN_TOKEN_PREFIX + userKey;
+            String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, userKey);
             return ((LoginUser) redisUtils.get(redisKey));
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `TokenService.getLoginUser`, error message is {}", e.getMessage(), e);
@@ -183,7 +186,7 @@ public class TokenService {
      */
     public void deleteLoginUser(String token) {
         if (StringUtils.isNotEmpty(token)) {
-            String redisKey = RedisConfig.KEY_LOGIN_TOKEN_PREFIX + token;
+            String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, token);
             redisUtils.delete(redisKey);
         }
     }

@@ -1,10 +1,10 @@
 package com.wqtang.system;
 
 import com.wqtang.auth.TokenService;
-import com.wqtang.config.redis.RedisConfig;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.user.LoginUser;
@@ -55,7 +55,7 @@ public class SystemUserService {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "目前系统没有开放注册功能");
         }
         if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
-            validateCaptcha(request.getCode(), RedisConfig.KEY_CAPTCHA_PREFIX + request.getUuid());
+            validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
         }
         checkRegisterRequest(request);
         SystemUser user = new SystemUser();
@@ -94,7 +94,7 @@ public class SystemUserService {
         } else {
             // login from web
             if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
-                validateCaptcha(request.getCode(), RedisConfig.KEY_CAPTCHA_PREFIX + request.getUuid());
+                validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
             }
         }
         String token = tokenService.authenticateAndCreateAccessToken(request.getUsername(), request.getPassword());
@@ -124,7 +124,7 @@ public class SystemUserService {
         String text = "欢迎使用密码重置服务。您的验证码是: " + code + ", 有效期为2分钟。如非本人操作，请检查帐号安全。";
         emailUtils.send(email, subject, text);
         // 在邮件发送成功后, 将该邮箱号以及对应的验证码缓存起来, 并设置好超时时间, 以此作为有效时长
-        String redisKey = RedisConfig.KEY_EMAIL_PREFIX + email;
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, email);
         redisUtils.set(redisKey, code, captchaTimeout, TimeUnit.MINUTES);
     }
 
@@ -138,7 +138,7 @@ public class SystemUserService {
         if (!systemUser.getEmail().equals(email)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请输入注册时填写的邮箱号");
         }
-        validateCaptcha(request.getVerificationCode(), RedisConfig.KEY_EMAIL_PREFIX + email);
+        validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, email));
         String rawPassword = request.getPassword();
         systemUserMapper.updatePasswordByUsername(username, passwordEncoder.encode(rawPassword));
     }

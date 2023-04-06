@@ -1,7 +1,7 @@
 package com.wqtang.system;
 
 import com.wqtang.AbstractCacheRefresh;
-import com.wqtang.config.redis.RedisConfig;
+import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.enumerate.SystemConfigKeyEnum;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.util.RedisUtils;
@@ -55,7 +55,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
 
     @Override
     public void clearCache() {
-        Set<String> keys = redisUtils.keysMatchPrefix(RedisConfig.KEY_SYSTEM_CONFIG_PREFIX);
+        Set<String> keys = redisUtils.keysMatchPrefix(RedisKeyEnum.SYSTEM_CONFIG.getPrefix());
         redisUtils.delete(keys);
     }
 

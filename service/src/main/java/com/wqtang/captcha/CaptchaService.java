@@ -1,7 +1,7 @@
 package com.wqtang.captcha;
 
 import com.google.code.kaptcha.Producer;
-import com.wqtang.config.redis.RedisConfig;
+import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;
 import com.wqtang.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +49,7 @@ public class CaptchaService {
         }
         // 随机生成一个key, 并将验证码的信息存入redis
         String uuid = UUID.randomUUID().toString();
-        String redisKey = RedisConfig.KEY_CAPTCHA_PREFIX + uuid;
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, uuid);
         redisUtils.set(redisKey, captchaCode, captchaTimeout, TimeUnit.MINUTES);
         // 输出图片, 并返回响应
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream()) {

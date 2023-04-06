@@ -24,11 +24,6 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
-    public static final String KEY_CAPTCHA_PREFIX = "captcha:";
-    public static final String KEY_SYSTEM_CONFIG_PREFIX = "system_config:";
-    public static final String KEY_EMAIL_PREFIX = "email:";
-    public static final String KEY_LOGIN_TOKEN_PREFIX = "login_token:";
-
     @Bean
     public RedisStandaloneConfiguration redisConfiguration() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
