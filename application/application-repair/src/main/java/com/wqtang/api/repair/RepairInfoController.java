@@ -63,6 +63,10 @@ public class RepairInfoController {
      */
     @PostMapping("/add")
     public void add(@RequestBody RepairInfo request) {
+        RepairInfo repairInfoFromDb = repairInfoService.getBySwitchNo(request.getSwitchNo());
+        if (repairInfoFromDb != null) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该道岔编号已经存在");
+        }
         repairInfoService.insert(request);
     }
 
@@ -83,7 +87,7 @@ public class RepairInfoController {
      */
     @DeleteMapping("/{ids}")
     public void delete(@PathVariable("ids") Long[] ids) {
-        repairInfoService.deleteByIds(ids);
+        repairInfoService.batchDeleteByIds(ids);
     }
 
     /**

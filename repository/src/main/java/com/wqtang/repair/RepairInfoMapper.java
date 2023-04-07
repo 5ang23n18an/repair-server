@@ -20,7 +20,7 @@ public interface RepairInfoMapper {
 
     void update(RepairInfo request);
 
-    void deleteByIds(Long[] ids);
+    void batchDeleteByIds(Long[] ids);
 
     RepairInfo getBySwitchNo(String switchNo);
 

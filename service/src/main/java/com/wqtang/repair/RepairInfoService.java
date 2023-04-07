@@ -50,8 +50,8 @@ public class RepairInfoService {
         repairInfoMapper.update(repairInfo);
     }
 
-    public void deleteByIds(Long[] ids) {
-        repairInfoMapper.deleteByIds(ids);
+    public void batchDeleteByIds(Long[] ids) {
+        repairInfoMapper.batchDeleteByIds(ids);
     }
 
     public ResponseEntity<byte[]> export(RepairInfo repairInfo) throws Exception {
@@ -77,7 +77,7 @@ public class RepairInfoService {
         }
         String username = SecurityUtils.getCurrentUsername();
         for (RepairInfo repairInfo : list) {
-            RepairInfo repairInfoFromDb = repairInfoMapper.getBySwitchNo(repairInfo.getSwitchNo());
+            RepairInfo repairInfoFromDb = getBySwitchNo(repairInfo.getSwitchNo());
             if (repairInfoFromDb == null) {
                 LOGGER.info("`RepairInfoService.importData`, repairInfo will be inserted, switchNo = {}", repairInfo.getSwitchNo());
                 repairInfo.setCreateBy(username);
@@ -91,6 +91,10 @@ public class RepairInfoService {
                 LOGGER.info("`RepairInfoService.importData`, repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
             }
         }
+    }
+
+    public RepairInfo getBySwitchNo(String switchNo) {
+        return repairInfoMapper.getBySwitchNo(switchNo);
     }
 
 }
