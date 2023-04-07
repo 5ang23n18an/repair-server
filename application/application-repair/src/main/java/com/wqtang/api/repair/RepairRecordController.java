@@ -1,0 +1,207 @@
+package com.wqtang.api.repair;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.wqtang.exception.BusinessException;
+import com.wqtang.object.constant.RepairConstants;
+import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.po.repair.RepairFileResult;
+import com.wqtang.object.po.repair.RepairRecord;
+import com.wqtang.object.po.repair.RepairTest;
+import com.wqtang.object.vo.response.repair.GetRepairRecordCountOfDayResponse;
+import com.wqtang.repair.RepairFileResultService;
+import com.wqtang.repair.RepairRecordService;
+import com.wqtang.repair.RepairTestService;
+import com.wqtang.util.SecurityUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * @author Wenqian Tang
+ * @date 2023/3/21
+ */
+@RestController
+@RequestMapping("/repair/record")
+public class RepairRecordController {
+
+    @Resource(name = "repairRecordService")
+    private RepairRecordService repairRecordService;
+    @Resource(name = "repairTestService")
+    private RepairTestService repairTestService;
+    @Resource(name = "repairFileResultService")
+    private RepairFileResultService repairFileResultService;
+
+    /**
+     * 查询检修记录列表(Web端)
+     *
+     * @param request
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/page")
+    public PageInfo<RepairRecord> getPage(RepairRecord request,
+                                          @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                          @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<RepairRecord> list = repairRecordService.listByParams(request);
+        return new PageInfo<>(list);
+    }
+
+    /**
+     * 查询检修记录列表(App端)
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/list")
+    public List<RepairRecord> getList(RepairRecord request) {
+        return repairRecordService.listByParams(request);
+    }
+
+    /**
+     * 获取检修记录详细信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public RepairRecord getById(@PathVariable("id") Long id) {
+        return repairRecordService.getById(id);
+    }
+
+    /**
+     * 新增检修记录(Web端)
+     *
+     * @param request
+     */
+    @PostMapping("/add/web")
+    @Transactional(rollbackFor = Exception.class)
+    public void webAdd(@RequestBody RepairRecord request) {
+        // 保存基础信息
+        saveRepairRecord(request, true);
+        // 保存测试记录
+        saveRepairTest(request, true);
+        // 保存图片返回的参数
+        saveRepairFileResult(request, true);
+    }
+
+    /**
+     * 修改检修记录
+     *
+     * @param request
+     */
+    @PutMapping("/edit")
+    @Transactional(rollbackFor = Exception.class)
+    public void edit(@RequestBody RepairRecord request) {
+        // 修改基础信息
+        saveRepairRecord(request, false);
+        // 修改测试记录
+        saveRepairTest(request, false);
+        // 修改图片返回的参数
+        saveRepairFileResult(request, false);
+    }
+
+    /**
+     * 新增检修记录(App端)
+     *
+     * @param request
+     */
+    @PostMapping("/add/app")
+    @Transactional(rollbackFor = Exception.class)
+    public void appAdd(@RequestBody RepairRecord request) {
+        if (CollectionUtils.isEmpty(request.getMachines())) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "");
+        }
+        for (RepairRecord repairRecord : request.getMachines()) {
+            // 保存基础信息
+            repairRecord.setRouteId(request.getRouteId());
+            repairRecord.setStationId(request.getStationId());
+            repairRecord.setSwitchId(repairRecord.getSwitchId());
+            if (RepairConstants.REPAIR_MACHINE_BACK.equals(repairRecord.getType())) {
+                repairRecord.setFile3(repairRecord.getFile1());
+                repairRecord.setFile4(repairRecord.getFile2());
+                repairRecord.setFile1(null);
+                repairRecord.setFile2(null);
+            }
+            repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
+            repairRecordService.insert(repairRecord);
+            // 保存测试记录
+            saveRepairTest(repairRecord, true);
+            // 保存图片返回的参数
+            saveRepairFileResult(repairRecord, true);
+        }
+    }
+
+    private void saveRepairRecord(RepairRecord repairRecord, boolean isAdd) {
+        List<Long> stationList = repairRecord.getStationList();
+        if (CollectionUtils.isEmpty(stationList)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请选择道岔");
+        }
+        if (stationList.size() == 3) {
+            repairRecord.setRouteId(stationList.get(0));
+            repairRecord.setStationId(stationList.get(1));
+            repairRecord.setSwitchId(stationList.get(2));
+        }
+        repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
+        if (isAdd) {
+            repairRecordService.insert(repairRecord);
+        } else {
+            repairRecordService.update(repairRecord);
+        }
+    }
+
+    private void saveRepairTest(RepairRecord repairRecord, boolean isAdd) {
+        if (CollectionUtils.isNotEmpty(repairRecord.getMachineList())) {
+            if (!isAdd) {
+                repairTestService.deleteById(repairRecord.getId());
+            }
+            for (RepairTest repairTest : repairRecord.getMachineList()) {
+                repairTest.setRecordId(repairRecord.getId());
+                repairTestService.insert(repairTest);
+            }
+        }
+    }
+
+    private void saveRepairFileResult(RepairRecord repairRecord, boolean isAdd) {
+        RepairFileResult rowOneTwo = repairRecord.getRowOneTwo();
+        if (rowOneTwo != null) {
+            if (!isAdd) {
+                repairFileResultService.deleteById(repairRecord.getId());
+            }
+            rowOneTwo.setRecordId(repairRecord.getId());
+            rowOneTwo.setRowType(RepairConstants.ROW_ONE_TOW);
+            repairFileResultService.insert(rowOneTwo);
+        }
+        RepairFileResult rowThreeFour = repairRecord.getRowThreeFour();
+        if (rowThreeFour != null) {
+            if (!isAdd) {
+                repairFileResultService.deleteById(repairRecord.getId());
+            }
+            rowThreeFour.setRecordId(repairRecord.getId());
+            rowThreeFour.setRowType(RepairConstants.ROW_THREE_FOUR);
+            repairFileResultService.insert(rowThreeFour);
+        }
+    }
+
+    /**
+     * 删除检修记录
+     *
+     * @param ids
+     */
+    @DeleteMapping("/{ids}")
+    public void delete(@PathVariable("ids") Long[] ids) {
+        repairRecordService.deleteByIds(ids);
+    }
+
+    @GetMapping("/count")
+    public List<GetRepairRecordCountOfDayResponse> countOfDay(RepairRecord request) {
+        // todo
+        return null;
+    }
+
+}

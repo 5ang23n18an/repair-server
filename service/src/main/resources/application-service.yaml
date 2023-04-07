@@ -1,3 +1,15 @@
-spring:
-  profiles:
-    active: commons
+# 验证码
+captcha:
+  # 有效时长(单位是分钟)
+  timeout: 2
+  # 验证码的类型(数字计算型)
+  type: math
+
+# token配置
+token:
+  # 有效时长(单位是分钟)
+  timeout: 60
+  # 令牌密钥
+  signingKey: abcdefghijklmnopqrstuvwxyz
+  # 续签时间(单位是分钟)
+  renewThreshold: 20

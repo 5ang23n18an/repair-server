@@ -17,7 +17,7 @@ import java.util.Map;
 public class ErrorAttributes extends DefaultErrorAttributes {
 
     /**
-     * errorAttributes: timestamp, path, error, errorCode, message, extraMessage
+     * errorAttributes: timestamp, path, error, errorCode, message
      *
      * @param webRequest
      * @param options
@@ -31,7 +31,7 @@ public class ErrorAttributes extends DefaultErrorAttributes {
         if (StringUtils.isBlank(path)) {
             path = webRequest.getContextPath();
         }
-        String errorStr = "", message = "", extraMessage = "";
+        String errorStr = StringUtils.EMPTY, message = StringUtils.EMPTY;
         int errorCode = 0;
         Throwable exception = getError(webRequest);
         if (exception instanceof BusinessException) {
@@ -39,14 +39,12 @@ public class ErrorAttributes extends DefaultErrorAttributes {
             errorStr = businessException.getErrorEnum().name();
             errorCode = businessException.getErrorEnum().getErrorCode();
             message = businessException.getMessage();
-            extraMessage = businessException.getExtraMessage();
         }
         errorAttributes.put("timestamp", timestamp);
         errorAttributes.put("path", path);
         errorAttributes.put("error", errorStr);
         errorAttributes.put("errorCode", errorCode);
         errorAttributes.put("message", message);
-        errorAttributes.put("extraMessage", extraMessage);
         return errorAttributes;
     }
 

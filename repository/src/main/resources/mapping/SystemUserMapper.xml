@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.system.SystemUserMapper">
+
+    <select id="getByUsername" resultType="com.wqtang.object.po.system.SystemUser">
+
+    </select>
+
+    <update id="updatePasswordByUsername">
+
+    </update>
+
+    <update id="updateLoginInfo">
+
+    </update>
+
+    <select id="countByDeptIdAndDelFlag" resultType="java.lang.Integer">
+
+    </select>
+
+    <select id="listAllocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">
+
+    </select>
+
+    <select id="listUnallocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">
+
+    </select>
+
+    <insert id="insert">
+
+    </insert>
+
+</mapper>

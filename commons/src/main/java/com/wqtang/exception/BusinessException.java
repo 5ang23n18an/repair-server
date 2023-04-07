@@ -9,23 +9,17 @@ import com.wqtang.object.enumerate.ErrorEnum;
 public class BusinessException extends RuntimeException {
 
     private ErrorEnum errorEnum;
-    private String extraMessage;
 
     public BusinessException() {
     }
 
     public BusinessException(ErrorEnum errorEnum) {
-        this(errorEnum, errorEnum.getMessageEn(), errorEnum.getMessageCn());
+        this(errorEnum, errorEnum.getMessage());
     }
 
     public BusinessException(ErrorEnum errorEnum, String message) {
-        this(errorEnum, message, message);
-    }
-
-    public BusinessException(ErrorEnum errorEnum, String messageEn, String messageCn) {
-        super(messageEn);
+        super(message);
         this.errorEnum = errorEnum;
-        this.extraMessage = messageCn;
     }
 
     public ErrorEnum getErrorEnum() {
@@ -34,14 +28,6 @@ public class BusinessException extends RuntimeException {
 
     public void setErrorEnum(ErrorEnum errorEnum) {
         this.errorEnum = errorEnum;
-    }
-
-    public String getExtraMessage() {
-        return extraMessage;
-    }
-
-    public void setExtraMessage(String extraMessage) {
-        this.extraMessage = extraMessage;
     }
 
 }

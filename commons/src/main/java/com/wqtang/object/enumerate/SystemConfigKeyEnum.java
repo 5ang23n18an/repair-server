@@ -7,6 +7,7 @@ package com.wqtang.object.enumerate;
 public enum SystemConfigKeyEnum {
 
     CAPTCHA("captcha"),
+    REGISTER("register"),
     ;
 
     private String key;

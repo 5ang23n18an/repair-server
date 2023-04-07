@@ -3,6 +3,7 @@ package com.wqtang.util;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +20,8 @@ import java.nio.file.Files;
 public class FileUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
+    private static final StringBuffer STRING_BUFFER = new StringBuffer();
     private static final int WRITE_BUFFER_SIZE = 8192;
-    private static final String SEPARATOR = "_";
 
     public static boolean isEmpty(MultipartFile multipartFile) {
         return multipartFile == null || multipartFile.isEmpty();
@@ -30,20 +31,20 @@ public class FileUtils {
         return !isEmpty(multipartFile);
     }
 
+    /**
+     * 将文件保存在指定的目录位置处
+     *
+     * @param multipartFile
+     * @param targetDirPath
+     * @return 该文件的最终保存位置的绝对路径
+     */
     public static String save(MultipartFile multipartFile, String targetDirPath) {
         if (isEmpty(multipartFile)) {
-            LOGGER.warn("Unexpected condition occurs in `FileUtils.save`, due to multipartFile is null or empty");
-            return "";
+            LOGGER.warn("Invalid condition occurs in `FileUtils.save`, due to multipartFile is null or empty, don't need to save");
+            return StringUtils.EMPTY;
         }
         try {
-            File file = new File(generateFilePath(targetDirPath, FilenameUtils.getName(multipartFile.getOriginalFilename())));
-            String absolutePath = file.getCanonicalPath();
-            String dirPath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
-            File dir = new File(dirPath);
-            if (!dir.exists() && !dir.mkdirs()) {
-                LOGGER.error("Unexpected exception occurs in `FileUtils.save`, due to directory create failed, dirPath = {}", dirPath);
-                throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
-            }
+            File file = fileUniquenessProcessing(targetDirPath, multipartFile.getOriginalFilename());
             try (InputStream inputStream = multipartFile.getInputStream(); OutputStream outputStream = Files.newOutputStream(file.toPath())) {
                 byte[] writeBuffer = new byte[WRITE_BUFFER_SIZE];
                 int byteRead;
@@ -54,15 +55,52 @@ public class FileUtils {
                 LOGGER.error("Exception occurs in `FileUtils.save`, error message is {}", e.getMessage(), e);
                 throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
             }
-            return absolutePath;
+            return file.getCanonicalPath();
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `FileUtils.save`, error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
         }
     }
 
-    private static String generateFilePath(String dirPath, String fileName) {
-        return dirPath + File.separatorChar + FilenameUtils.getBaseName(fileName) + SEPARATOR + System.currentTimeMillis() + FilenameUtils.EXTENSION_SEPARATOR + FilenameUtils.getExtension(fileName);
+    /**
+     * <p>1. 对目标文件夹进行判断, 如果该文件夹不存在会先进行创建</p>
+     * <p>2. 对原文件名进行唯一化处理, 使得不会因"重名"等原因导致保存失败</p>
+     *
+     * @param targetDirPath
+     * @param originalFileName
+     * @return 唯一化处理后的File对象
+     */
+    public static File fileUniquenessProcessing(String targetDirPath, String originalFileName) {
+        File targetDir = new File(targetDirPath);
+        if (!targetDir.exists() && !targetDir.mkdirs()) {
+            LOGGER.error("Exception occurs in `FileUtils.fileUniquenessProcessing`, due to target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
+            throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
+        }
+        String processedFileName = fileNameUniquenessProcessing(originalFileName);
+        return new File(FilenameUtils.concat(targetDirPath, processedFileName));
+    }
+
+    /**
+     * 对原文件名进行唯一化处理, 使得不会因"重名"等原因导致保存失败
+     *
+     * @param originalFileName
+     * @return 处理后的文件名
+     */
+    private static String fileNameUniquenessProcessing(String originalFileName) {
+        STRING_BUFFER.setLength(0);
+        // 假设原文件名: test.txt
+        STRING_BUFFER
+                // test
+                .append(FilenameUtils.getBaseName(originalFileName))
+                // test_
+                .append("_")
+                // test_1680421924166
+                .append(System.currentTimeMillis())
+                // test_1680421924166.
+                .append(FilenameUtils.EXTENSION_SEPARATOR)
+                // test_1680421924166.txt
+                .append(FilenameUtils.getExtension(originalFileName));
+        return STRING_BUFFER.toString();
     }
 
     public static byte[] readAsBytes(String filePath) {
@@ -76,7 +114,7 @@ public class FileUtils {
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             byte[] bytes = new byte[inputStream.available()];
             if (inputStream.read(bytes) == 0) {
-                LOGGER.warn("BusinessException occurs in `FileUtils.readAsBytes`, due to no bytes are read, filePath = {}", file.getPath());
+                LOGGER.warn("`FileUtils.readAsBytes`, no bytes are read, filePath = {}", file.getPath());
             }
             return bytes;
         } catch (Exception e) {

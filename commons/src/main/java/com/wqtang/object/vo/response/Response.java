@@ -1,6 +1,7 @@
 package com.wqtang.object.vo.response;
 
 import com.wqtang.object.enumerate.ErrorEnum;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Wenqian Tang
@@ -26,7 +27,7 @@ public class Response {
     }
 
     public static Response success(Object extraMessage) {
-        return new Response(200000, "Success", extraMessage);
+        return new Response(HttpStatus.OK.value(), "Success", extraMessage);
     }
 
     public static Response error(ErrorEnum errorEnum) {
@@ -34,7 +35,7 @@ public class Response {
     }
 
     public static Response error(ErrorEnum errorEnum, Object extraMessage) {
-        return new Response(errorEnum.getErrorCode(), errorEnum.getMessageEn(), extraMessage);
+        return new Response(errorEnum.getErrorCode(), errorEnum.getMessage(), extraMessage);
     }
 
     public int getCode() {
