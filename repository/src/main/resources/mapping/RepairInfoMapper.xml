@@ -2,53 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wqtang.repair.RepairInfoMapper">
 
-    <resultMap id="RepairInfoResultMap" type="com.wqtang.object.po.repair.RepairInfo">
-        <result property="id" column="id"/>
-        <result property="switchNo" column="switch_no"/>
-        <result property="route" column="route"/>
-        <result property="station" column="station"/>
-        <result property="dep" column="dep"/>
-        <result property="org" column="org"/>
-        <result property="name" column="name"/>
-        <result property="eqtType" column="eqt_type"/>
-        <result property="eqtMode" column="eqt_mode"/>
-        <result property="eqtLevel" column="eqt_level"/>
-        <result property="admitLocation" column="admit_location"/>
-        <result property="positionColsed" column="position_colsed"/>
-        <result property="action" column="action"/>
-        <result property="sequence" column="sequence"/>
-        <result property="lockMode" column="lock_mode"/>
-        <result property="installationMode" column="installation_mode"/>
-        <result property="installationDrawingNo" column="installation_drawing_no"/>
-        <result property="externalLockingDevice" column="external_locking_device"/>
-        <result property="pasteChecker" column="paste_checker"/>
-        <result property="circuitStandard" column="circuit_standard"/>
-        <result property="express" column="express"/>
-        <result property="installDate" column="install_date"/>
-        <result property="unloadingDate" column="unloading_date"/>
-        <result property="lineCoordinates" column="line_coordinates"/>
-        <result property="lineEnviroment" column="line_enviroment"/>
-        <result property="ballastBedType" column="ballast_bed_type"/>
-        <result property="switchType" column="switch_type"/>
-        <result property="railType" column="rail_type"/>
-        <result property="switchNum" column="switch_num"/>
-        <result property="drawingNum" column="drawing_num"/>
-        <result property="responsible" column="responsible"/>
-        <result property="locked" column="locked"/>
-        <result property="pic" column="pic"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-    </resultMap>
-
-    <select id="getById" resultMap="RepairInfoResultMap">
+    <select id="getById" resultType="com.wqtang.object.po.repair.RepairInfo">
         select *
         from repair_info
         where id = #{id}
     </select>
 
-    <select id="listByParams" resultMap="RepairInfoResultMap">
+    <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairInfo">
         select *
         from repair_info
         <where>
@@ -226,7 +186,7 @@
         </foreach>
     </delete>
 
-    <select id="getBySwitchNo" resultMap="RepairInfoResultMap">
+    <select id="getBySwitchNo" resultType="com.wqtang.object.po.repair.RepairInfo">
         select *
         from repair_info
         where switch_no = #{switchNo}

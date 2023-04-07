@@ -3,19 +3,35 @@
 <mapper namespace="com.wqtang.repair.RepairPlaceMapper">
 
     <select id="getById" resultType="com.wqtang.object.po.repair.RepairPlace">
-
+        select *
+        from repair_place
+        where id = #{id}
     </select>
 
     <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairPlace">
         select *
         from repair_place
         <where>
-            <if test=""></if>
+            <if test="parentId != null and parentId != ''">and parent_id = #{parentId}</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="switchNo != null and switchNo != ''">and switch_no = #{switchNo}</if>
+            <if test="dep != null and dep != ''">and dep = #{dep}</if>
+            <if test="org != null and org != ''">and org = #{org}</if>
+            <if test="eqtType != null and eqtType != ''">and eqt_type = #{eqtType}</if>
+            <if test="eqtMode != null and eqtMode != ''">and eqt_mode = #{eqtMode}</if>
+            <if test="eqtLevel != null and eqtLevel != ''">and eqt_level = #{eqtLevel}</if>
+            <if test="action != null and action != ''">and action = #{action}</if>
+            <if test="lockMode != null and lockMode != ''">and lock_mode = #{lockMode}</if>
         </where>
     </select>
 
-    <select id="listParents" resultType="com.wqtang.object.po.repair.RepairPlace">
-
+    <select id="listByType" resultType="com.wqtang.object.po.repair.RepairPlace">
+        select id,
+               name,
+               parent_id
+        from repair_place
+        where type = #{type}
     </select>
 
 </mapper>
