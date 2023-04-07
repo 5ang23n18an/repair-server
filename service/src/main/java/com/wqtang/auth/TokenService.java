@@ -46,7 +46,7 @@ public class TokenService {
     @Value("${token.renewThreshold}")
     private int renewThreshold;
 
-    @Resource
+    @Resource(name = "authenticationManager")
     private AuthenticationManager authenticationManager;
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;

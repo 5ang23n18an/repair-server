@@ -9,6 +9,7 @@ spring:
     port: 33
     from: twq3137@qq.com
 
+# 日志打印设置
 logging:
   pattern:
     level: "%5p [${spring.zipkin.service.name:${spring.application.name:-}},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}][%X{clientId}:%X{username}:%X{realRemoteAddr}]"
@@ -17,7 +18,7 @@ logging:
   level:
     root: info
 
-# 文件
+# 文件服务
 file:
   # 存储文件的根目录
   rootDirectory: E:/Download/root

@@ -33,7 +33,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <guava.version>31.1-jre</guava.version>
-        <pagehelper-spring-boot-starter.version>1.4.0</pagehelper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.6</pagehelper-spring-boot-starter.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <jjwt-api.version>0.10.5</jjwt-api.version>

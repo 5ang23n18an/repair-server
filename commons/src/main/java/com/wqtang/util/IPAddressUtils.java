@@ -22,7 +22,7 @@ public class IPAddressUtils {
     private static final String UNKNOWN_IP = "unknown";
     private static final String BLANK_IP = "0:0:0:0:0:0:0:1";
 
-    @Resource
+    @Resource(name = "restTemplate")
     private RestTemplate restTemplate;
 
     public static String getIPAddress() {

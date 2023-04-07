@@ -26,8 +26,6 @@ public class SystemDictionaryDataService {
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemDictionaryData> excelUtils;
 
-    @Resource
-
     public List<SystemDictionaryData> listByParams(SystemDictionaryData dictionaryData) {
         return systemDictionaryDataMapper.listByParams(dictionaryData);
     }

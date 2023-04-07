@@ -7,7 +7,7 @@ import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.UserStatus;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.system.SystemMenuService;
-import com.wqtang.system.SystemUserService;
+import com.wqtang.system.SystemUserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,8 +32,8 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UsernamePasswordAuthenticator.class);
 
-    @Resource(name = "systemUserService")
-    private SystemUserService systemUserService;
+    @Resource(name = "systemUserMapper")
+    private SystemUserMapper systemUserMapper;
     @Resource(name = "systemMenuService")
     private SystemMenuService systemMenuService;
     @Resource(name = "passwordEncoder")
@@ -42,7 +42,7 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = ((String) authentication.getPrincipal()), password = ((String) authentication.getCredentials());
-        SystemUser user = systemUserService.getByUsername(username);
+        SystemUser user = systemUserMapper.getByUsername(username);
         if (user == null) {
             LOGGER.info("`UsernamePasswordAuthenticator.authenticate`, find no user by username = {}", username);
             throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
