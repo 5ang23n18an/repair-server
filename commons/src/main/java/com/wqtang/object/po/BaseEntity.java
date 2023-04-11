@@ -1,12 +1,10 @@
 package com.wqtang.object.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.common.collect.Maps;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Wenqian Tang
@@ -53,7 +51,8 @@ public class BaseEntity implements Serializable {
     /**
      * 请求参数
      */
-    private Map<String, Object> params;
+    private String beginTime;
+    private String endTime;
 
     public String getSearchValue() {
         return searchValue;
@@ -103,15 +102,20 @@ public class BaseEntity implements Serializable {
         this.remark = remark;
     }
 
-    public Map<String, Object> getParams() {
-        if (params == null) {
-            params = Maps.newHashMap();
-        }
-        return params;
+    public String getBeginTime() {
+        return beginTime;
     }
 
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
 }

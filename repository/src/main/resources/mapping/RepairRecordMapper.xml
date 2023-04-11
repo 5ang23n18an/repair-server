@@ -3,23 +3,159 @@
 <mapper namespace="com.wqtang.repair.RepairRecordMapper">
 
     <select id="getById" resultType="com.wqtang.object.po.repair.RepairRecord">
-
+        select rr.*,
+               rt.id,
+               rt.record_id,
+               rt.label,
+               rt.status,
+               rt.sort_no,
+               rfr.*
+        from repair_record rr
+                 left join repair_test rt on rr.id = rt.record_id
+                 left join repair_file_result rfr on rr.id = rfr.record_id
+        where rr.id = #{id}
     </select>
 
-    <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairRecord">
+    <select id="webListByParams" resultType="com.wqtang.object.po.repair.RepairRecord">
+        select rr.id,
+               rr.route_id,
+               rp1.name as routeName,
+               rr.station_id,
+               rp2.name as stationName,
+               rr.switch_id,
+               rp3.name as switchName,
+               rr.type,
+               rr.description,
+               rr.create_by,
+               rr.create_time,
+               rr.update_by,
+               rr.update_time,
+               rr.del_flag
+        from repair_record rr
+                 inner join repair_place rp1 on rp1.id = rr.route_id
+                 inner join repair_place rp2 on rp2.id = rr.station_id
+                 inner join repair_place rp3 on rp3.id = rr.switch_id
+        <where>
+            rr.del_flag = '0'
+            <if test="routeId != null and routeId != ''">and rr.route_id = #{routeId}</if>
+            <if test="stationId != null and stationId != ''">and rr.station_id = #{stationId}</if>
+            <if test="switchId != null and switchId != ''">and rr.switch_id = #{switchId}</if>
+            <if test="type != null and type != ''">and rr.type = #{type}</if>
+            <if test="description != null and description != ''">and rr.description = #{description}</if>
+            <if test="file1 != null and file1 != ''">and rr.file1 = #{file1}</if>
+            <if test="file2 != null and file2 != ''">and rr.file2 = #{file2}</if>
+            <if test="file3 != null and file3 != ''">and rr.file3 = #{file3}</if>
+            <if test="file4 != null and file4 != ''">and rr.file4 = #{file4}</if>
+            <if test="beginTime != null and beginTime != ''">and rr.create_time >= #{beginTime}</if>
+            <if test="endTime != null and endTime != ''">and rr.create_time &lt;= #{endTime}</if>
+        </where>
+        order by rr.create_time desc
+    </select>
 
+    <select id="appListByParams" resultType="com.wqtang.object.po.repair.RepairRecord">
+        select rr.id,
+               rr.route_id,
+               rp1.name as routeName,
+               rr.station_id,
+               rp2.name as stationName,
+               rr.switch_id,
+               rp3.name as switchName,
+               rr.type,
+               rr.description,
+               rr.create_by,
+               rr.create_time,
+               rr.update_by,
+               rr.update_time,
+               rr.del_flag,
+               rfr.*
+        from repair_record rr
+                 inner join repair_place rp1 on rp1.id = rr.route_id
+                 inner join repair_place rp2 on rp2.id = rr.station_id
+                 inner join repair_place rp3 on rp3.id = rr.switch_id
+                 left join repair_file_result rfr on rfr.record_id = rr.id
+        <where>
+            rr.del_flag = '0'
+            <if test="routeId != null and routeId != ''">and rr.route_id = #{routeId}</if>
+            <if test="stationId != null and stationId != ''">and rr.station_id = #{stationId}</if>
+            <if test="switchId != null and switchId != ''">and rr.switch_id = #{switchId}</if>
+            <if test="type != null and type != ''">and rr.type = #{type}</if>
+            <if test="description != null and description != ''">and rr.description = #{description}</if>
+            <if test="file1 != null and file1 != ''">and rr.file1 = #{file1}</if>
+            <if test="file2 != null and file2 != ''">and rr.file2 = #{file2}</if>
+            <if test="file3 != null and file3 != ''">and rr.file3 = #{file3}</if>
+            <if test="file4 != null and file4 != ''">and rr.file4 = #{file4}</if>
+            <if test="beginTime != null and beginTime != ''">and rr.create_time >= #{beginTime}</if>
+            <if test="endTime != null and endTime != ''">and rr.create_time &lt;= #{endTime}</if>
+        </where>
+        order by rr.create_time desc
     </select>
 
     <insert id="insert">
-
+        insert into repair_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="routeId != null">route_id</if>
+            <if test="stationId != null">station_id</if>
+            <if test="switchId != null">switch_id</if>
+            <if test="type != null">type</if>
+            <if test="description != null">description</if>
+            <if test="file1 != null">file1</if>
+            <if test="file2 != null">file2</if>
+            <if test="file3 != null">file3</if>
+            <if test="file4 != null">file4</if>
+            <if test="createBy != null">create_by</if>
+            <if test="createTime != null">create_time</if>
+            <if test="updateBy != null">update_by</if>
+            <if test="updateTime != null">update_time</if>
+            <if test="delFlag != null">del_flag</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="routeId != null">#{routeId}</if>
+            <if test="stationId != null">#{stationId}</if>
+            <if test="switchId != null">#{switchId}</if>
+            <if test="type != null">#{type}</if>
+            <if test="description != null">#{description}</if>
+            <if test="file1 != null">#{file1}</if>
+            <if test="file2 != null">#{file2}</if>
+            <if test="file3 != null">#{file3}</if>
+            <if test="file4 != null">#{file4}</if>
+            <if test="createBy != null">#{createBy}</if>
+            <if test="createTime != null">#{createTime}</if>
+            <if test="updateBy != null">#{updateBy}</if>
+            <if test="updateTime != null">#{updateTime}</if>
+            <if test="delFlag != null">#{delFlag}</if>
+        </trim>
     </insert>
 
     <update id="update">
-
+        update repair_record
+        <trim prefix="set" suffixOverrides=",">
+            <if test="routeId != null">route_id = #{routeId}</if>
+            <if test="stationId != null">station_id = #{stationId}</if>
+            <if test="switchId != null">switch_id = {switchId}</if>
+            <if test="type != null">type = #{type}</if>
+            <if test="description != null">description = #{description}</if>
+            <if test="file1 != null">file1 = #{file1}</if>
+            <if test="file2 != null">file2 = #{file2}</if>
+            <if test="file3 != null">file3 = #{file3}</if>
+            <if test="file4 != null">file4 = #{file4}</if>
+            <if test="createBy != null">create_by = #{createBy}</if>
+            <if test="createTime != null">create_time = #{createTime}</if>
+            <if test="updateBy != null">update_by = #{updateBy}</if>
+            <if test="updateTime != null">update_time = #{updateTime}</if>
+            <if test="delFlag != null">del_flag = #{delFlag}</if>
+        </trim>
     </update>
 
-    <delete id="deleteByIds">
-
+    <delete id="batchDeleteByIds">
+        delete from repair_record
+        where id in
+        <foreach item="id" collection="array" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </delete>
+
+    <select id="listCountOfDailyRecord" resultType="java.util.Map">
+
+    </select>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.wqtang.api.repair;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.RepairConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
@@ -14,11 +15,13 @@ import com.wqtang.repair.RepairRecordService;
 import com.wqtang.repair.RepairTestService;
 import com.wqtang.util.SecurityUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Wenqian Tang
@@ -48,7 +51,7 @@ public class RepairRecordController {
                                           @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                           @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<RepairRecord> list = repairRecordService.listByParams(request);
+        List<RepairRecord> list = repairRecordService.webListByParams(request);
         return new PageInfo<>(list);
     }
 
@@ -60,7 +63,7 @@ public class RepairRecordController {
      */
     @GetMapping("/list")
     public List<RepairRecord> getList(RepairRecord request) {
-        return repairRecordService.listByParams(request);
+        return repairRecordService.appListByParams(request);
     }
 
     /**
@@ -75,11 +78,11 @@ public class RepairRecordController {
     }
 
     /**
-     * 新增检修记录(Web端)
+     * 新增检修记录(Web端), 单条新增
      *
      * @param request
      */
-    @PostMapping("/add/web")
+    @PostMapping("/addFromWeb")
     @Transactional(rollbackFor = Exception.class)
     public void webAdd(@RequestBody RepairRecord request) {
         // 保存基础信息
@@ -107,15 +110,15 @@ public class RepairRecordController {
     }
 
     /**
-     * 新增检修记录(App端)
+     * 新增检修记录(App端), 批量新增
      *
      * @param request
      */
-    @PostMapping("/add/app")
+    @PostMapping("/addFromApp")
     @Transactional(rollbackFor = Exception.class)
     public void appAdd(@RequestBody RepairRecord request) {
         if (CollectionUtils.isEmpty(request.getMachines())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "检修记录不得为空");
         }
         for (RepairRecord repairRecord : request.getMachines()) {
             // 保存基础信息
@@ -189,19 +192,38 @@ public class RepairRecordController {
     }
 
     /**
-     * 删除检修记录
+     * 删除检修记录, 支持批量删除
      *
      * @param ids
      */
     @DeleteMapping("/{ids}")
     public void delete(@PathVariable("ids") Long[] ids) {
-        repairRecordService.deleteByIds(ids);
+        repairRecordService.batchDeleteByIds(ids);
     }
 
+    /**
+     * 日期与检修次数的关系图表
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/count")
     public List<GetRepairRecordCountOfDayResponse> countOfDay(RepairRecord request) {
-        // todo
-        return null;
+        List<Map<String, Object>> dailyRecordList = repairRecordService.listCountOfDailyRecord(request);
+        List<GetRepairRecordCountOfDayResponse> list = Lists.newArrayList();
+        for (Map<String, Object> dailyRecord : dailyRecordList) {
+            String createTime = MapUtils.getString(dailyRecord, "createTime");
+            float round = MapUtils.getFloat(dailyRecord, "round");
+            GetRepairRecordCountOfDayResponse response = new GetRepairRecordCountOfDayResponse();
+            response.setCreateTime(createTime);
+            if (RepairConstants.ROW_ONE_TOW.equals(MapUtils.getString(dailyRecord, "rowType"))) {
+                response.setRowOneTwo(round);
+            } else {
+                response.setRowThreeFour(round);
+            }
+            list.add(response);
+        }
+        return list;
     }
 
 }

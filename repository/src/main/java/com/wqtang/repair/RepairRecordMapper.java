@@ -4,6 +4,7 @@ import com.wqtang.object.po.repair.RepairRecord;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Wenqian Tang
@@ -14,12 +15,17 @@ public interface RepairRecordMapper {
 
     RepairRecord getById(Long id);
 
-    List<RepairRecord> listByParams(RepairRecord record);
+    List<RepairRecord> webListByParams(RepairRecord repairRecord);
+
+    List<RepairRecord> appListByParams(RepairRecord repairRecord);
 
     void insert(RepairRecord repairRecord);
 
     void update(RepairRecord repairRecord);
 
-    void deleteByIds(Long[] ids);
+    void batchDeleteByIds(Long[] ids);
+
+    @SuppressWarnings("MybatisXMapperMethodInspection")
+    List<Map<String, Object>> listCountOfDailyRecord(RepairRecord repairRecord);
 
 }
