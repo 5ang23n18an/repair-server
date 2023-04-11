@@ -14,8 +14,11 @@
 
     </update>
 
-    <select id="countByDeptIdAndDelFlag" resultType="java.lang.Integer">
-
+    <select id="existsByDeptIdAndDelFlag" resultType="java.lang.Boolean">
+        select exists(select 1
+                      from system_user su
+                      where su.dept_id = #{deptId}
+                        and su.del_flag = #{delFlag})
     </select>
 
     <select id="listAllocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">

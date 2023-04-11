@@ -66,4 +66,5 @@ public class SystemConfigService extends AbstractCacheRefresh {
             redisUtils.set(systemConfig.getConfigKey(), systemConfig.getConfigValue());
         }
     }
+
 }

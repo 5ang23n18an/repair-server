@@ -20,8 +20,8 @@ public interface SystemUserMapper {
 
     void updateLoginInfo(SystemUser user);
 
-    int countByDeptIdAndDelFlag(@Param("deptId") Long deptId,
-                                @Param("delFlag") String delFlag);
+    boolean existsByDeptIdAndDelFlag(@Param("deptId") Long deptId,
+                                     @Param("delFlag") String delFlag);
 
     List<SystemUser> listAllocatedRolesByUser(SystemUser user);
 

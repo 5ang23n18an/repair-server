@@ -1,7 +1,5 @@
 package com.wqtang.api.system;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
@@ -33,17 +31,11 @@ public class SystemDepartmentController {
      * 查询部门列表
      *
      * @param request
-     * @param pageNumber
-     * @param pageSize
      * @return
      */
-    @GetMapping("/page")
-    public PageInfo<SystemDepartment> getPage(SystemDepartment request,
-                                              @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
-                                              @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        PageHelper.startPage(pageNumber, pageSize);
-        List<SystemDepartment> list = systemDepartmentService.listByParams(request);
-        return new PageInfo<>(list);
+    @GetMapping("/list")
+    public List<SystemDepartment> getPage(SystemDepartment request) {
+        return systemDepartmentService.listByParams(request);
     }
 
     /**
@@ -90,6 +82,12 @@ public class SystemDepartmentController {
         return departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
     }
 
+    /**
+     * 加载对应角色的部门列表树
+     *
+     * @param roleId
+     * @return
+     */
     @GetMapping("/tree/{roleId}")
     public TreeListInfo deptTreeListInfo(@PathVariable("roleId") Long roleId) {
         List<Long> deptIds = systemDepartmentService.listIdsByRoleId(roleId);
@@ -102,6 +100,11 @@ public class SystemDepartmentController {
         return treeListInfo;
     }
 
+    /**
+     * 新增部门
+     *
+     * @param request
+     */
     @PostMapping("/add")
     public void add(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
@@ -111,6 +114,11 @@ public class SystemDepartmentController {
         systemDepartmentService.insert(request);
     }
 
+    /**
+     * 修改部门
+     *
+     * @param request
+     */
     @PutMapping("/edit")
     public void edit(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
@@ -119,20 +127,25 @@ public class SystemDepartmentController {
         if (!request.getDeptId().equals(request.getParentId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级部门不能是自己");
         }
-        if (UserConstants.DEPT_DISABLED.equals(request.getStatus())
-                && systemDepartmentService.countNormalChildrenDeptById(request.getDeptId()) > 0) {
+        if (UserConstants.DISABLED.equals(request.getStatus())
+                && systemDepartmentService.existsNormalChildrenDeptById(request.getDeptId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门已停用, 但仍包含未停用的子部门");
         }
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.update(request);
     }
 
+    /**
+     * 删除部门, 可批量删除
+     *
+     * @param deptId
+     */
     @DeleteMapping("/{deptId}")
     public void delete(@PathVariable("deptId") Long deptId) {
-        if (systemDepartmentService.countChildrenDeptById(deptId) > 0) {
+        if (systemDepartmentService.existsChildrenDeptById(deptId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在下级部门, 不允许删除");
         }
-        if (systemDepartmentService.countDeptUserById(deptId) > 0) {
+        if (systemDepartmentService.existsDeptUserById(deptId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在用户, 不允许删除");
         }
         systemDepartmentService.deleteById(deptId);
