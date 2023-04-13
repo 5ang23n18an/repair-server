@@ -71,7 +71,7 @@ public class SystemPositionController {
      */
     @GetMapping("/{postId}")
     public SystemPosition getById(@PathVariable("postId") Long postId) {
-        return systemPositionService.getById(postId);
+        return systemPositionService.getByPostId(postId);
     }
 
     /**

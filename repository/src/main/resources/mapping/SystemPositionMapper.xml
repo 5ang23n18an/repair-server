@@ -3,31 +3,74 @@
 <mapper namespace="com.wqtang.system.SystemPositionMapper">
 
     <select id="listByParams" resultType="com.wqtang.object.po.system.SystemPosition">
-
+        select sp.*
+        from system_position
+        <where>
+            <if test="postCode != null and postCode != ''">and sp.post_code like concat('%', #{postCode}, '%')</if>
+            <if test="status != null and status != ''">and sp.status = #{status}</if>
+            <if test="postName != null and postName != ''">and sp.post_name like concat('%', #{postName}, '%')</if>
+        </where>
     </select>
 
-    <select id="getById" resultType="com.wqtang.object.po.system.SystemPosition">
-
+    <select id="getByPostId" resultType="com.wqtang.object.po.system.SystemPosition">
+        select sp.*
+        from system_position sp
+        where sp.post_id = #{postId}
     </select>
 
     <insert id="insert">
-
+        insert into system_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postId != null and postId != 0">post_id,</if>
+            <if test="postCode != null and postCode != ''">post_code,</if>
+            <if test="postName != null and postName != ''">post_name,</if>
+            <if test="postSort != null and postSort != ''">post_sort,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postId != null and postId != 0">#{postId},</if>
+            <if test="postCode != null and postCode != ''">#{postCode},</if>
+            <if test="postName != null and postName != ''">#{postName},</if>
+            <if test="postSort != null and postSort != ''">#{postSort},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
     </insert>
 
     <update id="update">
-
+        update system_position
+        <set>
+            <if test="postCode != null and postCode != ''">post_code = #{postCode},</if>
+            <if test="postName != null and postName != ''">post_name = #{postName},</if>
+            <if test="postSort != null and postSort != ''">post_sort = #{postSort},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </set>
+        where post_id = #{postId}
     </update>
 
     <delete id="batchDeleteByPostId">
-
+        delete from system_position
+        where post_id in
+        <foreach item="postId" collection="array" open="(" close=")" separator=",">
+            #{postId}
+        </foreach>
     </delete>
 
     <select id="getByPostName" resultType="com.wqtang.object.po.system.SystemPosition">
-
+        select sp.*
+        from system_position sp
+        where sp.post_name = #{postName}
     </select>
 
     <select id="getByPostCode" resultType="com.wqtang.object.po.system.SystemPosition">
-
+        select sp.*
+        from system_position sp
+        where sp.post_code = #{postCode}
     </select>
 
 </mapper>

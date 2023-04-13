@@ -14,7 +14,7 @@ public interface SystemPositionMapper {
 
     List<SystemPosition> listByParams(SystemPosition position);
 
-    SystemPosition getById(Long postId);
+    SystemPosition getByPostId(Long postId);
 
     void insert(SystemPosition position);
 

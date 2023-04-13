@@ -45,8 +45,8 @@ public class SystemPositionService {
                 .body(fileBytes);
     }
 
-    public SystemPosition getById(Long postId) {
-        return systemPositionMapper.getById(postId);
+    public SystemPosition getByPostId(Long postId) {
+        return systemPositionMapper.getByPostId(postId);
     }
 
     public boolean isPostNameDuplicated(SystemPosition position) {
