@@ -33,7 +33,7 @@ public class SystemMenuController {
 
     @GetMapping("/{menuId}")
     public SystemMenu getById(@PathVariable("menuId") Long menuId) {
-        return systemMenuService.getById(menuId);
+        return systemMenuService.getByMenuId(menuId);
     }
 
     @GetMapping("/tree/{roleId}")
@@ -86,13 +86,13 @@ public class SystemMenuController {
 
     @DeleteMapping("/{menuId}")
     public void delete(@PathVariable("menuId") Long menuId) {
-        if (systemMenuService.countChildrenMenuById(menuId) > 0) {
+        if (systemMenuService.existsChildrenMenuByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单仍存在子菜单, 不允许删除");
         }
-        if (systemMenuService.countRoleById(menuId) > 0) {
+        if (systemMenuService.existsRoleByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单已被分配, 不允许删除");
         }
-        systemMenuService.deleteById(menuId);
+        systemMenuService.deleteByMenuId(menuId);
     }
 
 }

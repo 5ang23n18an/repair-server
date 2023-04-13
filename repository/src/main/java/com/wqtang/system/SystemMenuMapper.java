@@ -15,27 +15,25 @@ public interface SystemMenuMapper {
 
     List<SystemMenu> listByParams(SystemMenu menu);
 
-    SystemMenu getById(Long menuId);
+    SystemMenu getByMenuId(Long menuId);
 
     void insert(SystemMenu menu);
 
     void update(SystemMenu menu);
 
-    void deleteById(Long menuId);
+    void deleteByMenuId(Long menuId);
 
     List<String> listPermissionsByUserId(Long userId);
 
-    List<SystemMenu> listByUserId(@Param("menu") SystemMenu menu,
-                                  @Param("userId") Long userId);
+    List<SystemMenu> listByParamsAndUserId(@Param("menu") SystemMenu menu,
+                                           @Param("userId") Long userId);
 
     SystemMenu getByMenuNameAndParentId(@Param("menuName") String menuName,
                                         @Param("parentId") Long parentId);
 
-    int countChildrenMenuById(Long menuId);
+    boolean existsByParentId(Long menuId);
 
-    int countRoleById(Long menuId);
-
-    List<Long> listMenuIdsByRoleId(@Param("roleId") Long roleId,
-                                   @Param("menuCheckStrictly") boolean menuCheckStrictly);
+    List<Long> listMenuIdByRoleId(@Param("roleId") Long roleId,
+                                  @Param("menuCheckStrictly") boolean menuCheckStrictly);
 
 }

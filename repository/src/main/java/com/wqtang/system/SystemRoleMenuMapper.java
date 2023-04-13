@@ -18,4 +18,6 @@ public interface SystemRoleMenuMapper {
 
     void batchDeleteByRoleIds(Long[] roleIds);
 
+    boolean existsByMenuId(Long menuId);
+
 }
