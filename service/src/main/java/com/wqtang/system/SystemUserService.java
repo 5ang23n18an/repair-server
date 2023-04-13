@@ -148,7 +148,7 @@ public class SystemUserService {
         systemUser.setUserId(userId);
         systemUser.setLoginIp(IPAddressUtils.getIPAddress());
         systemUser.setLoginDate(Calendar.getInstance().getTime());
-        systemUserMapper.updateLoginInfo(systemUser);
+        systemUserMapper.update(systemUser);
     }
 
     public void refreshLoginUserPermissions() {

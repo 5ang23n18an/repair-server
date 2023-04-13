@@ -18,7 +18,7 @@ public interface SystemUserMapper {
     void updatePasswordByUsername(@Param("username") String username,
                                   @Param("password") String password);
 
-    void updateLoginInfo(SystemUser user);
+    void update(SystemUser user);
 
     boolean existsByDeptIdAndDelFlag(@Param("deptId") Long deptId,
                                      @Param("delFlag") String delFlag);
