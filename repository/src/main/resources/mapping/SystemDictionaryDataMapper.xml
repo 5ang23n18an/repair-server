@@ -3,23 +3,77 @@
 <mapper namespace="com.wqtang.system.SystemDictionaryDataMapper">
 
     <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDictionaryData">
-
+        select sdd.*
+        from system_dictionary_data sdd
+        <where>
+            <if test="dictType != null and dictType != ''">and sdd.dict_type = #{dictType}</if>
+            <if test="dictLabel != null and dictLabel != ''">and sdd.dict_label like concat('%', #{dictLabel}, '%')</if>
+            <if test="status != null and status != ''">and sdd.status = #{status}</if>
+        </where>
+        order by sdd.dict_sort
     </select>
 
     <select id="getByDictCode" resultType="com.wqtang.object.po.system.SystemDictionaryData">
-
+        select sdd.*
+        from system_dictionary_data sdd
+        where sdd.dict_code = #{dictCode}
     </select>
 
     <insert id="insert">
-
+        insert into system_dictionary_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dictSort != null and dictSort != ''">dict_sort,</if>
+            <if test="dictLabel != null and dictLabel != ''">dict_label,</if>
+            <if test="dictValue != null and dictValue != ''">dict_value,</if>
+            <if test="dictType != null and dictType != ''">dict_type,</if>
+            <if test="cssClass != null and cssClass != ''">css_class,</if>
+            <if test="listClass != null and listClass != ''">list_class,</if>
+            <if test="isDefault != null and isDefault != ''">is_default,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dictSort != null and dictSort != ''">#{dictSort},</if>
+            <if test="dictLabel != null and dictLabel != ''">#{dictLabel},</if>
+            <if test="dictValue != null and dictValue != ''">#{dictValue},</if>
+            <if test="dictType != null and dictType != ''">#{dictType},</if>
+            <if test="cssClass != null and cssClass != ''">#{cssClass},</if>
+            <if test="listClass != null and listClass != ''">#{listClass},</if>
+            <if test="isDefault != null and isDefault != ''">#{isDefault},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
     </insert>
 
     <update id="update">
-
+        update system_dictionary_data
+        <set>
+            <if test="dictSort != null and dictSort != ''">dict_sort = #{dictSort},</if>
+            <if test="dictLabel != null and dictLabel != ''">dict_label = #{dictLabel},</if>
+            <if test="dictValue != null and dictValue != ''">dict_value = #{dictValue},</if>
+            <if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+            <if test="cssClass != null and cssClass != ''">css_class = #{cssClass},</if>
+            <if test="listClass != null and listClass != ''">list_class = #{listClass},</if>
+            <if test="isDefault != null and isDefault != ''">is_default = #{isDefault},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </set>
+        where dict_code = #{dictCode}
     </update>
 
     <delete id="batchDeleteByDictCode">
-
+        delete from system_dictionary_data
+        where dict_code in
+        <foreach item="dictCode" collection="array" open="(" close=")" separator=",">
+            #{dictCode}
+        </foreach>
     </delete>
+
+    <select id="existsByDictType" resultType="java.lang.Boolean">
+        select exists(select 1 from system_dictionary_data sdd where sdd.dict_type = #{dictType})
+    </select>
 
 </mapper>
