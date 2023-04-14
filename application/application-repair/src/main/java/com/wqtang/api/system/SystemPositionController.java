@@ -123,8 +123,8 @@ public class SystemPositionController {
      *
      * @return
      */
-    @GetMapping("/list")
-    public List<SystemPosition> getList() {
+    @GetMapping("/all")
+    public List<SystemPosition> getAll() {
         return systemPositionService.listByParams(null);
     }
 

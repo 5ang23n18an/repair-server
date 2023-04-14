@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.system.SystemDictionaryTypeMapper">
+
+    <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDictionaryType">
+        select sdt.*
+        from system_dictionary_type sdt
+        <where>
+            <if test="dictName != null and dictName != ''">and sdt.dict_name like concat('%', #{dictName}, '%')</if>
+            <if test="dictType != null and dictType != ''">and sdt.dict_type like concat('%', #{dictType}, '%')</if>
+            <if test="status != null and status != ''">and sdt.status = #{status}</if>
+            <if test="beginTime != null and beginTime != ''">and sdt.create_time >= #{beginTime}</if>
+            <if test="endTime != null and endTime != ''">and sdt.create_time &lt;= #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="getByDictId" resultType="com.wqtang.object.po.system.SystemDictionaryType">
+        select sdt.*
+        from system_dictionary_type sdt
+        where sdt.dict_id = #{dictId}
+    </select>
+
+    <select id="getByDictType" resultType="com.wqtang.object.po.system.SystemDictionaryType">
+        select sdt.*
+        from system_dictionary_type sdt
+        where sdt.dict_type = #{dictType}
+    </select>
+
+    <insert id="insert">
+        insert into system_dictionary_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dictName != null and dictName != ''">dict_name,</if>
+            <if test="dictType != null and dictType != ''">dict_type,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dictName != null and dictName != ''">#{dictName},</if>
+            <if test="dictType != null and dictType != ''">#{dictType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update system_dictionary_type
+        <set>
+            <if test="dictName != null and dictName != ''">dict_name = #{dictName},</if>
+            <if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </set>
+    </update>
+
+    <select id="existsByDictType" resultType="java.lang.Boolean">
+        select exists(select 1 from system_dictionary_type sdt where sdt.dict_type = #{dictType})
+    </select>
+
+    <delete id="batchDeleteByDictIds">
+        delete from system_dictionary_type
+        where dict_id in
+        <foreach item="dictId" collection="array" open="(" close=")" separator=",">
+            #{dictId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -61,7 +61,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
 
     @Override
     public void loadIntoCache() {
-        List<SystemConfig> list = systemConfigMapper.listByParams(null);
+        List<SystemConfig> list = listByParams(null);
         for (SystemConfig systemConfig : list) {
             redisUtils.set(systemConfig.getConfigKey(), systemConfig.getConfigValue());
         }

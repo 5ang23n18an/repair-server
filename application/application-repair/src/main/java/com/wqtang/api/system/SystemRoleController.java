@@ -110,7 +110,7 @@ public class SystemRoleController {
     }
 
     /**
-     * 根据角色id进行删除
+     * 根据角色id进行删除, 支持批量删除
      *
      * @param roleIds
      */
