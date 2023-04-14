@@ -4,6 +4,7 @@ import com.wqtang.object.po.repair.RepairTest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Wenqian Tang
@@ -14,6 +15,10 @@ public class RepairTestService {
 
     @Resource(name = "repairTestMapper")
     private RepairTestMapper repairTestMapper;
+
+    public List<RepairTest> listByParams(RepairTest repairTest) {
+        return repairTestMapper.listByParams(repairTest);
+    }
 
     public void insert(RepairTest repairTest) {
         repairTestMapper.insert(repairTest);
