@@ -1,7 +1,7 @@
-package com.wqtang.auth;
+/*
+package com.wqtang.oauth;
 
 import com.google.common.collect.Lists;
-import com.wqtang.config.security.SecurityConfig;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.UserStatus;
@@ -23,10 +23,12 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 
+*/
 /**
  * @author Wenqian Tang
  * @date 2023/3/26
- */
+ *//*
+
 @Component
 public class UsernamePasswordAuthenticator implements AuthenticationProvider {
 
@@ -77,3 +79,4 @@ public class UsernamePasswordAuthenticator implements AuthenticationProvider {
     }
 
 }
+*/

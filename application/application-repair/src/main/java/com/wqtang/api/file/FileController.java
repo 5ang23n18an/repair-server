@@ -55,6 +55,12 @@ public class FileController {
         return fileService.commonUpload(file);
     }
 
+    /**
+     * 本地图片上传(固件检测记录), 无需token
+     *
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     public synchronized FileCommonUploadResponse upload(MultipartFile file) {
         return fileService.upload(file);

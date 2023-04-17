@@ -24,7 +24,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Object> handleBusinessException(BusinessException businessException, WebRequest webRequest) {
         return ResponseEntity
-                .status(businessException.getErrorEnum().getErrorCode())
+                .status(businessException.getErrorEnum().getHttpStatus())
                 .body(errorAttributes.getErrorAttributes(webRequest, null));
     }
 

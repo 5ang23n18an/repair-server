@@ -9,6 +9,7 @@ import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
  * @date 2023/3/9
  */
 @RestController
+@RequestMapping("/captcha")
 public class CaptchaController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CaptchaController.class);
@@ -32,7 +34,7 @@ public class CaptchaController {
      *
      * @return
      */
-    @GetMapping("/captchaImage")
+    @GetMapping("/image")
     public GetCaptchaImageResponse getCaptchaImage() {
         if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码功能暂不可用");
