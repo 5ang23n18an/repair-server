@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Wenqian Tang
@@ -20,8 +21,12 @@ public class RepairRecordService {
         return repairRecordMapper.getById(id);
     }
 
-    public List<RepairRecord> listByParams(RepairRecord request) {
-        return repairRecordMapper.listByParams(request);
+    public List<RepairRecord> webListByParams(RepairRecord repairRecord) {
+        return repairRecordMapper.webListByParams(repairRecord);
+    }
+
+    public List<RepairRecord> appListByParams(RepairRecord repairRecord) {
+        return repairRecordMapper.appListByParams(repairRecord);
     }
 
     public void insert(RepairRecord repairRecord) {
@@ -32,8 +37,12 @@ public class RepairRecordService {
         repairRecordMapper.update(repairRecord);
     }
 
-    public void deleteByIds(Long[] ids) {
-        repairRecordMapper.deleteByIds(ids);
+    public void batchDeleteByIds(Long[] ids) {
+        repairRecordMapper.batchDeleteByIds(ids);
+    }
+
+    public List<Map<String, Object>> listCountOfDailyRecord(RepairRecord repairRecord) {
+        return repairRecordMapper.listCountOfDailyRecord(repairRecord);
     }
 
 }

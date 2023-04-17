@@ -1,7 +1,6 @@
 package com.wqtang.repair;
 
 import com.wqtang.object.po.system.SystemDepartment;
-import com.wqtang.object.po.system.SystemRole;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,13 +24,13 @@ public interface SystemDepartmentMapper {
 
     void update(SystemDepartment department);
 
-    int countChildrenDeptById(Long deptId);
+    boolean existsChildrenDeptById(Long deptId);
 
-    int countNormalChildrenDeptById(Long deptId);
+    boolean existsNormalChildrenDeptById(Long deptId);
 
     void deleteById(Long deptId);
 
-    List<Long> listIdsByRoleId(@Param("role") SystemRole role,
+    List<Long> listIdsByRoleId(@Param("roleId") Long roleId,
                                @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
 }

@@ -3,39 +3,108 @@
 <mapper namespace="com.wqtang.repair.SystemDepartmentMapper">
 
     <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
-
+        select sd.*
+        from system_department sd
+        <where>
+            sd.del_flag = '0'
+            <if test="deptId != null and deptId != 0">and sd.dept_id = #{deptId}</if>
+            <if test="parentId != null and parentId != 0">and sd.parent_id = #{parentId}</if>
+            <if test="deptName != null and deptName != ''">and sd.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="status != null and status != ''">and sd.status = #{status}</if>
+        </where>
+        order by sd.parent_id, sd.order_num
     </select>
 
     <select id="getById" resultType="com.wqtang.object.po.system.SystemDepartment">
-
+        select sd.*
+        from system_department sd
+        where sd.dept_id = #{deptId}
     </select>
 
     <select id="getByDeptNameAndParentId" resultType="com.wqtang.object.po.system.SystemDepartment">
-
+        select sd.*
+        from system_department sd
+        where sd.dept_name = #{deptName}
+          and sd.parent_id = #{parentId}
     </select>
 
     <insert id="insert">
-
+        insert into system_department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId != 0">dept_id,</if>
+            <if test="parentId != null and parentId != 0">parent_id,</if>
+            <if test="ancestors != null and ancestors != ''">ancestors,</if>
+            <if test="deptName != null and deptName != ''">dept_name,</if>
+            <if test="orderNum != null and orderNum != ''">order_num,</if>
+            <if test="leader != null and leader != ''">leader,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId != 0">#{deptId},</if>
+            <if test="parentId != null and parentId != 0">#{parentId},</if>
+            <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+            <if test="deptName != null and deptName != ''">#{deptName},</if>
+            <if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+            <if test="leader != null and leader != ''">#{leader},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
     </insert>
 
     <update id="update">
-
+        update system_department
+        <set>
+            <if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
+            <if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </set>
+        where dept_id = #{deptId}
     </update>
 
-    <select id="countChildrenDeptById" resultType="java.lang.Integer">
-
+    <select id="existsChildrenDeptById" resultType="java.lang.Boolean">
+        select exists(select 1
+                      from system_department sd
+                      where sd.del_flag = '0'
+                        and sd.parent_id = #{deptId})
     </select>
 
-    <select id="countNormalChildrenDeptById" resultType="java.lang.Integer">
-
+    <select id="existsNormalChildrenDeptById" resultType="java.lang.Boolean">
+        select exists(select 1
+                      from system_department sd
+                      where sd.status = '0'
+                        and sd.del_flag = '0'
+                        and find_in_set(#{deptId}, sd.ancestors))
     </select>
 
     <delete id="deleteById">
-
+        update system_department
+        set del_flag = '2'
+        where dept_id = #{deptId}
     </delete>
 
     <select id="listIdsByRoleId" resultType="java.lang.Long">
-
+        select sd.dept_id
+        from system_department sd
+                 left join system_role_department srd on sd.dept_id = srd.dept_id
+        where srd.role_id = #{roleId}
+            <if test="deptCheckStrictly">
+                and sd.dept_id not in (select t_sd.parent_id
+                                       from system_department t_sd
+                                                inner join system_role_department t_srd
+                                                           on t_sd.dept_id = t_srd.dept_id and t_srd.role_id = #{roleId})
+            </if>
+        order by sd.parent_id, sd.order_num
     </select>
 
 </mapper>

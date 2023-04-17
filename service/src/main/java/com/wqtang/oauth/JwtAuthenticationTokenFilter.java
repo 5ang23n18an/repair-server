@@ -1,4 +1,4 @@
-package com.wqtang.auth;
+package com.wqtang.oauth;
 
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.util.SecurityUtils;

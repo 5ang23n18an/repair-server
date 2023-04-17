@@ -1,6 +1,7 @@
 package com.wqtang.controller;
 
 import com.wqtang.object.vo.response.Response;
+import com.wqtang.util.JsonUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,8 @@ public class ControllerResponseAdvisor implements ResponseBodyAdvice<Object> {
      */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        return Response.success(body);
+        Response myResponse = Response.success(body);
+        return body instanceof String ? JsonUtils.getJson(myResponse) : myResponse;
     }
 
 }

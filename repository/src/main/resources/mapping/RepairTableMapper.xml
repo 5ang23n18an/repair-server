@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wqtang.repair.RepairTableMapper">
+
+    <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairTable">
+        select rt.*
+        from repair_table rt
+        <where>
+            <if test="label != null and label != ''">and rt.label like concat('%', #{label}, '%')</if>
+            <if test="status != null and status != ''">and rt.status = #{status}</if>
+        </where>
+        order by rt.sort_no
+    </select>
+
+    <select id="getById" resultType="com.wqtang.object.po.repair.RepairTable">
+        select rt.*
+        from repair_table rt
+        where rt.id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into repair_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="label != null">label,</if>
+            <if test="sortNo != null">sort_no,</if>
+            <if test="createBy != null">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="label != null">#{label},</if>
+            <if test="sortNo != null">#{sortNo},</if>
+            <if test="createBy != null">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update repair_table
+        <set>
+            <if test="label != null">label = #{label},</if>
+            <if test="sortNo != null">sort_no = #{sortNo},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="batchDeleteByIds">
+        delete from repair_table
+        where id in
+        <foreach item="id" collection="array" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

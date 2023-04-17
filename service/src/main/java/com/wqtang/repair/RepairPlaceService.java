@@ -25,8 +25,8 @@ public class RepairPlaceService {
         return repairPlaceMapper.listByParams(request);
     }
 
-    public List<RepairPlace> listParents() {
-        return repairPlaceMapper.listParents();
+    public List<RepairPlace> listByType(String type) {
+        return repairPlaceMapper.listByType(type);
     }
 
 }

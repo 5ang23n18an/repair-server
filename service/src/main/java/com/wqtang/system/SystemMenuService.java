@@ -25,17 +25,19 @@ public class SystemMenuService {
     private SystemMenuMapper systemMenuMapper;
     @Resource(name = "systemRoleMapper")
     private SystemRoleMapper systemRoleMapper;
+    @Resource(name = "systemRoleMenuMapper")
+    private SystemRoleMenuMapper systemRoleMenuMapper;
 
     public List<SystemMenu> listByUserId(Long userId) {
         return listByParams(null, userId);
     }
 
     public List<SystemMenu> listByParams(SystemMenu menu, Long userId) {
-        return SystemUser.isAdmin(userId) ? systemMenuMapper.listByParams(menu) : systemMenuMapper.listByUserId(menu, userId);
+        return SystemUser.isAdmin(userId) ? systemMenuMapper.listByParams(menu) : systemMenuMapper.listByParamsAndUserId(menu, userId);
     }
 
-    public SystemMenu getById(Long menuId) {
-        return systemMenuMapper.getById(menuId);
+    public SystemMenu getByMenuId(Long menuId) {
+        return systemMenuMapper.getByMenuId(menuId);
     }
 
     public void insert(SystemMenu menu) {
@@ -46,8 +48,8 @@ public class SystemMenuService {
         systemMenuMapper.update(menu);
     }
 
-    public void deleteById(Long menuId) {
-        systemMenuMapper.deleteById(menuId);
+    public void deleteByMenuId(Long menuId) {
+        systemMenuMapper.deleteByMenuId(menuId);
     }
 
     public Set<String> getPermissionsByUser(SystemUser user) {
@@ -105,17 +107,17 @@ public class SystemMenuService {
         return menuFromDb != null && !menuId.equals(menuFromDb.getMenuId());
     }
 
-    public int countChildrenMenuById(Long menuId) {
-        return systemMenuMapper.countChildrenMenuById(menuId);
+    public boolean existsChildrenMenuByMenuId(Long menuId) {
+        return systemMenuMapper.existsByParentId(menuId);
     }
 
-    public int countRoleById(Long menuId) {
-        return systemMenuMapper.countRoleById(menuId);
+    public boolean existsRoleByMenuId(Long menuId) {
+        return systemRoleMenuMapper.existsByMenuId(menuId);
     }
 
     public List<Long> listMenuIdsByRoleId(Long roleId) {
         SystemRole role = systemRoleMapper.getByRoleId(roleId);
-        return systemMenuMapper.listMenuIdsByRoleId(roleId, role.isMenuCheckStrictly());
+        return systemMenuMapper.listMenuIdByRoleId(roleId, role.isMenuCheckStrictly());
     }
 
 }

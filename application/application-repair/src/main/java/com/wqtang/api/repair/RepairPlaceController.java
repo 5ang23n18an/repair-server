@@ -1,7 +1,10 @@
 package com.wqtang.api.repair;
 
+import com.google.common.collect.Lists;
+import com.wqtang.object.constant.RepairConstants;
 import com.wqtang.object.po.repair.RepairPlace;
 import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
+import com.wqtang.object.vo.response.repair.RepairPlaceParentRoute;
 import com.wqtang.repair.RepairPlaceService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,8 +55,17 @@ public class RepairPlaceController {
      * @return
      */
     @GetMapping("/parent")
-    public List<RepairPlace> parent() {
-        return repairPlaceService.listParents();
+    public List<RepairPlaceParentRoute> getParentList() {
+        List<RepairPlace> parentRouteList = repairPlaceService.listByType(RepairConstants.REPAIR_ROUTE);
+        List<RepairPlaceParentRoute> list = Lists.newArrayListWithExpectedSize(parentRouteList.size());
+        for (RepairPlace repairPlace : parentRouteList) {
+            RepairPlaceParentRoute parentRoute = new RepairPlaceParentRoute();
+            parentRoute.setValue(repairPlace.getId());
+            parentRoute.setLabel(repairPlace.getName());
+            parentRoute.setParentId(repairPlace.getParentId());
+            list.add(parentRoute);
+        }
+        return list;
     }
 
     /**

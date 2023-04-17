@@ -18,10 +18,10 @@ public interface SystemUserMapper {
     void updatePasswordByUsername(@Param("username") String username,
                                   @Param("password") String password);
 
-    void updateLoginInfo(SystemUser user);
+    void update(SystemUser user);
 
-    int countByDeptIdAndDelFlag(@Param("deptId") Long deptId,
-                                @Param("delFlag") String delFlag);
+    boolean existsByDeptIdAndDelFlag(@Param("deptId") Long deptId,
+                                     @Param("delFlag") String delFlag);
 
     List<SystemUser> listAllocatedRolesByUser(SystemUser user);
 

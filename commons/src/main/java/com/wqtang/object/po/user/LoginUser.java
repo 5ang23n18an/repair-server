@@ -175,6 +175,7 @@ public class LoginUser implements UserDetails {
         this.user = user;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

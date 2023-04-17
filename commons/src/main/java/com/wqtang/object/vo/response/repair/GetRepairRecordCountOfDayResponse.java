@@ -1,22 +1,20 @@
 package com.wqtang.object.vo.response.repair;
 
-import java.util.Date;
-
 /**
  * @author Wenqian Tang
  * @date 2023/3/22
  */
 public class GetRepairRecordCountOfDayResponse {
 
-    private Date createTime;
+    private String createTime;
     private float rowOneTwo;
     private float rowThreeFour;
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

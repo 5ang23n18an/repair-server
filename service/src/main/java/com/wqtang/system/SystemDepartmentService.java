@@ -26,8 +26,8 @@ public class SystemDepartmentService {
     @Resource(name = "systemRoleMapper")
     private SystemRoleMapper systemRoleMapper;
 
-    public List<SystemDepartment> listByParams(SystemDepartment systemDepartment) {
-        return systemDepartmentMapper.listByParams(systemDepartment);
+    public List<SystemDepartment> listByParams(SystemDepartment department) {
+        return systemDepartmentMapper.listByParams(department);
     }
 
     public SystemDepartment getById(Long deptId) {
@@ -79,16 +79,16 @@ public class SystemDepartmentService {
         systemDepartmentMapper.update(department);
     }
 
-    public int countChildrenDeptById(Long deptId) {
-        return systemDepartmentMapper.countChildrenDeptById(deptId);
+    public boolean existsChildrenDeptById(Long deptId) {
+        return systemDepartmentMapper.existsChildrenDeptById(deptId);
     }
 
-    public int countNormalChildrenDeptById(Long deptId) {
-        return systemDepartmentMapper.countNormalChildrenDeptById(deptId);
+    public boolean existsNormalChildrenDeptById(Long deptId) {
+        return systemDepartmentMapper.existsNormalChildrenDeptById(deptId);
     }
 
-    public int countDeptUserById(Long deptId) {
-        return systemUserMapper.countByDeptIdAndDelFlag(deptId, UserConstants.NORMAL);
+    public boolean existsDeptUserById(Long deptId) {
+        return systemUserMapper.existsByDeptIdAndDelFlag(deptId, UserConstants.NORMAL);
     }
 
     public void deleteById(Long deptId) {
@@ -97,7 +97,7 @@ public class SystemDepartmentService {
 
     public List<Long> listIdsByRoleId(Long roleId) {
         SystemRole role = systemRoleMapper.getByRoleId(roleId);
-        return systemDepartmentMapper.listIdsByRoleId(role, role.isDeptCheckStrictly());
+        return systemDepartmentMapper.listIdsByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
 }

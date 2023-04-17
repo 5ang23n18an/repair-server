@@ -1,21 +1,24 @@
-package com.wqtang.auth;
+package com.wqtang.oauth;
 
 import com.google.common.collect.Maps;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.util.IPAddressUtils;
 import com.wqtang.util.RedisUtils;
+import com.wqtang.util.SecurityUtils;
 import com.wqtang.util.ServletUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,11 +44,10 @@ public class TokenService {
 
     @Value("${token.timeout}")
     private int timeout;
-    @Value("${token.signingKey}")
-    private String signingKey;
     @Value("${token.renewThreshold}")
     private int renewThreshold;
 
+    @Lazy
     @Resource(name = "authenticationManager")
     private AuthenticationManager authenticationManager;
     @Resource(name = "redisUtils")
@@ -54,7 +56,7 @@ public class TokenService {
     private IPAddressUtils ipAddressUtils;
 
     /**
-     * 使用password模式, 验证用户信息. 验证通过后, 颁发令牌token
+     * 使用UsernamePassword模式, 验证用户信息. 验证通过后, 颁发令牌token
      *
      * @param username
      * @param password
@@ -62,7 +64,10 @@ public class TokenService {
      */
     public String authenticateAndCreateAccessToken(String username, String password) {
         // 验证用户信息
+        ServletUtils.getHttpServletRequest().setAttribute("password", password);
         Authentication userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        // 记录用户信息
+        SecurityUtils.setAuthentication(userAuthentication);
         // 颁发令牌token
         return createAccessToken(((LoginUser) userAuthentication.getPrincipal()));
     }
@@ -73,16 +78,16 @@ public class TokenService {
      * @param loginUser
      * @return
      */
-    public String createAccessToken(LoginUser loginUser) {
+    private String createAccessToken(LoginUser loginUser) {
         loginUser.setToken(UUID.randomUUID().toString());
         setUserAgent(loginUser);
         refreshToken(loginUser);
         Map<String, Object> claims = Maps.newHashMapWithExpectedSize(1);
         claims.put("login_user_key", loginUser.getToken());
-        return Jwts
-                .builder()
+        return Jwts.builder()
+                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, signingKey).compact();
+                .compact();
     }
 
     /**
@@ -90,7 +95,7 @@ public class TokenService {
      *
      * @param loginUser
      */
-    public void setUserAgent(LoginUser loginUser) {
+    private void setUserAgent(LoginUser loginUser) {
         HttpServletRequest servletRequest = ServletUtils.getHttpServletRequest();
         String userAgentString = servletRequest.getHeader(HttpHeaders.USER_AGENT);
         UserAgent userAgent = UserAgent.parseUserAgentString(userAgentString);
@@ -106,7 +111,7 @@ public class TokenService {
      *
      * @param loginUser
      */
-    public void refreshToken(LoginUser loginUser) {
+    private void refreshToken(LoginUser loginUser) {
         Date loginTime = Calendar.getInstance().getTime(), expireTime = DateUtils.addMinutes(loginTime, timeout);
         loginUser.setLoginTime(loginTime);
         loginUser.setExpireTime(expireTime);
@@ -133,7 +138,7 @@ public class TokenService {
             // 解析对应的权限以及用户信息
             String userKey = MapUtils.getString(claims, "login_user_key");
             String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, userKey);
-            return ((LoginUser) redisUtils.get(redisKey));
+            return redisUtils.getAndCast(redisKey, LoginUser.class);
         } catch (Exception e) {
             LOGGER.error("Exception occurs in `TokenService.getLoginUser`, error message is {}", e.getMessage(), e);
             return null;
@@ -165,9 +170,8 @@ public class TokenService {
      * @return
      */
     private Claims parseToken(String token) {
-        return Jwts
-                .parser()
-                .setSigningKey(signingKey)
+        return Jwts.parserBuilder().build()
+                .setSigningKey(Keys.secretKeyFor(SignatureAlgorithm.HS512))
                 .parseClaimsJws(token)
                 .getBody();
     }

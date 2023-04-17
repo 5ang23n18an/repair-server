@@ -12,34 +12,9 @@ public class UserConstants {
     public static final String NORMAL = "0";
 
     /**
-     * 异常状态
+     * 失效状态
      */
-    public static final String EXCEPTION = "1";
-
-    /**
-     * 用户封禁状态
-     */
-    public static final String USER_DISABLED = "1";
-
-    /**
-     * 角色封禁状态
-     */
-    public static final String ROLE_DISABLED = "1";
-
-    /**
-     * 部门正常状态
-     */
-    public static final String DEPT_NORMAL = "0";
-
-    /**
-     * 部门停用状态
-     */
-    public static final String DEPT_DISABLED = "1";
-
-    /**
-     * 字典正常状态
-     */
-    public static final String DICT_NORMAL = "0";
+    public static final String DISABLED = "1";
 
     /**
      * 是否为系统默认（是）

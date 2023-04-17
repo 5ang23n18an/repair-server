@@ -17,6 +17,6 @@ public interface RepairPlaceMapper {
 
     List<RepairPlace> listByParams(GetRepairPlaceListRequest request);
 
-    List<RepairPlace> listParents();
+    List<RepairPlace> listByType(String type);
 
 }

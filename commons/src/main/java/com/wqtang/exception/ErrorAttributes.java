@@ -31,15 +31,11 @@ public class ErrorAttributes extends DefaultErrorAttributes {
         if (StringUtils.isBlank(path)) {
             path = webRequest.getContextPath();
         }
-        String errorStr = StringUtils.EMPTY, message = StringUtils.EMPTY;
-        int errorCode = 0;
         Throwable exception = getError(webRequest);
-        if (exception instanceof BusinessException) {
-            BusinessException businessException = (BusinessException) exception;
-            errorStr = businessException.getErrorEnum().name();
-            errorCode = businessException.getErrorEnum().getErrorCode();
-            message = businessException.getMessage();
-        }
+        BusinessException businessException = exception instanceof BusinessException ? ((BusinessException) exception) : ((BusinessException) exception.getCause());
+        String errorStr = businessException.getErrorEnum().name();
+        int errorCode = businessException.getErrorEnum().getErrorCode();
+        String message = businessException.getMessage();
         errorAttributes.put("timestamp", timestamp);
         errorAttributes.put("path", path);
         errorAttributes.put("error", errorStr);

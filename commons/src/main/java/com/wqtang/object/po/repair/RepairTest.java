@@ -1,5 +1,6 @@
 package com.wqtang.object.po.repair;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.wqtang.object.po.BaseEntity;
 
 /**
@@ -18,46 +19,55 @@ public class RepairTest extends BaseEntity {
     /**
      * 检修记录id
      */
+    @ExcelProperty("检修记录id")
     private Long recordId;
 
     /**
      * 检修内容
      */
+    @ExcelProperty("检修内容")
     private String label;
 
     /**
      * 状态
      */
+    @ExcelProperty("状态")
     private String status;
 
     /**
      * 排序
      */
+    @ExcelProperty("排序")
     private Integer sortNo;
 
     /**
      * 是否有效 0：有效 1：失效
      */
+    @ExcelProperty("是否有效 0：有效 1：失效")
     private Integer isDelete;
 
     /**
      * 文件1
      */
+    @ExcelProperty("文件1")
     private String file1;
 
     /**
      * 文件2
      */
+    @ExcelProperty("文件2")
     private String file2;
 
     /**
      * 文件3
      */
+    @ExcelProperty("文件3")
     private String file3;
 
     /**
      * 文件4
      */
+    @ExcelProperty("文件4")
     private String file4;
 
     public Long getId() {

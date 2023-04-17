@@ -2,16 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wqtang.repair.RepairTestMapper">
 
-    <insert id="insert">
+    <select id="listByParams" resultType="com.wqtang.object.po.repair.RepairTest">
+        select rt.*
+        from repair_test rt
+        <where>
+            <if test="recordId != null and recordId != ''">and rt.record_id = #{recordId}</if>
+            <if test="label != null and label != ''">and rt.label = #{label}</if>
+            <if test="status != null and status != ''">and rt.status = #{status}</if>
+            <if test="sortNo != null and sortNo != ''">and rt.sort_no = #{sortNo}</if>
+            <if test="isDelete != null and isDelete != ''">and rt.is_delete = #{isDelete}</if>
+        </where>
+    </select>
 
+    <insert id="insert">
+        insert into repair_test
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">record_id,</if>
+            <if test="label != null">label,</if>
+            <if test="status != null">status,</if>
+            <if test="sortNo != null">sort_no,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordId != null">#{recordId},</if>
+            <if test="label != null">#{label},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortNo != null">#{sortNo},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
     </insert>
 
     <update id="update">
-
+        update repair_test
+        <set>
+            <if test="recordId != null">record_id = #{recordId},</if>
+            <if test="label != null">label = #{label},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortNo != null">sort_no = #{sortNo},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </set>
+        where id = #{id}
     </update>
 
     <delete id="deleteById">
-
+        delete from repair_test
+        where id = #{id}
     </delete>
 
 </mapper>

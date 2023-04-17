@@ -22,4 +22,6 @@ public interface SystemDictionaryDataMapper {
 
     void batchDeleteByDictCode(Long[] dictCodes);
 
+    boolean existsByDictType(String dictType);
+
 }

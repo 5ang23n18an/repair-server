@@ -36,7 +36,9 @@
         <pagehelper-spring-boot-starter.version>1.4.6</pagehelper-spring-boot-starter.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
-        <jjwt-api.version>0.10.5</jjwt-api.version>
+        <jjwt-api.version>0.11.5</jjwt-api.version>
+        <jjwt-impl.version>0.11.5</jjwt-impl.version>
+        <jjwt-jackson.version>0.11.5</jjwt-jackson.version>
         <mail.version>1.4.4</mail.version>
         <easyexcel.version>3.1.1</easyexcel.version>
     </properties>
@@ -75,6 +77,11 @@
                 <version>${commons-io.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper-spring-boot-starter.version}</version>
@@ -93,6 +100,18 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
                 <version>${jjwt-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt-impl.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt-jackson.version}</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>javax.mail</groupId>

@@ -71,7 +71,7 @@ public class SystemPositionController {
      */
     @GetMapping("/{postId}")
     public SystemPosition getById(@PathVariable("postId") Long postId) {
-        return systemPositionService.getById(postId);
+        return systemPositionService.getByPostId(postId);
     }
 
     /**
@@ -123,8 +123,8 @@ public class SystemPositionController {
      *
      * @return
      */
-    @GetMapping("/list")
-    public List<SystemPosition> getList() {
+    @GetMapping("/all")
+    public List<SystemPosition> getAll() {
         return systemPositionService.listByParams(null);
     }
 
