@@ -7,10 +7,13 @@ import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.system.SystemMenuService;
 import com.wqtang.system.SystemUserMapper;
+import com.wqtang.util.ServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,6 +31,9 @@ public class UserDetailsService implements org.springframework.security.core.use
     private SystemUserMapper systemUserMapper;
     @Resource(name = "systemMenuService")
     private SystemMenuService systemMenuService;
+    @Lazy
+    @Resource(name = "passwordEncoder")
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,6 +49,11 @@ public class UserDetailsService implements org.springframework.security.core.use
         if (UserStatus.DELETED.getCode().equals(user.getDelFlag())) {
             LOGGER.info("`UserDetailsService.loadUserByUsername`, user is deleted, username = {}", username);
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该用户已被删除");
+        }
+        String password = ((String) ServletUtils.getHttpServletRequest().getAttribute("password"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            LOGGER.info("`UserDetailsService.loadUserByUsername`, password doesn't match with username = {}", username);
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "用户名或密码错误");
         }
         return new LoginUser(user.getUserId(), user.getDeptId(), user, systemMenuService.getPermissionsByUser(user));
     }

@@ -64,6 +64,7 @@ public class TokenService {
      */
     public String authenticateAndCreateAccessToken(String username, String password) {
         // 验证用户信息
+        ServletUtils.getHttpServletRequest().setAttribute("password", password);
         Authentication userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         // 记录用户信息
         SecurityUtils.setAuthentication(userAuthentication);
