@@ -61,7 +61,7 @@ public class RepairInfoController {
      * @param request
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody RepairInfo request) {
         if (repairInfoService.isSwitchNoDuplicated(request.getSwitchNo())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该道岔编号已经存在");
@@ -74,7 +74,7 @@ public class RepairInfoController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody RepairInfo request) {
         repairInfoService.update(request);
     }

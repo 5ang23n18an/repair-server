@@ -32,8 +32,8 @@
             <if test="pasteChecker != null and pasteChecker != ''">and paste_checker = #{pasteChecker}</if>
             <if test="circuitStandard != null and circuitStandard != ''">and circuit_standard = #{circuitStandard}</if>
             <if test="express != null and express != ''">and express = #{express}</if>
-            <if test="installDate != null and installDate != ''">and install_date = #{installDate}</if>
-            <if test="unloadingDate != null and unloadingDate != ''">and unloading_date = #{unloadingDate}</if>
+            <if test="installDate != null">and install_date = #{installDate}</if>
+            <if test="unloadingDate != null">and unloading_date = #{unloadingDate}</if>
             <if test="lineCoordinates != null and lineCoordinates != ''">and line_coordinates = #{lineCoordinates}</if>
             <if test="lineEnviroment != null and lineEnviroment != ''">and line_enviroment = #{lineEnviroment}</if>
             <if test="ballastBedType != null and ballastBedType != ''">and ballast_bed_type = #{ballastBedType}</if>
@@ -52,128 +52,122 @@
     <insert id="insert">
         insert into repair_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="switchNo != null">switch_no</if>
-            <if test="route != null">route</if>
-            <if test="station != null">station</if>
-            <if test="dep != null">dep</if>
-            <if test="org != null">org</if>
-            <if test="name != null">name</if>
-            <if test="eqtType != null">eqt_type</if>
-            <if test="eqtMode != null">eqt_mode</if>
-            <if test="eqtLevel != null">eqt_level</if>
-            <if test="admitLocation != null">admit_location</if>
-            <if test="positionColsed != null">position_colsed</if>
-            <if test="action != null">action</if>
-            <if test="sequence != null">sequence</if>
-            <if test="lockMode != null">lock_mode</if>
-            <if test="installationMode != null">installation_mode</if>
-            <if test="installationDrawingNo != null">installation_drawing_no</if>
-            <if test="externalLockingDevice != null">external_locking_device</if>
-            <if test="pasteChecker != null">paste_checker</if>
-            <if test="circuitStandard != null">circuit_standard</if>
-            <if test="express != null">express</if>
-            <if test="installDate != null">install_date</if>
-            <if test="unloadingDate != null">unloading_date</if>
-            <if test="lineCoordinates != null">line_coordinates</if>
-            <if test="lineEnviroment != null">line_enviroment</if>
-            <if test="ballastBedType != null">ballast_bed_type</if>
-            <if test="switchType != null">switch_type</if>
-            <if test="railType != null">rail_type</if>
-            <if test="switchNum != null">switch_num</if>
-            <if test="drawingNum != null">drawing_num</if>
-            <if test="responsible != null">responsible</if>
-            <if test="locked != null">locked</if>
-            <if test="pic != null">pic</if>
-            <if test="coordinateX != null">coordinate_x</if>
-            <if test="coordinateY != null">coordinate_y</if>
-            <if test="createBy != null">create_by</if>
-            <if test="createTime != null">create_time</if>
-            <if test="updateBy != null">update_by</if>
-            <if test="updateTime != null">update_time</if>
+            <if test="switchNo != null">switch_no,</if>
+            <if test="route != null">route,</if>
+            <if test="station != null">station,</if>
+            <if test="dep != null">dep,</if>
+            <if test="org != null">org,</if>
+            <if test="name != null">name,</if>
+            <if test="eqtType != null">eqt_type,</if>
+            <if test="eqtMode != null">eqt_mode,</if>
+            <if test="eqtLevel != null">eqt_level,</if>
+            <if test="admitLocation != null">admit_location,</if>
+            <if test="positionColsed != null">position_colsed,</if>
+            <if test="action != null">action,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="lockMode != null">lock_mode,</if>
+            <if test="installationMode != null">installation_mode,</if>
+            <if test="installationDrawingNo != null">installation_drawing_no,</if>
+            <if test="externalLockingDevice != null">external_locking_device,</if>
+            <if test="pasteChecker != null">paste_checker,</if>
+            <if test="circuitStandard != null">circuit_standard,</if>
+            <if test="express != null">express,</if>
+            <if test="installDate != null">install_date,</if>
+            <if test="unloadingDate != null">unloading_date,</if>
+            <if test="lineCoordinates != null">line_coordinates,</if>
+            <if test="lineEnviroment != null">line_enviroment,</if>
+            <if test="ballastBedType != null">ballast_bed_type,</if>
+            <if test="switchType != null">switch_type,</if>
+            <if test="railType != null">rail_type,</if>
+            <if test="switchNum != null">switch_num,</if>
+            <if test="drawingNum != null">drawing_num,</if>
+            <if test="responsible != null">responsible,</if>
+            <if test="locked != null">locked,</if>
+            <if test="pic != null">pic,</if>
+            <if test="coordinateX != null">coordinate_x,</if>
+            <if test="coordinateY != null">coordinate_y,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="switchNo != null">#{switchNo}</if>
-            <if test="route != null">#{route}</if>
-            <if test="station != null">#{station}</if>
-            <if test="dep != null">#{dep}</if>
-            <if test="org != null">#{org}</if>
-            <if test="name != null">#{name}</if>
-            <if test="eqtType != null">#{eqtType}</if>
-            <if test="eqtMode != null">#{eqtMode}</if>
-            <if test="eqtLevel != null">#{eqtLevel}</if>
-            <if test="admitLocation != null">#{admitLocation}</if>
-            <if test="positionColsed != null">#{positionColsed}</if>
-            <if test="action != null">#{action}</if>
-            <if test="sequence != null">#{sequence}</if>
-            <if test="lockMode != null">#{lockMode}</if>
-            <if test="installationMode != null">#{installationMode}</if>
-            <if test="installationDrawingNo != null">#{installationDrawingNo}</if>
-            <if test="externalLockingDevice != null">#{externalLockingDevice}</if>
-            <if test="pasteChecker != null">#{pasteChecker}</if>
-            <if test="circuitStandard != null">#{circuitStandard}</if>
-            <if test="express != null">#{express}</if>
-            <if test="installDate != null">#{installDate}</if>
-            <if test="unloadingDate != null">#{unloadingDate}</if>
-            <if test="lineCoordinates != null">#{lineCoordinates}</if>
-            <if test="lineEnviroment != null">#{lineEnviroment}</if>
-            <if test="ballastBedType != null">#{ballastBedType}</if>
-            <if test="switchType != null">#{switchType}</if>
-            <if test="railType != null">#{railType}</if>
-            <if test="switchNum != null">#{switchNum}</if>
-            <if test="drawingNum != null">#{drawingNum}</if>
-            <if test="responsible != null">#{responsible}</if>
-            <if test="locked != null">#{locked}</if>
-            <if test="pic != null">#{pic}</if>
-            <if test="coordinateX != null">#{coordinateX}</if>
-            <if test="coordinateY != null">#{coordinateY}</if>
-            <if test="createBy != null">#{createBy}</if>
-            <if test="createTime != null">#{createTime}</if>
-            <if test="updateBy != null">#{updateBy}</if>
-            <if test="updateTime != null">#{updateTime}</if>
+            <if test="switchNo != null">#{switchNo},</if>
+            <if test="route != null">#{route},</if>
+            <if test="station != null">#{station},</if>
+            <if test="dep != null">#{dep},</if>
+            <if test="org != null">#{org},</if>
+            <if test="name != null">#{name},</if>
+            <if test="eqtType != null">#{eqtType},</if>
+            <if test="eqtMode != null">#{eqtMode},</if>
+            <if test="eqtLevel != null">#{eqtLevel},</if>
+            <if test="admitLocation != null">#{admitLocation},</if>
+            <if test="positionColsed != null">#{positionColsed},</if>
+            <if test="action != null">#{action},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="lockMode != null">#{lockMode},</if>
+            <if test="installationMode != null">#{installationMode},</if>
+            <if test="installationDrawingNo != null">#{installationDrawingNo},</if>
+            <if test="externalLockingDevice != null">#{externalLockingDevice},</if>
+            <if test="pasteChecker != null">#{pasteChecker},</if>
+            <if test="circuitStandard != null">#{circuitStandard},</if>
+            <if test="express != null">#{express},</if>
+            <if test="installDate != null">#{installDate},</if>
+            <if test="unloadingDate != null">#{unloadingDate},</if>
+            <if test="lineCoordinates != null">#{lineCoordinates},</if>
+            <if test="lineEnviroment != null">#{lineEnviroment},</if>
+            <if test="ballastBedType != null">#{ballastBedType},</if>
+            <if test="switchType != null">#{switchType},</if>
+            <if test="railType != null">#{railType},</if>
+            <if test="switchNum != null">#{switchNum},</if>
+            <if test="drawingNum != null">#{drawingNum},</if>
+            <if test="responsible != null">#{responsible},</if>
+            <if test="locked != null">#{locked},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="coordinateX != null">#{coordinateX},</if>
+            <if test="coordinateY != null">#{coordinateY},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
         </trim>
     </insert>
 
     <update id="update">
         update repair_info
         <trim prefix="set" suffixOverrides=",">
-            <if test="switchNo != null">switch_no = #{switchNo}</if>
-            <if test="route != null">route = #{route}</if>
-            <if test="station != null">station = #{station}</if>
-            <if test="dep != null">dep = #{dep}</if>
-            <if test="org != null">org = #{org}</if>
-            <if test="name != null">name = #{name}</if>
-            <if test="eqtType != null">eqt_type = #{eqtType}</if>
-            <if test="eqtMode != null">eqt_mode = #{eqtMode}</if>
-            <if test="eqtLevel != null">eqt_level = #{eqtLevel}</if>
-            <if test="admitLocation != null">admit_location = #{admitLocation}</if>
-            <if test="positionColsed != null">position_colsed = #{positionColsed}</if>
-            <if test="action != null">action = #{action}</if>
-            <if test="sequence != null">sequence = #{sequence}</if>
-            <if test="lockMode != null">lock_mode = #{lockMode}</if>
-            <if test="installationMode != null">installation_mode = #{installationMode}</if>
-            <if test="installationDrawingNo != null">installation_drawing_no = #{installationDrawingNo}</if>
-            <if test="externalLockingDevice != null">external_locking_device = #{externalLockingDevice}</if>
-            <if test="pasteChecker != null">paste_checker = #{pasteChecker}</if>
-            <if test="circuitStandard != null">circuit_standard = #{circuitStandard}</if>
-            <if test="express != null">express = #{express}</if>
-            <if test="installDate != null">install_date = #{installDate}</if>
-            <if test="unloadingDate != null">unloading_date = #{unloadingDate}</if>
-            <if test="lineCoordinates != null">line_coordinates = #{lineCoordinates}</if>
-            <if test="lineEnviroment != null">line_enviroment = #{lineEnviroment}</if>
-            <if test="ballastBedType != null">ballast_bed_type = #{ballastBedType}</if>
-            <if test="switchType != null">switch_type = #{switchType}</if>
-            <if test="railType != null">rail_type = #{railType}</if>
-            <if test="switchNum != null">switch_num = #{switchNum}</if>
-            <if test="drawingNum != null">drawing_num = #{drawingNum}</if>
-            <if test="responsible != null">responsible = #{responsible}</if>
-            <if test="locked != null">locked = #{locked}</if>
-            <if test="pic != null">pic = #{pic}</if>
-            <if test="coordinateX != null">coordinate_x = #{coordinateX}</if>
-            <if test="coordinateY != null">coordinate_y = #{coordinateY}</if>
-            <if test="createBy != null">create_by = #{createBy}</if>
-            <if test="createTime != null">create_time = #{createTime}</if>
-            <if test="updateBy != null">update_by = #{updateBy}</if>
-            <if test="updateTime != null">update_time = #{updateTime}</if>
+            <if test="switchNo != null">switch_no = #{switchNo},</if>
+            <if test="route != null">route = #{route},</if>
+            <if test="station != null">station = #{station},</if>
+            <if test="dep != null">dep = #{dep},</if>
+            <if test="org != null">org = #{org},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="eqtType != null">eqt_type = #{eqtType},</if>
+            <if test="eqtMode != null">eqt_mode = #{eqtMode},</if>
+            <if test="eqtLevel != null">eqt_level = #{eqtLevel},</if>
+            <if test="admitLocation != null">admit_location = #{admitLocation},</if>
+            <if test="positionColsed != null">position_colsed = #{positionColsed},</if>
+            <if test="action != null">action = #{action},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="lockMode != null">lock_mode = #{lockMode},</if>
+            <if test="installationMode != null">installation_mode = #{installationMode},</if>
+            <if test="installationDrawingNo != null">installation_drawing_no = #{installationDrawingNo},</if>
+            <if test="externalLockingDevice != null">external_locking_device = #{externalLockingDevice},</if>
+            <if test="pasteChecker != null">paste_checker = #{pasteChecker},</if>
+            <if test="circuitStandard != null">circuit_standard = #{circuitStandard},</if>
+            <if test="express != null">express = #{express},</if>
+            <if test="installDate != null">install_date = #{installDate},</if>
+            <if test="unloadingDate != null">unloading_date = #{unloadingDate},</if>
+            <if test="lineCoordinates != null">line_coordinates = #{lineCoordinates},</if>
+            <if test="lineEnviroment != null">line_enviroment = #{lineEnviroment},</if>
+            <if test="ballastBedType != null">ballast_bed_type = #{ballastBedType},</if>
+            <if test="switchType != null">switch_type = #{switchType},</if>
+            <if test="railType != null">rail_type = #{railType},</if>
+            <if test="switchNum != null">switch_num = #{switchNum},</if>
+            <if test="drawingNum != null">drawing_num = #{drawingNum},</if>
+            <if test="responsible != null">responsible = #{responsible},</if>
+            <if test="locked != null">locked = #{locked},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="coordinateX != null">coordinate_x = #{coordinateX},</if>
+            <if test="coordinateY != null">coordinate_y = #{coordinateY},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
         </trim>
         where id = #{id}
     </update>
