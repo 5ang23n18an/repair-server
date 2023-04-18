@@ -55,7 +55,7 @@ public class SystemMenuController {
         return menuList.stream().map(TreeInfo::new).collect(Collectors.toList());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
@@ -68,7 +68,7 @@ public class SystemMenuController {
         systemMenuService.insert(request);
     }
 
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");

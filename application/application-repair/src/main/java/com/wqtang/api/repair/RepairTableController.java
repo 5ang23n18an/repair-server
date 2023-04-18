@@ -71,7 +71,7 @@ public class RepairTableController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody RepairTable request) {
         request.setCreateBy(SecurityUtils.getCurrentUsername());
         repairTableService.insert(request);
@@ -82,7 +82,7 @@ public class RepairTableController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody RepairTable request) {
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         repairTableService.update(request);

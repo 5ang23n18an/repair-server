@@ -54,7 +54,7 @@ public class SystemRoleController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemRole request) {
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
@@ -71,7 +71,7 @@ public class SystemRoleController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemRole request) {
         checkRoleAllowed(request.getRoleId());
         if (systemRoleService.isRoleNameDuplicated(request)) {

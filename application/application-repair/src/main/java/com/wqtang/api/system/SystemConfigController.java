@@ -60,7 +60,7 @@ public class SystemConfigController {
     /**
      * 新增参数配置信息
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemConfig request) {
         systemConfigService.insert(request);
     }
@@ -68,7 +68,7 @@ public class SystemConfigController {
     /**
      * 修改参数配置信息
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemConfig request) {
         systemConfigService.update(request);
     }

@@ -79,7 +79,7 @@ public class SystemPositionController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
@@ -96,7 +96,7 @@ public class SystemPositionController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");

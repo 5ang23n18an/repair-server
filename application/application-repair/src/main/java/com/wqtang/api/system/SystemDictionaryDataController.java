@@ -103,7 +103,7 @@ public class SystemDictionaryDataController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemDictionaryData request) {
         request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryDataService.insert(request);
@@ -115,7 +115,7 @@ public class SystemDictionaryDataController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemDictionaryData request) {
         request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryDataService.update(request);

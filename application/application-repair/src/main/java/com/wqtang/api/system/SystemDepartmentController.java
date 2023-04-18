@@ -105,7 +105,7 @@ public class SystemDepartmentController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
@@ -119,7 +119,7 @@ public class SystemDepartmentController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemDepartment request) {
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");

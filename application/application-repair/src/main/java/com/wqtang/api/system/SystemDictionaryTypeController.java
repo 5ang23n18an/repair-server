@@ -79,7 +79,7 @@ public class SystemDictionaryTypeController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
     public void add(@RequestBody SystemDictionaryType request) {
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
@@ -93,7 +93,7 @@ public class SystemDictionaryTypeController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     public void edit(@RequestBody SystemDictionaryType request) {
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
