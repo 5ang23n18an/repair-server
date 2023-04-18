@@ -63,8 +63,7 @@ public class RepairInfoController {
      */
     @PostMapping("/add")
     public void add(@RequestBody RepairInfo request) {
-        RepairInfo repairInfoFromDb = repairInfoService.getBySwitchNo(request.getSwitchNo());
-        if (repairInfoFromDb != null) {
+        if (repairInfoService.isSwitchNoDuplicated(request.getSwitchNo())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该道岔编号已经存在");
         }
         repairInfoService.insert(request);

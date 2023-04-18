@@ -97,4 +97,8 @@ public class RepairInfoService {
         return repairInfoMapper.getBySwitchNo(switchNo);
     }
 
+    public boolean isSwitchNoDuplicated(String switchNo) {
+        return getBySwitchNo(switchNo) != null;
+    }
+
 }
