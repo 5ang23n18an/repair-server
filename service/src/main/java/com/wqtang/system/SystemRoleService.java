@@ -29,20 +29,13 @@ public class SystemRoleService {
     private SystemUserRoleMapper systemUserRoleMapper;
 
     public Set<String> getRolesByUser(SystemUser user) {
-        Set<String> roles = Sets.newHashSet();
         if (user.isAdmin()) {
-            roles.add("admin");
-        } else {
-            roles.addAll(getRolesByUserId(user.getUserId()));
+            return Sets.newHashSet("admin");
         }
-        return roles;
-    }
-
-    private Set<String> getRolesByUserId(Long userId) {
-        List<SystemRole> roleList = systemRoleMapper.listByUserId(userId);
         Set<String> roles = Sets.newHashSet();
-        for (SystemRole systemRole : roleList) {
-            roles.addAll(Arrays.asList(systemRole.getRoleKey().split(",")));
+        List<SystemRole> roleList = systemRoleMapper.listByUserId(user.getUserId());
+        for (SystemRole role : roleList) {
+            roles.addAll(Arrays.asList(role.getRoleKey().split(",")));
         }
         return roles;
     }

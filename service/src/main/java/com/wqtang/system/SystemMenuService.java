@@ -53,20 +53,13 @@ public class SystemMenuService {
     }
 
     public Set<String> getPermissionsByUser(SystemUser user) {
-        Set<String> rolePermissions = Sets.newHashSet();
         if (user.isAdmin()) {
-            rolePermissions.add("*:*:*");
-        } else {
-            rolePermissions.addAll(getPermissionsByUserId(user.getUserId()));
+            return Sets.newHashSet("*:*:*");
         }
-        return rolePermissions;
-    }
-
-    private Set<String> getPermissionsByUserId(Long userId) {
         Set<String> permissions = Sets.newHashSet();
-        List<String> permsList = systemMenuMapper.listPermissionsByUserId(userId);
-        for (String perm : permsList) {
-            permissions.addAll(Arrays.asList(perm.split(",")));
+        List<String> permsList = systemMenuMapper.listPermissionsByUserId(user.getUserId());
+        for (String perms : permsList) {
+            permissions.addAll(Arrays.asList(perms.split(",")));
         }
         return permissions;
     }

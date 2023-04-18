@@ -87,7 +87,7 @@
     </delete>
 
     <select id="listPermissionsByUserId" resultType="java.lang.String">
-        select sm.menu_id
+        select sm.perms
         from system_menu sm
                  left join system_role_menu srm on sm.menu_id = srm.menu_id
                  left join system_user_role sur on srm.role_id = sur.role_id
