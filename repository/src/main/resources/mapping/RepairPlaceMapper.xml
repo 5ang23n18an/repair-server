@@ -27,9 +27,7 @@
     </select>
 
     <select id="listByType" resultType="com.wqtang.object.po.repair.RepairPlace">
-        select id,
-               name,
-               parent_id
+        select *
         from repair_place
         where type = #{type}
     </select>
