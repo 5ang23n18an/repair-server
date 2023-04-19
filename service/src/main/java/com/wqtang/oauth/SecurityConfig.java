@@ -89,14 +89,16 @@ public class SecurityConfig {
 //                .exceptionHandling().authenticationEntryPoint(exceptionHandler).and()
                 // 请求权限设置
                 .authorizeRequests(authorize -> authorize
-                        // 以下请求允许用户任意访问
+                        // 以下资源路径允许任意状态时访问(登录或未登录均可)
                         .antMatchers(
                                 "/",
                                 "/*.html",
                                 "/**/*.html",
                                 "/**/*.css",
                                 "/**/*.js").permitAll()
-                        // 以下请求允许匿名访问(无需token)
+                        // fixme: 仅用于测试, 需要记得事后删除!
+                        .antMatchers("/repair/**", "system/**").permitAll()
+                        // 以下资源路径仅允许未登录状态时访问(无需token)
                         .antMatchers(
                                 "/system/user/login",
                                 "/system/user/register",
@@ -105,7 +107,7 @@ public class SecurityConfig {
                                 "/system/user/getEmail",
                                 "/captcha/image",
                                 "/file/upload").anonymous()
-                        // 除上面以外的所有请求都需要验证权限
+                        // 除上面以外的所有资源路径都需要在登录状态时访问
                         .anyRequest().authenticated())
                 // 在用户名密码认证过滤器之前, 添加一个JWT过滤器
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
