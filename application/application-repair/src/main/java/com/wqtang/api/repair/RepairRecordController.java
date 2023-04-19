@@ -98,7 +98,7 @@ public class RepairRecordController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
     @Transactional(rollbackFor = Exception.class)
     public void edit(@RequestBody RepairRecord request) {
         // 修改基础信息
@@ -150,10 +150,12 @@ public class RepairRecordController {
             repairRecord.setStationId(stationList.get(1));
             repairRecord.setSwitchId(stationList.get(2));
         }
-        repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
+        String username = SecurityUtils.getCurrentUsername();
         if (isAdd) {
+            repairRecord.setCreateBy(username);
             repairRecordService.insert(repairRecord);
         } else {
+            repairRecord.setUpdateBy(username);
             repairRecordService.update(repairRecord);
         }
     }
@@ -210,7 +212,7 @@ public class RepairRecordController {
     @GetMapping("/count")
     public List<GetRepairRecordCountOfDayResponse> countOfDay(RepairRecord request) {
         List<Map<String, Object>> dailyRecordList = repairRecordService.listCountOfDailyRecord(request);
-        List<GetRepairRecordCountOfDayResponse> list = Lists.newArrayList();
+        List<GetRepairRecordCountOfDayResponse> list = Lists.newArrayListWithExpectedSize(dailyRecordList.size());
         for (Map<String, Object> dailyRecord : dailyRecordList) {
             String createTime = MapUtils.getString(dailyRecord, "createTime");
             float round = MapUtils.getFloat(dailyRecord, "round");
