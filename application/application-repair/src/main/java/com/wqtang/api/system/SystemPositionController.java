@@ -123,9 +123,9 @@ public class SystemPositionController {
      *
      * @return
      */
-    @GetMapping("/all")
-    public List<SystemPosition> getAll() {
-        return systemPositionService.listByParams(null);
+    @GetMapping("/list")
+    public List<SystemPosition> getList() {
+        return systemPositionService.listAll();
     }
 
 }

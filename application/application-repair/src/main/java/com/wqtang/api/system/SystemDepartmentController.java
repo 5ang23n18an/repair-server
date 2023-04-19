@@ -46,7 +46,7 @@ public class SystemDepartmentController {
      */
     @GetMapping("/list/exclude/{deptId}")
     public List<SystemDepartment> getListExclude(@PathVariable("deptId") Long deptId) {
-        List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
+        List<SystemDepartment> departmentList = systemDepartmentService.listAll();
         for (Iterator<SystemDepartment> iterator = departmentList.iterator(); iterator.hasNext(); ) {
             SystemDepartment department = iterator.next();
             boolean match = department.getDeptId().equals(deptId)
@@ -91,7 +91,7 @@ public class SystemDepartmentController {
     @GetMapping("/tree/{roleId}")
     public TreeListInfo deptTreeListInfo(@PathVariable("roleId") Long roleId) {
         List<Long> deptIds = systemDepartmentService.listIdsByRoleId(roleId);
-        List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
+        List<SystemDepartment> departmentList = systemDepartmentService.listAll();
         systemDepartmentService.refactorAsTree(departmentList);
         List<TreeInfo> treeInfo = departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
         TreeListInfo treeListInfo = new TreeListInfo();

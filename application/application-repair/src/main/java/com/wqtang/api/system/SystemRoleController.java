@@ -136,9 +136,9 @@ public class SystemRoleController {
      *
      * @return
      */
-    @GetMapping("/all")
-    public List<SystemRole> getAll() {
-        return systemRoleService.listByParams(null);
+    @GetMapping("/list")
+    public List<SystemRole> getList() {
+        return systemRoleService.listAll();
     }
 
     /**

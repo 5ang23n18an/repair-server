@@ -27,6 +27,10 @@ public class SystemPositionService {
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemPosition> excelUtils;
 
+    public List<SystemPosition> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemPosition> listByParams(SystemPosition position) {
         return systemPositionMapper.listByParams(position);
     }

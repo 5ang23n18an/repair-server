@@ -37,6 +37,10 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
 
+    public List<SystemDictionaryType> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemDictionaryType> listByParams(SystemDictionaryType dictionaryType) {
         return systemDictionaryTypeMapper.listByParams(dictionaryType);
     }
@@ -89,7 +93,7 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     @Override
     public void loadIntoCache() {
-        List<SystemDictionaryType> dictTypeList = listByParams(null);
+        List<SystemDictionaryType> dictTypeList = listAll();
         for (SystemDictionaryType dictType : dictTypeList) {
             SystemDictionaryData param = new SystemDictionaryData();
             param.setStatus(UserConstants.NORMAL);

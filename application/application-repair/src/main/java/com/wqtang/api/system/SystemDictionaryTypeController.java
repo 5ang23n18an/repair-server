@@ -131,9 +131,9 @@ public class SystemDictionaryTypeController {
      *
      * @return
      */
-    @GetMapping("/all")
-    public List<SystemDictionaryType> getAll() {
-        return systemDictionaryTypeService.listByParams(null);
+    @GetMapping("/list")
+    public List<SystemDictionaryType> getList() {
+        return systemDictionaryTypeService.listAll();
     }
 
 }

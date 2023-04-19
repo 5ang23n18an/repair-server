@@ -75,7 +75,7 @@ public class RepairPlaceController {
      */
     @GetMapping("/groupByType")
     public Map<String, List<RepairPlace>> groupByType() {
-        List<RepairPlace> list = repairPlaceService.listByParams(null);
+        List<RepairPlace> list = repairPlaceService.listAll();
         return list.stream().collect(Collectors.groupingBy(RepairPlace::getType));
     }
 

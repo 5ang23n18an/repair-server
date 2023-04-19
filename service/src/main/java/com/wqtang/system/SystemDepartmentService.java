@@ -26,6 +26,10 @@ public class SystemDepartmentService {
     @Resource(name = "systemRoleMapper")
     private SystemRoleMapper systemRoleMapper;
 
+    public List<SystemDepartment> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemDepartment> listByParams(SystemDepartment department) {
         return systemDepartmentMapper.listByParams(department);
     }

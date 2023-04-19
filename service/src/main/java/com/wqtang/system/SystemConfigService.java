@@ -32,6 +32,10 @@ public class SystemConfigService extends AbstractCacheRefresh {
         return systemConfigMapper.getByKey(key);
     }
 
+    public List<SystemConfig> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemConfig> listByParams(SystemConfig config) {
         return systemConfigMapper.listByParams(config);
     }
@@ -61,7 +65,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
 
     @Override
     public void loadIntoCache() {
-        List<SystemConfig> list = listByParams(null);
+        List<SystemConfig> list = listAll();
         for (SystemConfig systemConfig : list) {
             redisUtils.set(systemConfig.getConfigKey(), systemConfig.getConfigValue());
         }

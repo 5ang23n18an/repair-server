@@ -21,6 +21,10 @@ public class RepairPlaceService {
         return repairPlaceMapper.getById(id);
     }
 
+    public List<RepairPlace> listAll() {
+        return listByParams(null);
+    }
+
     public List<RepairPlace> listByParams(GetRepairPlaceListRequest request) {
         return repairPlaceMapper.listByParams(request);
     }

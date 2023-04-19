@@ -40,6 +40,10 @@ public class SystemRoleService {
         return roles;
     }
 
+    public List<SystemRole> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemRole> listByParams(SystemRole role) {
         return systemRoleMapper.listByParams(role);
     }
