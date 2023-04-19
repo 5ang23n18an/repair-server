@@ -58,11 +58,11 @@ public class SystemDictionaryDataController {
      */
     @GetMapping("/export")
     public ResponseEntity<byte[]> export(SystemDictionaryData request) {
-        LOGGER.info("`SystemDictionaryDataController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return systemDictionaryDataService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `SystemDictionaryDataController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }

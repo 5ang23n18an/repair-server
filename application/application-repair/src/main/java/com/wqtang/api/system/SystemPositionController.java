@@ -54,11 +54,11 @@ public class SystemPositionController {
      */
     @GetMapping("/export")
     public ResponseEntity<byte[]> export(SystemPosition request) {
-        LOGGER.info("`SystemPositionController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return systemPositionService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `SystemPositionController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }

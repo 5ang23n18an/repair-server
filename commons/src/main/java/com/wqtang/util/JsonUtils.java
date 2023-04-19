@@ -40,8 +40,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.writer().writeValueAsString(object);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.getJson`, object = {}, error message is {}",
-                    object, e.getMessage(), e);
+            LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -50,8 +49,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.getPrettyJson`, object = {}, error message is {}",
-                    object, e.getMessage(), e);
+            LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -60,8 +58,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER_NOT_NULL.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.getPrettyJsonExcludeNullProperty`, object = {}, error message is {}",
-                    object, e.getMessage(), e);
+            LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -70,8 +67,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER_NOT_EMPTY.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.getPrettyJsonExcludeEmptyProperty`, object = {}, error message is {}",
-                    object, e.getMessage(), e);
+            LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -80,8 +76,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.readValue(jsonStr, clazz);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.readValue`, jsonStr = {}, class = {}, error message is {}",
-                    jsonStr, clazz.getName(), e.getMessage(), e);
+            LOGGER.error("jsonStr = {}, class = {}, error message is {}", jsonStr, clazz.getName(), e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -90,8 +85,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.readValue(jsonStr, type);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.readValue`, jsonStr = {}, error message is {}",
-                    jsonStr, e.getMessage(), e);
+            LOGGER.error("jsonStr = {}, error message is {}", jsonStr, e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -100,8 +94,7 @@ public class JsonUtils {
         try {
             return OBJECT_MAPPER.convertValue(object, clazz);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `JsonUtils.convertValue`, object = {}, class = {}, error message is {}",
-                    object, clazz.getName(), e.getMessage(), e);
+            LOGGER.error("object = {}, class = {}, error message is {}", object, clazz.getName(), e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }

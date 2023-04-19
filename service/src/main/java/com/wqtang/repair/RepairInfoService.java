@@ -79,16 +79,16 @@ public class RepairInfoService {
         for (RepairInfo repairInfo : list) {
             RepairInfo repairInfoFromDb = getBySwitchNo(repairInfo.getSwitchNo());
             if (repairInfoFromDb == null) {
-                LOGGER.info("`RepairInfoService.importData`, repairInfo will be inserted, switchNo = {}", repairInfo.getSwitchNo());
+                LOGGER.info("repairInfo will be inserted, switchNo = {}", repairInfo.getSwitchNo());
                 repairInfo.setCreateBy(username);
                 insert(repairInfo);
             } else if (updateSupport) {
-                LOGGER.info("`RepairInfoService.importData`, repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
+                LOGGER.info("repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
                 repairInfo.setId(repairInfoFromDb.getId());
                 repairInfo.setUpdateBy(username);
                 update(repairInfo);
             } else {
-                LOGGER.info("`RepairInfoService.importData`, repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
+                LOGGER.info("repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
             }
         }
     }

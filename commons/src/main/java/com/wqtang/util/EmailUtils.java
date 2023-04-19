@@ -34,11 +34,11 @@ public class EmailUtils {
         mailMessage.setTo(tos);
         mailMessage.setSubject(subject);
         mailMessage.setText(text);
-        LOGGER.info("`EmailUtils.send`, mailMessage = {}", JsonUtils.getPrettyJson(mailMessage));
+        LOGGER.info("mailMessage = {}", JsonUtils.getPrettyJson(mailMessage));
         try {
             mailSender.send(mailMessage);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `EmailUtils.send`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
         }
     }
 

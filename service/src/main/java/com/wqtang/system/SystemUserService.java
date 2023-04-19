@@ -88,7 +88,7 @@ public class SystemUserService {
         if (StringUtils.isNotEmpty(request.getApp())) {
             // login from app
             if (!"repair".equals(request.getApp())) {
-                LOGGER.error("Invalid parameter is received in `SystemUserService.login`, app = {}", request.getApp());
+                LOGGER.error("Invalid parameter is received, app = {}", request.getApp());
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "非法的APP登录信息，禁止登录");
             }
         } else {

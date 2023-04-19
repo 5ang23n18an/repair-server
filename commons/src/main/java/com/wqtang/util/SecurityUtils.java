@@ -29,7 +29,7 @@ public class SecurityUtils {
         try {
             return ((LoginUser) getAuthentication().getPrincipal());
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `SecurityUtils.getLoginUser`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.UNAUTHORIZED, "无法获取登录用户的信息");
         }
     }

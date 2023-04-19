@@ -132,7 +132,7 @@ public class TokenService {
         // 获取请求携带的令牌
         String token = getTokenFromHttpServletRequest(servletRequest);
         if (StringUtils.isEmpty(token)) {
-            LOGGER.warn("`TokenService.getLoginUser`, but token is empty");
+            LOGGER.warn("token is empty");
             return null;
         }
         try {
@@ -142,7 +142,7 @@ public class TokenService {
             String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, userKey);
             return redisUtils.getAndCast(redisKey, LoginUser.class);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `TokenService.getLoginUser`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             return null;
         }
     }
