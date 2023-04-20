@@ -54,7 +54,7 @@ public class SystemConfigController {
      */
     @GetMapping("/key/{key}")
     public SystemConfig getByKey(@PathVariable("key") String key) {
-        return systemConfigService.getByKey(key);
+        return systemConfigService.getByConfigKey(key);
     }
 
     /**
@@ -80,7 +80,7 @@ public class SystemConfigController {
      */
     @DeleteMapping("/{ids}")
     public void delete(@PathVariable("ids") Long[] ids) {
-        systemConfigService.deleteByIds(ids);
+        systemConfigService.batchDeleteByIds(ids);
     }
 
     /**

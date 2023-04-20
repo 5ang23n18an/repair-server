@@ -34,7 +34,7 @@ public class SystemDepartmentController {
      * @return
      */
     @GetMapping("/list")
-    public List<SystemDepartment> getPage(SystemDepartment request) {
+    public List<SystemDepartment> getList(SystemDepartment request) {
         return systemDepartmentService.listByParams(request);
     }
 

@@ -14,7 +14,7 @@ public interface SystemConfigMapper {
 
     SystemConfig getById(Long id);
 
-    SystemConfig getByKey(String key);
+    SystemConfig getByConfigKey(String configKey);
 
     List<SystemConfig> listByParams(SystemConfig config);
 
@@ -22,6 +22,6 @@ public interface SystemConfigMapper {
 
     void update(SystemConfig config);
 
-    void deleteByIds(Long[] ids);
+    void batchDeleteByIds(Long[] ids);
 
 }

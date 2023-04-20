@@ -28,8 +28,8 @@ public class SystemConfigService extends AbstractCacheRefresh {
         return systemConfigMapper.getById(id);
     }
 
-    public SystemConfig getByKey(String key) {
-        return systemConfigMapper.getByKey(key);
+    public SystemConfig getByConfigKey(String key) {
+        return systemConfigMapper.getByConfigKey(key);
     }
 
     public List<SystemConfig> listAll() {
@@ -48,12 +48,19 @@ public class SystemConfigService extends AbstractCacheRefresh {
         systemConfigMapper.update(request);
     }
 
-    public void deleteByIds(Long[] ids) {
-        systemConfigMapper.deleteByIds(ids);
+    public void batchDeleteByIds(Long[] ids) {
+        systemConfigMapper.batchDeleteByIds(ids);
     }
 
     public boolean isSystemConfigAvailable(SystemConfigKeyEnum configKeyEnum) {
-        SystemConfig config = getByKey(configKeyEnum.getKey());
+        // 优先从缓存中进行查询
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_CONFIG, configKeyEnum.getConfigKey()),
+                redisValue = redisUtils.getAndCast(redisKey, String.class);
+        if (redisValue != null) {
+            return BooleanUtils.toBoolean(redisValue);
+        }
+        // 缓存中没有, 则从数据库中进行查询
+        SystemConfig config = getByConfigKey(configKeyEnum.getConfigKey());
         return config != null && BooleanUtils.toBoolean(config.getConfigValue());
     }
 
@@ -66,8 +73,9 @@ public class SystemConfigService extends AbstractCacheRefresh {
     @Override
     public void loadIntoCache() {
         List<SystemConfig> list = listAll();
-        for (SystemConfig systemConfig : list) {
-            redisUtils.set(systemConfig.getConfigKey(), systemConfig.getConfigValue());
+        for (SystemConfig config : list) {
+            String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_CONFIG, config.getConfigKey());
+            redisUtils.set(redisKey, config.getConfigValue());
         }
     }
 
