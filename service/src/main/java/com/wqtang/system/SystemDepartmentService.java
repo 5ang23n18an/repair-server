@@ -34,8 +34,8 @@ public class SystemDepartmentService {
         return systemDepartmentMapper.listByParams(department);
     }
 
-    public SystemDepartment getById(Long deptId) {
-        return systemDepartmentMapper.getById(deptId);
+    public SystemDepartment getByDeptId(Long deptId) {
+        return systemDepartmentMapper.getByDeptId(deptId);
     }
 
     public void refactorAsTree(List<SystemDepartment> departmentList) {
@@ -99,9 +99,9 @@ public class SystemDepartmentService {
         systemDepartmentMapper.deleteById(deptId);
     }
 
-    public List<Long> listIdsByRoleId(Long roleId) {
+    public List<Long> listDeptIdByRoleId(Long roleId) {
         SystemRole role = systemRoleMapper.getByRoleId(roleId);
-        return systemDepartmentMapper.listIdsByRoleId(roleId, role.isDeptCheckStrictly());
+        return systemDepartmentMapper.listDeptIdByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
 }
