@@ -1,7 +1,9 @@
 package com.wqtang.api.system;
 
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.constant.UserConstants;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.vo.TreeInfo;
@@ -56,6 +58,7 @@ public class SystemMenuController {
     }
 
     @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
     public void add(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
@@ -64,11 +67,11 @@ public class SystemMenuController {
                 && !StringUtils.startsWithAny(request.getPath(), "http://", "https://")) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
         }
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemMenuService.insert(request);
     }
 
     @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
     public void edit(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
@@ -80,7 +83,6 @@ public class SystemMenuController {
         if (request.getMenuId().equals(request.getParentId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级菜单不能是自己");
         }
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemMenuService.update(request);
     }
 

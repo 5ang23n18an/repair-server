@@ -3,11 +3,12 @@ package com.wqtang.api.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemPosition;
 import com.wqtang.system.SystemPositionService;
 import com.wqtang.util.JsonUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +81,7 @@ public class SystemPositionController {
      * @param request
      */
     @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
     public void add(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
@@ -87,7 +89,6 @@ public class SystemPositionController {
         if (systemPositionService.isPostCodeDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位编码已经存在");
         }
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemPositionService.insert(request);
     }
 
@@ -97,6 +98,7 @@ public class SystemPositionController {
      * @param request
      */
     @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
     public void edit(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
@@ -104,7 +106,6 @@ public class SystemPositionController {
         if (systemPositionService.isPostCodeDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位编码已经存在");
         }
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemPositionService.update(request);
     }
 

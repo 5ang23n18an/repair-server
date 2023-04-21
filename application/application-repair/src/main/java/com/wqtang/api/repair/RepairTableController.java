@@ -1,11 +1,12 @@
 package com.wqtang.api.repair;
 
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.repair.RepairTable;
 import com.wqtang.repair.RepairTableService;
 import com.wqtang.util.JsonUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -72,8 +73,8 @@ public class RepairTableController {
      * @param request
      */
     @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
     public void add(@RequestBody RepairTable request) {
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         repairTableService.insert(request);
     }
 
@@ -83,8 +84,8 @@ public class RepairTableController {
      * @param request
      */
     @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
     public void edit(@RequestBody RepairTable request) {
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         repairTableService.update(request);
     }
 

@@ -3,13 +3,14 @@ package com.wqtang.api.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.system.SystemDictionaryData;
 import com.wqtang.system.SystemDictionaryDataService;
 import com.wqtang.util.JsonUtils;
 import com.wqtang.util.RedisUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -104,8 +105,8 @@ public class SystemDictionaryDataController {
      * @param request
      */
     @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
     public void add(@RequestBody SystemDictionaryData request) {
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryDataService.insert(request);
         refreshCacheByDictType(request.getDictType());
     }
@@ -116,8 +117,8 @@ public class SystemDictionaryDataController {
      * @param request
      */
     @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
     public void edit(@RequestBody SystemDictionaryData request) {
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryDataService.update(request);
         refreshCacheByDictType(request.getDictType());
     }
