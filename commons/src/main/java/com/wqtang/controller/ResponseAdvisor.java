@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @date 2023/3/12
  */
 @RestControllerAdvice(basePackages = {"com.wqtang.api"})
-public class ControllerResponseAdvisor implements ResponseBodyAdvice<Object> {
+public class ResponseAdvisor implements ResponseBodyAdvice<Object> {
 
     /**
      * 负责判断何时才需要对"响应信息"做额外处理
