@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemDictionaryType;
 import com.wqtang.system.SystemDictionaryTypeService;
 import com.wqtang.util.JsonUtils;
@@ -54,6 +56,7 @@ public class SystemDictionaryTypeController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "字典类型", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemDictionaryType request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
@@ -82,6 +85,7 @@ public class SystemDictionaryTypeController {
      */
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "字典类型", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryType request) {
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
@@ -96,6 +100,7 @@ public class SystemDictionaryTypeController {
      */
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "字典类型", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryType request) {
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
@@ -109,6 +114,7 @@ public class SystemDictionaryTypeController {
      * @param dictIds
      */
     @DeleteMapping("/{dictIds}")
+    @OperationLog(title = "字典类型", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("dictIds") Long[] dictIds) {
         for (Long dictId : dictIds) {
             SystemDictionaryType dictionaryType = systemDictionaryTypeService.getByDictId(dictId);
@@ -123,6 +129,7 @@ public class SystemDictionaryTypeController {
      * 刷新字典类型的缓存数据
      */
     @PutMapping("/refreshCache")
+    @OperationLog(title = "字典类型", businessType = BusinessType.CLEAN, operatorType = OperatorType.ADMIN)
     public void refreshCache() {
         systemDictionaryTypeService.refreshCache();
     }

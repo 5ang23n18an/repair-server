@@ -1,7 +1,10 @@
 package com.wqtang.api.system;
 
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
@@ -108,6 +111,7 @@ public class SystemUserController {
      * @return
      */
     @PostMapping("/modifyPassword")
+    @OperationLog(title = "修改密码", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyPassword(@RequestBody SystemUserModifyPasswordRequest request) {
         systemUserService.modifyPassword(request);
     }

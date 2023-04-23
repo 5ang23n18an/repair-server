@@ -110,6 +110,7 @@ public class SystemUserService {
         if (!expectedCode.equals(inputCode)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码错误");
         }
+        redisUtils.delete(redisKey);
     }
 
     public SystemUser getByUsername(String username) {
@@ -129,18 +130,16 @@ public class SystemUserService {
     }
 
     public void modifyPassword(SystemUserModifyPasswordRequest request) {
-        String username = request.getUsername();
-        SystemUser systemUser = getByUsername(username);
+        SystemUser systemUser = getByUsername(request.getUsername());
         if (systemUser == null) {
             throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
         }
-        String email = request.getEmail();
-        if (!systemUser.getEmail().equals(email)) {
+        if (!systemUser.getEmail().equals(request.getEmail())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请输入注册时填写的邮箱号");
         }
-        validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, email));
+        validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, request.getEmail()));
         String rawPassword = request.getPassword();
-        systemUserMapper.updatePasswordByUsername(username, passwordEncoder.encode(rawPassword));
+        systemUserMapper.updatePasswordByUsername(request.getUsername(), passwordEncoder.encode(rawPassword));
     }
 
     private void recordLoginInfo(Long userId) {

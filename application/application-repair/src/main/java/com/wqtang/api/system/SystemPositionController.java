@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemPosition;
 import com.wqtang.system.SystemPositionService;
 import com.wqtang.util.JsonUtils;
@@ -54,6 +56,7 @@ public class SystemPositionController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "岗位管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemPosition request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
@@ -82,6 +85,7 @@ public class SystemPositionController {
      */
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "岗位管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
@@ -99,6 +103,7 @@ public class SystemPositionController {
      */
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "岗位管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
@@ -115,6 +120,7 @@ public class SystemPositionController {
      * @param postIds
      */
     @DeleteMapping("/{postIds}")
+    @OperationLog(title = "岗位管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("postIds") Long[] postIds) {
         systemPositionService.batchDeleteByPostId(postIds);
     }

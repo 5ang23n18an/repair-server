@@ -5,8 +5,10 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.system.SystemUserRole;
@@ -57,6 +59,7 @@ public class SystemRoleController {
      */
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "角色管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemRole request) {
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
@@ -74,6 +77,7 @@ public class SystemRoleController {
      */
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemRole request) {
         checkRoleAllowed(request.getRoleId());
         if (systemRoleService.isRoleNameDuplicated(request)) {
@@ -94,6 +98,7 @@ public class SystemRoleController {
      */
     @PutMapping("/modify/status")
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyStatus(@RequestBody SystemRole request) {
         checkRoleAllowed(request.getRoleId());
         systemRoleService.updateStatus(request);
@@ -105,6 +110,7 @@ public class SystemRoleController {
      * @param request
      */
     @PutMapping("/modify/dataScope")
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyDataScope(@RequestBody SystemRole request) {
         checkRoleAllowed(request.getRoleId());
         systemRoleService.updateDataScope(request);
@@ -116,6 +122,7 @@ public class SystemRoleController {
      * @param roleIds
      */
     @DeleteMapping("/{roleIds}")
+    @OperationLog(title = "角色管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("roleIds") Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
@@ -183,6 +190,7 @@ public class SystemRoleController {
      * @param userIds
      */
     @PutMapping("/cancelAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
     public void batchCancelUserRole(Long roleId, Long[] userIds) {
         systemRoleService.batchDeleteUserRole(roleId, userIds);
     }
@@ -194,6 +202,7 @@ public class SystemRoleController {
      * @param userIds
      */
     @PutMapping("/selectAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
     public void selectUserRole(Long roleId, Long[] userIds) {
         List<SystemUserRole> list = Lists.newArrayListWithExpectedSize(userIds.length);
         for (Long userId : userIds) {

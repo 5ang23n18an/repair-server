@@ -2,8 +2,10 @@ package com.wqtang.api.repair;
 
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.repair.RepairTable;
 import com.wqtang.repair.RepairTableService;
 import com.wqtang.util.JsonUtils;
@@ -46,6 +48,7 @@ public class RepairTableController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "检测", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(RepairTable request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
@@ -74,6 +77,7 @@ public class RepairTableController {
      */
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "检测", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody RepairTable request) {
         repairTableService.insert(request);
     }
@@ -85,6 +89,7 @@ public class RepairTableController {
      */
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "检测", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairTable request) {
         repairTableService.update(request);
     }
@@ -95,6 +100,7 @@ public class RepairTableController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
+    @OperationLog(title = "检测", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("ids") Long[] ids) {
         repairTableService.batchDeleteByIds(ids);
     }

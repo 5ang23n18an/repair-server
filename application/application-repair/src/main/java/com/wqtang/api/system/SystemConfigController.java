@@ -2,6 +2,10 @@ package com.wqtang.api.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.system.SystemConfigService;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +65,8 @@ public class SystemConfigController {
      * 新增参数配置信息
      */
     @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "参数管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemConfig request) {
         systemConfigService.insert(request);
     }
@@ -69,6 +75,8 @@ public class SystemConfigController {
      * 修改参数配置信息
      */
     @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "参数管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemConfig request) {
         systemConfigService.update(request);
     }
@@ -79,6 +87,7 @@ public class SystemConfigController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
+    @OperationLog(title = "参数管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("ids") Long[] ids) {
         systemConfigService.batchDeleteByIds(ids);
     }
@@ -87,6 +96,7 @@ public class SystemConfigController {
      * 刷新参数配置的缓存数据
      */
     @PutMapping("/refreshCache")
+    @OperationLog(title = "参数管理", businessType = BusinessType.CLEAN, operatorType = OperatorType.ADMIN)
     public void refreshCache() {
         systemConfigService.refreshCache();
     }

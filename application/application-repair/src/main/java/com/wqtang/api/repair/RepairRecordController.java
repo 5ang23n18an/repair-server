@@ -4,8 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.RepairConstants;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.repair.RepairFileResult;
 import com.wqtang.object.po.repair.RepairRecord;
 import com.wqtang.object.po.repair.RepairTest;
@@ -13,7 +17,6 @@ import com.wqtang.object.vo.response.repair.GetRepairRecordCountOfDayResponse;
 import com.wqtang.repair.RepairFileResultService;
 import com.wqtang.repair.RepairRecordService;
 import com.wqtang.repair.RepairTestService;
-import com.wqtang.util.SecurityUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +87,8 @@ public class RepairRecordController {
      */
     @PostMapping("/addFromWeb")
     @Transactional(rollbackFor = Exception.class)
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "检修记录", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void webAdd(@RequestBody RepairRecord request) {
         // 保存基础信息
         saveRepairRecord(request, true);
@@ -100,6 +105,8 @@ public class RepairRecordController {
      */
     @PutMapping
     @Transactional(rollbackFor = Exception.class)
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "检修记录", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairRecord request) {
         // 修改基础信息
         saveRepairRecord(request, false);
@@ -116,6 +123,8 @@ public class RepairRecordController {
      */
     @PostMapping("/addFromApp")
     @Transactional(rollbackFor = Exception.class)
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "检修记录", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void appAdd(@RequestBody RepairRecord request) {
         if (CollectionUtils.isEmpty(request.getMachines())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "检修记录不得为空");
@@ -125,13 +134,13 @@ public class RepairRecordController {
             repairRecord.setRouteId(request.getRouteId());
             repairRecord.setStationId(request.getStationId());
             repairRecord.setSwitchId(repairRecord.getSwitchId());
+            repairRecord.setCreateBy(request.getCreateBy());
             if (RepairConstants.REPAIR_MACHINE_BACK.equals(repairRecord.getType())) {
                 repairRecord.setFile3(repairRecord.getFile1());
                 repairRecord.setFile4(repairRecord.getFile2());
                 repairRecord.setFile1(null);
                 repairRecord.setFile2(null);
             }
-            repairRecord.setCreateBy(SecurityUtils.getCurrentUsername());
             repairRecordService.insert(repairRecord);
             // 保存测试记录
             saveRepairTest(repairRecord, true);
@@ -150,12 +159,9 @@ public class RepairRecordController {
             repairRecord.setStationId(stationList.get(1));
             repairRecord.setSwitchId(stationList.get(2));
         }
-        String username = SecurityUtils.getCurrentUsername();
         if (isAdd) {
-            repairRecord.setCreateBy(username);
             repairRecordService.insert(repairRecord);
         } else {
-            repairRecord.setUpdateBy(username);
             repairRecordService.update(repairRecord);
         }
     }
@@ -199,6 +205,7 @@ public class RepairRecordController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
+    @OperationLog(title = "检修记录", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("ids") Long[] ids) {
         repairRecordService.batchDeleteByIds(ids);
     }

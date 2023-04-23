@@ -2,9 +2,11 @@ package com.wqtang.api.system;
 
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
@@ -59,6 +61,7 @@ public class SystemMenuController {
 
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "菜单管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
@@ -72,6 +75,7 @@ public class SystemMenuController {
 
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "菜单管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
@@ -87,6 +91,7 @@ public class SystemMenuController {
     }
 
     @DeleteMapping("/{menuId}")
+    @OperationLog(title = "菜单管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("menuId") Long menuId) {
         if (systemMenuService.existsChildrenMenuByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单仍存在子菜单, 不允许删除");
