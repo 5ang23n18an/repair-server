@@ -38,6 +38,7 @@ public class RepairTableController {
      */
     @GetMapping("/list")
     public List<RepairTable> getList(RepairTable request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairTableService.listByParams(request);
     }
 
@@ -79,6 +80,7 @@ public class RepairTableController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "检测", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody RepairTable request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairTableService.insert(request);
     }
 
@@ -91,6 +93,7 @@ public class RepairTableController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "检测", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairTable request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairTableService.update(request);
     }
 

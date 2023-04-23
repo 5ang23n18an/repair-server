@@ -54,6 +54,7 @@ public class RepairInfoController {
     public PageInfo<RepairInfo> getPage(RepairInfo request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<RepairInfo> list = repairInfoService.listByParams(request);
         return new PageInfo<>(list);
@@ -69,6 +70,7 @@ public class RepairInfoController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "道岔信息", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody RepairInfo request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (repairInfoService.isSwitchNoDuplicated(request.getSwitchNo())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该道岔编号已经存在");
         }
@@ -84,6 +86,7 @@ public class RepairInfoController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "道岔信息", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairInfo request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairInfoService.update(request);
     }
 

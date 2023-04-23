@@ -44,6 +44,7 @@ public class SystemDictionaryTypeController {
     public PageInfo<SystemDictionaryType> getPage(SystemDictionaryType request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemDictionaryType> list = systemDictionaryTypeService.listByParams(request);
         return new PageInfo<>(list);
@@ -87,6 +88,7 @@ public class SystemDictionaryTypeController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "字典类型", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryType request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }
@@ -102,6 +104,7 @@ public class SystemDictionaryTypeController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "字典类型", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryType request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }

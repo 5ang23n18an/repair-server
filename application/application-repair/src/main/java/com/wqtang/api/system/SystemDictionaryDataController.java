@@ -49,6 +49,7 @@ public class SystemDictionaryDataController {
     public PageInfo<SystemDictionaryData> getPage(SystemDictionaryData request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(request);
         return new PageInfo<>(list);
@@ -112,6 +113,7 @@ public class SystemDictionaryDataController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "字典数据", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryData request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemDictionaryDataService.insert(request);
         refreshCacheByDictType(request.getDictType());
     }
@@ -125,6 +127,7 @@ public class SystemDictionaryDataController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "字典数据", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryData request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemDictionaryDataService.update(request);
         refreshCacheByDictType(request.getDictType());
     }

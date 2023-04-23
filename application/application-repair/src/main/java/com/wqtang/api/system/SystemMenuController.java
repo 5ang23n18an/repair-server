@@ -11,8 +11,11 @@ import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
 import com.wqtang.system.SystemMenuService;
+import com.wqtang.util.JsonUtils;
 import com.wqtang.util.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,11 +30,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/system/menu")
 public class SystemMenuController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemMenuController.class);
+
     @Resource(name = "systemMenuService")
     private SystemMenuService systemMenuService;
 
     @GetMapping("/list")
     public List<SystemMenu> getList(SystemMenu request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return systemMenuService.listByParams(request, SecurityUtils.getCurrentUserId());
     }
 
@@ -54,6 +60,7 @@ public class SystemMenuController {
 
     @GetMapping("/tree")
     public List<TreeInfo> getTree(SystemMenu request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         List<SystemMenu> menuList = systemMenuService.listByParams(request, SecurityUtils.getCurrentUserId());
         systemMenuService.refactorAsTree(menuList);
         return menuList.stream().map(TreeInfo::new).collect(Collectors.toList());
@@ -63,6 +70,7 @@ public class SystemMenuController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "菜单管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemMenu request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }
@@ -77,6 +85,7 @@ public class SystemMenuController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "菜单管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemMenu request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }

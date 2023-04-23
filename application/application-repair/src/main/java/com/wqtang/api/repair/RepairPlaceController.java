@@ -6,6 +6,9 @@ import com.wqtang.object.po.repair.RepairPlace;
 import com.wqtang.object.vo.request.repair.GetRepairPlaceListRequest;
 import com.wqtang.object.vo.response.repair.RepairPlaceParentRoute;
 import com.wqtang.repair.RepairPlaceService;
+import com.wqtang.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/repair/place")
 public class RepairPlaceController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepairPlaceController.class);
 
     @Resource(name = "repairPlaceService")
     private RepairPlaceService repairPlaceService;
@@ -46,6 +51,7 @@ public class RepairPlaceController {
      */
     @GetMapping("/list")
     public List<RepairPlace> getList(GetRepairPlaceListRequest request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairPlaceService.listByParams(request);
     }
 

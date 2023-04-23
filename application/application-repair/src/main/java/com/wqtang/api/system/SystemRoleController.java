@@ -14,6 +14,9 @@ import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.system.SystemUserRole;
 import com.wqtang.system.SystemRoleService;
 import com.wqtang.system.SystemUserService;
+import com.wqtang.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +30,8 @@ import java.util.List;
 @RequestMapping("/system/role")
 public class SystemRoleController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemRoleController.class);
+
     @Resource(name = "systemRoleService")
     private SystemRoleService systemRoleService;
     @Resource(name = "systemUserService")
@@ -36,6 +41,7 @@ public class SystemRoleController {
     public PageInfo<SystemRole> getPage(SystemRole request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemRole> list = systemRoleService.listByParams(request);
         return new PageInfo<>(list);
@@ -61,6 +67,7 @@ public class SystemRoleController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "角色管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
@@ -79,6 +86,7 @@ public class SystemRoleController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
@@ -100,6 +108,7 @@ public class SystemRoleController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyStatus(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         systemRoleService.updateStatus(request);
     }
@@ -112,6 +121,7 @@ public class SystemRoleController {
     @PutMapping("/modify/dataScope")
     @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyDataScope(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         systemRoleService.updateDataScope(request);
     }
@@ -152,34 +162,36 @@ public class SystemRoleController {
     /**
      * 查询已分配给某个用户的角色(列表)
      *
-     * @param user
+     * @param request
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @GetMapping("/allocatedRoles")
-    public PageInfo<SystemUser> getAllocatedRoles(SystemUser user,
+    public PageInfo<SystemUser> getAllocatedRoles(SystemUser request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> allocatedRoles = systemUserService.listAllocatedRolesByUser(user);
+        List<SystemUser> allocatedRoles = systemUserService.listAllocatedRolesByUser(request);
         return new PageInfo<>(allocatedRoles);
     }
 
     /**
      * 查询未分配给某个用户的角色(列表)
      *
-     * @param user
+     * @param request
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @GetMapping("/unallocatedRoles")
-    public PageInfo<SystemUser> getUnallocatedRoles(SystemUser user,
+    public PageInfo<SystemUser> getUnallocatedRoles(SystemUser request,
                                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                     @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(user);
+        List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(request);
         return new PageInfo<>(unallocatedRoles);
     }
 

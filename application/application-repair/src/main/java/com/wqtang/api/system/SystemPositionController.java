@@ -44,6 +44,7 @@ public class SystemPositionController {
     public PageInfo<SystemPosition> getPage(SystemPosition request,
                                             @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                             @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemPosition> list = systemPositionService.listByParams(request);
         return new PageInfo<>(list);
@@ -87,6 +88,7 @@ public class SystemPositionController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "岗位管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemPosition request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
         }
@@ -105,6 +107,7 @@ public class SystemPositionController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "岗位管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemPosition request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
         }

@@ -12,8 +12,11 @@ import com.wqtang.object.vo.response.system.GetSystemUserInfoResponse;
 import com.wqtang.system.SystemMenuService;
 import com.wqtang.system.SystemRoleService;
 import com.wqtang.system.SystemUserService;
+import com.wqtang.util.JsonUtils;
 import com.wqtang.util.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,6 +29,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/system/user")
 public class SystemUserController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemUserController.class);
 
     @Resource(name = "systemUserService")
     private SystemUserService systemUserService;
@@ -41,6 +46,7 @@ public class SystemUserController {
      */
     @PostMapping("/register")
     public void register(@RequestBody SystemUserLoginRequest request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemUserService.register(request);
     }
 
@@ -52,6 +58,7 @@ public class SystemUserController {
      */
     @PostMapping("/login")
     public String login(@RequestBody SystemUserLoginRequest request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return systemUserService.login(request);
     }
 
@@ -113,6 +120,7 @@ public class SystemUserController {
     @PostMapping("/modifyPassword")
     @OperationLog(title = "修改密码", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyPassword(@RequestBody SystemUserModifyPasswordRequest request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemUserService.modifyPassword(request);
     }
 

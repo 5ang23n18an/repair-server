@@ -11,7 +11,10 @@ import com.wqtang.object.po.system.SystemDepartment;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
 import com.wqtang.system.SystemDepartmentService;
+import com.wqtang.util.JsonUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/system/department")
 public class SystemDepartmentController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemDepartmentController.class);
+
     @Resource(name = "systemDepartmentService")
     private SystemDepartmentService systemDepartmentService;
 
@@ -38,6 +43,7 @@ public class SystemDepartmentController {
      */
     @GetMapping("/list")
     public List<SystemDepartment> getList(SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return systemDepartmentService.listByParams(request);
     }
 
@@ -80,6 +86,7 @@ public class SystemDepartmentController {
      */
     @GetMapping("/tree")
     public List<TreeInfo> getTree(SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         List<SystemDepartment> departmentList = systemDepartmentService.listByParams(request);
         systemDepartmentService.refactorAsTree(departmentList);
         return departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
@@ -112,6 +119,7 @@ public class SystemDepartmentController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "部门管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }
@@ -127,6 +135,7 @@ public class SystemDepartmentController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "部门管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }

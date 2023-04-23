@@ -17,8 +17,11 @@ import com.wqtang.object.vo.response.repair.GetRepairRecordCountOfDayResponse;
 import com.wqtang.repair.RepairFileResultService;
 import com.wqtang.repair.RepairRecordService;
 import com.wqtang.repair.RepairTestService;
+import com.wqtang.util.JsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/repair/record")
 public class RepairRecordController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepairRecordController.class);
 
     @Resource(name = "repairRecordService")
     private RepairRecordService repairRecordService;
@@ -53,6 +58,7 @@ public class RepairRecordController {
     public PageInfo<RepairRecord> getPage(RepairRecord request,
                                           @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                           @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<RepairRecord> list = repairRecordService.webListByParams(request);
         return new PageInfo<>(list);
@@ -66,6 +72,7 @@ public class RepairRecordController {
      */
     @GetMapping("/list")
     public List<RepairRecord> getList(RepairRecord request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairRecordService.appListByParams(request);
     }
 
@@ -90,6 +97,7 @@ public class RepairRecordController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "检修记录", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void webAdd(@RequestBody RepairRecord request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         // 保存基础信息
         saveRepairRecord(request, true);
         // 保存测试记录
@@ -108,6 +116,7 @@ public class RepairRecordController {
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "检修记录", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairRecord request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         // 修改基础信息
         saveRepairRecord(request, false);
         // 修改测试记录
@@ -126,6 +135,7 @@ public class RepairRecordController {
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "检修记录", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void appAdd(@RequestBody RepairRecord request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (CollectionUtils.isEmpty(request.getMachines())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "检修记录不得为空");
         }
@@ -218,6 +228,7 @@ public class RepairRecordController {
      */
     @GetMapping("/count")
     public List<GetRepairRecordCountOfDayResponse> countOfDay(RepairRecord request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         List<Map<String, Object>> dailyRecordList = repairRecordService.listCountOfDailyRecord(request);
         List<GetRepairRecordCountOfDayResponse> list = Lists.newArrayListWithExpectedSize(dailyRecordList.size());
         for (Map<String, Object> dailyRecord : dailyRecordList) {
