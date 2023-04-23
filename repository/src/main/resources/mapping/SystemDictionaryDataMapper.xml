@@ -64,12 +64,9 @@
         where dict_code = #{dictCode}
     </update>
 
-    <delete id="batchDeleteByDictCode">
+    <delete id="deleteByDictCode">
         delete from system_dictionary_data
-        where dict_code in
-        <foreach item="dictCode" collection="array" open="(" close=")" separator=",">
-            #{dictCode}
-        </foreach>
+        where dict_code = #{dictCode}
     </delete>
 
     <select id="existsByDictType" resultType="java.lang.Boolean">

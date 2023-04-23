@@ -20,7 +20,7 @@ public interface SystemDictionaryDataMapper {
 
     void update(SystemDictionaryData dictionaryData);
 
-    void batchDeleteByDictCode(Long[] dictCodes);
+    void deleteByDictCode(Long dictCode);
 
     boolean existsByDictType(String dictType);
 

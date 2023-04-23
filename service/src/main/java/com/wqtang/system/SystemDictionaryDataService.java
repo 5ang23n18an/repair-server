@@ -56,8 +56,8 @@ public class SystemDictionaryDataService {
         systemDictionaryDataMapper.update(dictionaryData);
     }
 
-    public void batchDeleteByDictCode(Long[] dictCodes) {
-        systemDictionaryDataMapper.batchDeleteByDictCode(dictCodes);
+    public void deleteByDictCode(Long dictCode) {
+        systemDictionaryDataMapper.deleteByDictCode(dictCode);
     }
 
 }
