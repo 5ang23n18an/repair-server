@@ -128,8 +128,10 @@ public class AspectComponent {
                 }
             }
         }
-        // 去除多余的尾空格
-        resultBuilder.deleteCharAt(resultBuilder.length() - 1);
+        if (resultBuilder.length() > 0) {
+            // 去除多余的尾空格
+            resultBuilder.deleteCharAt(resultBuilder.length() - 1);
+        }
         return resultBuilder.toString();
     }
 
