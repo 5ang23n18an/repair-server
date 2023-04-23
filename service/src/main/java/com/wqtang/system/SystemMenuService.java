@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,7 +95,7 @@ public class SystemMenuService {
 
     public boolean isMenuNameDuplicated(SystemMenu menu) {
         SystemMenu menuFromDb = systemMenuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
-        Long menuId = Optional.of(menu.getMenuId()).orElse(-1L);
+        Long menuId = menu.getMenuId() == null ? -1L : menu.getMenuId();
         return menuFromDb != null && !menuId.equals(menuFromDb.getMenuId());
     }
 

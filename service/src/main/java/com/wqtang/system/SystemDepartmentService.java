@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -71,7 +70,7 @@ public class SystemDepartmentService {
 
     public boolean isDeptNameDuplicated(SystemDepartment department) {
         SystemDepartment departmentFromDb = systemDepartmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
-        Long deptId = Optional.of(department.getDeptId()).orElse(-1L);
+        Long deptId = department.getDeptId() == null ? -1L : department.getDeptId();
         return departmentFromDb != null && !deptId.equals(departmentFromDb.getDeptId());
     }
 

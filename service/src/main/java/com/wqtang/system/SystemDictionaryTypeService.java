@@ -18,7 +18,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -65,7 +64,7 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     public boolean isDictNameDuplicated(SystemDictionaryType dictionaryType) {
         SystemDictionaryType dictionaryTypeFromDb = systemDictionaryTypeMapper.getByDictType(dictionaryType.getDictType());
-        Long dictId = Optional.of(dictionaryType.getDictId()).orElse(-1L);
+        Long dictId = dictionaryType.getDictId() == null ? -1L : dictionaryType.getDictId();
         return dictionaryTypeFromDb != null && !dictId.equals(dictionaryTypeFromDb.getDictId());
     }
 

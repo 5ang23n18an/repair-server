@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -118,13 +117,13 @@ public class SystemRoleService {
 
     public boolean isRoleNameDuplicated(SystemRole role) {
         SystemRole roleFromDb = systemRoleMapper.getByRoleName(role.getRoleName());
-        Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
+        Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
     public boolean isRoleKeyDuplicated(SystemRole role) {
         SystemRole roleFromDb = systemRoleMapper.getByRoleKey(role.getRoleKey());
-        Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
+        Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
