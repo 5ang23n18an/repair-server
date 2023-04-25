@@ -17,7 +17,7 @@ import java.util.Map;
 public class ErrorAttributes extends DefaultErrorAttributes {
 
     /**
-     * 包含6类信息: timestamp, path, error, errorCode, message
+     * 包含5类信息: timestamp, path, error, errorCode, message
      *
      * @param webRequest
      * @param options
@@ -25,10 +25,13 @@ public class ErrorAttributes extends DefaultErrorAttributes {
      */
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
-        Map<String, Object> errorAttributes = Maps.newLinkedHashMapWithExpectedSize(6);
+        Throwable exception = getError(webRequest);
+        if (exception == null) {
+            return super.getErrorAttributes(webRequest, options);
+        }
+        Map<String, Object> errorAttributes = Maps.newLinkedHashMapWithExpectedSize(5);
         long timestamp = System.currentTimeMillis();
         String path = ServletUtils.getHttpServletRequest().getRequestURI();
-        Throwable exception = getError(webRequest);
         BusinessException businessException = exception instanceof BusinessException ? ((BusinessException) exception) : ((BusinessException) exception.getCause());
         String errorStr = businessException.getErrorEnum().name();
         int errorCode = businessException.getErrorEnum().getErrorCode();
