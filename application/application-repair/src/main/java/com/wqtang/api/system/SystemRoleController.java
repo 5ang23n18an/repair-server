@@ -17,6 +17,7 @@ import com.wqtang.system.SystemUserService;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,6 +38,14 @@ public class SystemRoleController {
     @Resource(name = "systemUserService")
     private SystemUserService systemUserService;
 
+    /**
+     * 获取角色信息列表
+     *
+     * @param request
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/page")
     public PageInfo<SystemRole> getPage(SystemRole request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
@@ -45,6 +54,24 @@ public class SystemRoleController {
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemRole> list = systemRoleService.listByParams(request);
         return new PageInfo<>(list);
+    }
+
+    /**
+     * 导出角色信息列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/export")
+    @OperationLog(title = "角色管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
+    public ResponseEntity<byte[]> export(SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        try {
+            return systemRoleService.export(request);
+        } catch (Exception e) {
+            LOGGER.error("error message is {}", e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
+        }
     }
 
     /**
