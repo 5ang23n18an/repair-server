@@ -10,18 +10,18 @@ public enum SystemConfigKeyEnum {
     REGISTER("register"),
     ;
 
-    private String key;
+    private String configKey;
 
-    SystemConfigKeyEnum(String key) {
-        this.key = key;
+    SystemConfigKeyEnum(String configKey) {
+        this.configKey = configKey;
     }
 
-    public String getKey() {
-        return key;
+    public String getConfigKey() {
+        return configKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setConfigKey(String configKey) {
+        this.configKey = configKey;
     }
 
 }

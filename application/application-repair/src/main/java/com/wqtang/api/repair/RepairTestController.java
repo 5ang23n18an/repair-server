@@ -2,6 +2,9 @@ package com.wqtang.api.repair;
 
 import com.wqtang.object.po.repair.RepairTest;
 import com.wqtang.repair.RepairTestService;
+import com.wqtang.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +20,8 @@ import java.util.List;
 @RequestMapping("/repair/test")
 public class RepairTestController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepairTestController.class);
+
     @Resource(name = "repairTestService")
     private RepairTestService repairTestService;
 
@@ -28,6 +33,7 @@ public class RepairTestController {
      */
     @GetMapping("/list")
     public List<RepairTest> getList(RepairTest request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairTestService.listByParams(request);
     }
 

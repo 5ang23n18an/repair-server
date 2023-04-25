@@ -13,7 +13,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Wenqian Tang
@@ -26,6 +25,10 @@ public class SystemPositionService {
     private SystemPositionMapper systemPositionMapper;
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemPosition> excelUtils;
+
+    public List<SystemPosition> listAll() {
+        return listByParams(null);
+    }
 
     public List<SystemPosition> listByParams(SystemPosition position) {
         return systemPositionMapper.listByParams(position);
@@ -51,13 +54,13 @@ public class SystemPositionService {
 
     public boolean isPostNameDuplicated(SystemPosition position) {
         SystemPosition positionFromDb = systemPositionMapper.getByPostName(position.getPostName());
-        Long postId = Optional.of(position.getPostId()).orElse(-1L);
+        Long postId = position.getPostId() == null ? -1L : position.getPostId();
         return positionFromDb != null && !postId.equals(positionFromDb.getPostId());
     }
 
     public boolean isPostCodeDuplicated(SystemPosition position) {
         SystemPosition positionFromDb = systemPositionMapper.getByPostCode(position.getPostCode());
-        Long postId = Optional.of(position.getPostId()).orElse(-1L);
+        Long postId = position.getPostId() == null ? -1L : position.getPostId();
         return positionFromDb != null && !postId.equals(positionFromDb.getPostId());
     }
 

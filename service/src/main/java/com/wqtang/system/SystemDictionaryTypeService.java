@@ -1,7 +1,6 @@
 package com.wqtang.system;
 
 import com.wqtang.AbstractCacheRefresh;
-import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.system.SystemDictionaryData;
 import com.wqtang.object.po.system.SystemDictionaryType;
@@ -18,7 +17,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,6 +34,10 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
     private ExcelUtils<SystemDictionaryType> excelUtils;
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
+
+    public List<SystemDictionaryType> listAll() {
+        return listByParams(null);
+    }
 
     public List<SystemDictionaryType> listByParams(SystemDictionaryType dictionaryType) {
         return systemDictionaryTypeMapper.listByParams(dictionaryType);
@@ -61,24 +63,30 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     public boolean isDictNameDuplicated(SystemDictionaryType dictionaryType) {
         SystemDictionaryType dictionaryTypeFromDb = systemDictionaryTypeMapper.getByDictType(dictionaryType.getDictType());
-        Long dictId = Optional.of(dictionaryType.getDictId()).orElse(-1L);
+        Long dictId = dictionaryType.getDictId() == null ? -1L : dictionaryType.getDictId();
         return dictionaryTypeFromDb != null && !dictId.equals(dictionaryTypeFromDb.getDictId());
     }
 
     public void insert(SystemDictionaryType dictionaryType) {
         systemDictionaryTypeMapper.insert(dictionaryType);
+        loadIntoCache(dictionaryType.getDictType());
     }
 
     public void update(SystemDictionaryType dictionaryType) {
         systemDictionaryTypeMapper.update(dictionaryType);
+        loadIntoCache(dictionaryType.getDictType());
     }
 
-    public boolean existsByDictType(String dictType) {
-        return systemDictionaryTypeMapper.existsByDictType(dictType);
+    private void loadIntoCache(String dictType) {
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType);
+        List<SystemDictionaryData> dictDataList = systemDictionaryDataMapper.listByDictType(dictType);
+        redisUtils.set(redisKey, dictDataList);
     }
 
-    public void batchDeleteByDictIds(Long[] dictIds) {
-        systemDictionaryTypeMapper.batchDeleteByDictIds(dictIds);
+    public void deleteByDictId(SystemDictionaryType dictionaryType) {
+        systemDictionaryTypeMapper.deleteByDictId(dictionaryType.getDictId());
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictionaryType.getDictType());
+        redisUtils.delete(redisKey);
     }
 
     @Override
@@ -89,14 +97,8 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     @Override
     public void loadIntoCache() {
-        List<SystemDictionaryType> dictTypeList = listByParams(null);
-        for (SystemDictionaryType dictType : dictTypeList) {
-            SystemDictionaryData param = new SystemDictionaryData();
-            param.setStatus(UserConstants.NORMAL);
-            param.setDictType(dictType.getDictType());
-            List<SystemDictionaryData> dictDataList = systemDictionaryDataMapper.listByParams(param);
-            String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType.getDictType());
-            redisUtils.set(redisKey, dictDataList);
+        for (SystemDictionaryType dictType : listAll()) {
+            loadIntoCache(dictType.getDictType());
         }
     }
 

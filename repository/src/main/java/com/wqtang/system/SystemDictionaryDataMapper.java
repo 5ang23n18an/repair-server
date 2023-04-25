@@ -16,11 +16,13 @@ public interface SystemDictionaryDataMapper {
 
     SystemDictionaryData getByDictCode(Long dictCode);
 
+    List<SystemDictionaryData> listByDictType(String dictType);
+
     void insert(SystemDictionaryData dictionaryData);
 
     void update(SystemDictionaryData dictionaryData);
 
-    void batchDeleteByDictCode(Long[] dictCodes);
+    void deleteByDictCode(Long dictCode);
 
     boolean existsByDictType(String dictType);
 

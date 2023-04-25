@@ -42,7 +42,7 @@ public class CaptchaController {
         try {
             return captchaService.getCaptchaImage();
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `CaptchaController.getCaptchaImage`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.ERROR, "获取验证码图片失败");
         }
     }

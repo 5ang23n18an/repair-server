@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,12 +25,16 @@ public class SystemDepartmentService {
     @Resource(name = "systemRoleMapper")
     private SystemRoleMapper systemRoleMapper;
 
+    public List<SystemDepartment> listAll() {
+        return listByParams(null);
+    }
+
     public List<SystemDepartment> listByParams(SystemDepartment department) {
         return systemDepartmentMapper.listByParams(department);
     }
 
-    public SystemDepartment getById(Long deptId) {
-        return systemDepartmentMapper.getById(deptId);
+    public SystemDepartment getByDeptId(Long deptId) {
+        return systemDepartmentMapper.getByDeptId(deptId);
     }
 
     public void refactorAsTree(List<SystemDepartment> departmentList) {
@@ -67,7 +70,7 @@ public class SystemDepartmentService {
 
     public boolean isDeptNameDuplicated(SystemDepartment department) {
         SystemDepartment departmentFromDb = systemDepartmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
-        Long deptId = Optional.of(department.getDeptId()).orElse(-1L);
+        Long deptId = department.getDeptId() == null ? -1L : department.getDeptId();
         return departmentFromDb != null && !deptId.equals(departmentFromDb.getDeptId());
     }
 
@@ -95,9 +98,9 @@ public class SystemDepartmentService {
         systemDepartmentMapper.deleteById(deptId);
     }
 
-    public List<Long> listIdsByRoleId(Long roleId) {
+    public List<Long> listDeptIdByRoleId(Long roleId) {
         SystemRole role = systemRoleMapper.getByRoleId(roleId);
-        return systemDepartmentMapper.listIdsByRoleId(roleId, role.isDeptCheckStrictly());
+        return systemDepartmentMapper.listDeptIdByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
 }

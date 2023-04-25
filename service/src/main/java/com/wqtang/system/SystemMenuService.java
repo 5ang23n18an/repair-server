@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,20 +52,13 @@ public class SystemMenuService {
     }
 
     public Set<String> getPermissionsByUser(SystemUser user) {
-        Set<String> rolePermissions = Sets.newHashSet();
         if (user.isAdmin()) {
-            rolePermissions.add("*:*:*");
-        } else {
-            rolePermissions.addAll(getPermissionsByUserId(user.getUserId()));
+            return Sets.newHashSet("*:*:*");
         }
-        return rolePermissions;
-    }
-
-    private Set<String> getPermissionsByUserId(Long userId) {
         Set<String> permissions = Sets.newHashSet();
-        List<String> permsList = systemMenuMapper.listPermissionsByUserId(userId);
-        for (String perm : permsList) {
-            permissions.addAll(Arrays.asList(perm.split(",")));
+        List<String> permsList = systemMenuMapper.listPermissionsByUserId(user.getUserId());
+        for (String perms : permsList) {
+            permissions.addAll(Arrays.asList(perms.split(",")));
         }
         return permissions;
     }
@@ -103,7 +95,7 @@ public class SystemMenuService {
 
     public boolean isMenuNameDuplicated(SystemMenu menu) {
         SystemMenu menuFromDb = systemMenuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
-        Long menuId = Optional.of(menu.getMenuId()).orElse(-1L);
+        Long menuId = menu.getMenuId() == null ? -1L : menu.getMenuId();
         return menuFromDb != null && !menuId.equals(menuFromDb.getMenuId());
     }
 

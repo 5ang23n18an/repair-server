@@ -5,17 +5,15 @@
     <select id="listByParams" resultType="com.wqtang.object.po.system.SystemDepartment">
         select sd.*
         from system_department sd
-        <where>
-            sd.del_flag = '0'
-            <if test="deptId != null and deptId != 0">and sd.dept_id = #{deptId}</if>
-            <if test="parentId != null and parentId != 0">and sd.parent_id = #{parentId}</if>
-            <if test="deptName != null and deptName != ''">and sd.dept_name like concat('%', #{deptName}, '%')</if>
-            <if test="status != null and status != ''">and sd.status = #{status}</if>
-        </where>
+        where sd.del_flag = '0'
+          <if test="deptId != null and deptId != 0">and sd.dept_id = #{deptId}</if>
+          <if test="parentId != null and parentId != 0">and sd.parent_id = #{parentId}</if>
+          <if test="deptName != null and deptName != ''">and sd.dept_name like concat('%', #{deptName}, '%')</if>
+          <if test="status != null and status != ''">and sd.status = #{status}</if>
         order by sd.parent_id, sd.order_num
     </select>
 
-    <select id="getById" resultType="com.wqtang.object.po.system.SystemDepartment">
+    <select id="getByDeptId" resultType="com.wqtang.object.po.system.SystemDepartment">
         select sd.*
         from system_department sd
         where sd.dept_id = #{deptId}
@@ -93,17 +91,17 @@
         where dept_id = #{deptId}
     </delete>
 
-    <select id="listIdsByRoleId" resultType="java.lang.Long">
+    <select id="listDeptIdByRoleId" resultType="java.lang.Long">
         select sd.dept_id
         from system_department sd
                  left join system_role_department srd on sd.dept_id = srd.dept_id
         where srd.role_id = #{roleId}
-            <if test="deptCheckStrictly">
-                and sd.dept_id not in (select t_sd.parent_id
-                                       from system_department t_sd
-                                                inner join system_role_department t_srd
-                                                           on t_sd.dept_id = t_srd.dept_id and t_srd.role_id = #{roleId})
-            </if>
+          <if test="deptCheckStrictly">
+              and sd.dept_id not in (select t_sd.parent_id
+                                     from system_department t_sd
+                                              inner join system_role_department t_srd
+                                                         on t_sd.dept_id = t_srd.dept_id and t_srd.role_id = #{roleId})
+          </if>
         order by sd.parent_id, sd.order_num
     </select>
 

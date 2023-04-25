@@ -3,10 +3,12 @@
 <mapper namespace="com.wqtang.system.SystemUserMapper">
 
     <select id="getByUsername" resultType="com.wqtang.object.po.system.SystemUser">
-        select su.*, sd.dept_name, sd.leader
+        select su.*,
+               sd.dept_name,
+               sd.leader
         from system_user su
                  left join system_department sd on su.dept_id = sd.dept_id
-        where  su.username = #{username}
+        where su.username = #{username}
     </select>
 
     <update id="updatePasswordByUsername">
@@ -48,11 +50,9 @@
                  left join system_department sd on su.dept_id = sd.dept_id
                  left join system_user_role sur on su.user_id = sur.user_id
                  left join system_role sr on sur.role_id = sr.role_id
-        <where>
-            su.del_flag = '0' and sr.role_id = #{roleId}
-            <if test="username != null and username != ''">and su.username like concat('%', #{username}, '%')</if>
-            <if test="phoneNumber != null and phoneNumber != ''">and su.phone_number like concat('%', #{phoneNumber}, '%')</if>
-        </where>
+        where su.del_flag = '0' and sr.role_id = #{roleId}
+          <if test="username != null and username != ''">and su.username like concat('%', #{username}, '%')</if>
+          <if test="phoneNumber != null and phoneNumber != ''">and su.phone_number like concat('%', #{phoneNumber}, '%')</if>
     </select>
 
     <select id="listUnallocatedRolesByUser" resultType="com.wqtang.object.po.system.SystemUser">

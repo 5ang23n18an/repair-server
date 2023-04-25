@@ -38,7 +38,7 @@ public class RedisUtils {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.set`, key = {}, value = {}, error message is {}", key, value, e.getMessage(), e);
+            LOGGER.error("key = {}, value = {}, error message is {}", key, value, e.getMessage(), e);
             return false;
         }
     }
@@ -69,7 +69,7 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.set`, key = {}, value = {}, timeout = {}, timeUnit = {}, error message is {}", key, value, timeout, timeUnit, e.getMessage(), e);
+            LOGGER.error("key = {}, value = {}, timeout = {}, timeUnit = {}, error message is {}", key, value, timeout, timeUnit, e.getMessage(), e);
             return false;
         }
     }
@@ -87,7 +87,7 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForValue().get(key);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.get`, key = {}, error message is {}", key, e.getMessage(), e);
+            LOGGER.error("key = {}, error message is {}", key, e.getMessage(), e);
             return null;
         }
     }
@@ -111,7 +111,7 @@ public class RedisUtils {
             }
             return ((T) value);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.getAndCast`, key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
+            LOGGER.error("key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
             return null;
         }
     }
@@ -136,7 +136,7 @@ public class RedisUtils {
             String valueStr = value.toString();
             return StringUtils.isBlank(valueStr) ? null : JsonUtils.readValue(valueStr, clazz);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.getAndJsonConvert`, key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
+            LOGGER.error("key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
             return null;
         }
     }
@@ -151,7 +151,7 @@ public class RedisUtils {
         try {
             return redisTemplate.keys(prefix + "*");
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.keysMatchPrefix`, prefix = {}, error message is {}", prefix, e.getMessage(), e);
+            LOGGER.error("prefix = {}, error message is {}", prefix, e.getMessage(), e);
             return null;
         }
     }
@@ -166,7 +166,7 @@ public class RedisUtils {
         try {
             return redisTemplate.keys("*" + suffix);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.keysMatchSuffix`, suffix = {}, error message is {}", suffix, e.getMessage(), e);
+            LOGGER.error("suffix = {}, error message is {}", suffix, e.getMessage(), e);
             return null;
         }
     }
@@ -181,7 +181,7 @@ public class RedisUtils {
         try {
             return Boolean.TRUE.equals(redisTemplate.hasKey(key));
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.hasKey`, key = {}, error message is {}", key, e.getMessage(), e);
+            LOGGER.error("key = {}, error message is {}", key, e.getMessage(), e);
             return false;
         }
     }
@@ -211,13 +211,13 @@ public class RedisUtils {
             redisTemplate.delete(keys);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RedisUtils.delete`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             return false;
         }
     }
 
     public static String getRedisKey(RedisKeyEnum redisKeyEnum, String key) {
-        return redisKeyEnum.getPrefix() + ":" + key;
+        return redisKeyEnum.getPrefix() + ": " + key;
     }
 
 }

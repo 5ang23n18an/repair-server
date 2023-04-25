@@ -11,7 +11,6 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -44,6 +44,8 @@ public class TokenService {
 
     @Value("${token.timeout}")
     private int timeout;
+    @Value("${token.signingKey}")
+    private String signingKey;
     @Value("${token.renewThreshold}")
     private int renewThreshold;
 
@@ -85,7 +87,7 @@ public class TokenService {
         Map<String, Object> claims = Maps.newHashMapWithExpectedSize(1);
         claims.put("login_user_key", loginUser.getToken());
         return Jwts.builder()
-                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS512))
+                .signWith(SignatureAlgorithm.HS256, signingKey.getBytes(StandardCharsets.UTF_8))
                 .setClaims(claims)
                 .compact();
     }
@@ -130,7 +132,7 @@ public class TokenService {
         // 获取请求携带的令牌
         String token = getTokenFromHttpServletRequest(servletRequest);
         if (StringUtils.isEmpty(token)) {
-            LOGGER.warn("`TokenService.getLoginUser`, but token is empty");
+            LOGGER.warn("token is empty");
             return null;
         }
         try {
@@ -140,7 +142,7 @@ public class TokenService {
             String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.LOGIN_TOKEN, userKey);
             return redisUtils.getAndCast(redisKey, LoginUser.class);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `TokenService.getLoginUser`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             return null;
         }
     }
@@ -153,14 +155,10 @@ public class TokenService {
      */
     private String getTokenFromHttpServletRequest(HttpServletRequest servletRequest) {
         String token = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isNotBlank(token)) {
-            String prefix = "Bearer ";
-            int index = token.indexOf(prefix);
-            if (index >= 0) {
-                token = token.substring(index + prefix.length());
-            }
+        if (StringUtils.isEmpty(token) || !token.startsWith("Bearer ")) {
+            return token;
         }
-        return token;
+        return token.substring(7);
     }
 
     /**
@@ -170,8 +168,9 @@ public class TokenService {
      * @return
      */
     private Claims parseToken(String token) {
-        return Jwts.parserBuilder().build()
-                .setSigningKey(Keys.secretKeyFor(SignatureAlgorithm.HS512))
+        return Jwts.parserBuilder()
+                .setSigningKey(signingKey.getBytes(StandardCharsets.UTF_8))
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }

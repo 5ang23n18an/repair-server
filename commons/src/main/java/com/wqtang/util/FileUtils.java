@@ -40,7 +40,7 @@ public class FileUtils {
      */
     public static String save(MultipartFile multipartFile, String targetDirPath) {
         if (isEmpty(multipartFile)) {
-            LOGGER.warn("Invalid condition occurs in `FileUtils.save`, due to multipartFile is null or empty, don't need to save");
+            LOGGER.warn("multipartFile is null or empty, so don't need to save");
             return StringUtils.EMPTY;
         }
         try {
@@ -52,12 +52,12 @@ public class FileUtils {
                     outputStream.write(writeBuffer, 0, byteRead);
                 }
             } catch (Exception e) {
-                LOGGER.error("Exception occurs in `FileUtils.save`, error message is {}", e.getMessage(), e);
+                LOGGER.error("error message is {}", e.getMessage(), e);
                 throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
             }
             return file.getCanonicalPath();
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `FileUtils.save`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
         }
     }
@@ -73,7 +73,7 @@ public class FileUtils {
     public static File fileUniquenessProcessing(String targetDirPath, String originalFileName) {
         File targetDir = new File(targetDirPath);
         if (!targetDir.exists() && !targetDir.mkdirs()) {
-            LOGGER.error("Exception occurs in `FileUtils.fileUniquenessProcessing`, due to target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
+            LOGGER.error("target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
             throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
         }
         String processedFileName = fileNameUniquenessProcessing(originalFileName);
@@ -114,11 +114,11 @@ public class FileUtils {
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             byte[] bytes = new byte[inputStream.available()];
             if (inputStream.read(bytes) == 0) {
-                LOGGER.warn("`FileUtils.readAsBytes`, no bytes are read, filePath = {}", file.getPath());
+                LOGGER.warn("no bytes are read, filePath = {}", file.getPath());
             }
             return bytes;
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `FileUtils.readAsBytes`, filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
+            LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_READ_FAIL);
         }
     }
@@ -135,7 +135,7 @@ public class FileUtils {
             Files.delete(file.toPath());
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `FileUtils.delete`, filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
+            LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
             return false;
         }
     }

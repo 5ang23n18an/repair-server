@@ -3,11 +3,15 @@ package com.wqtang.api.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemDictionaryType;
+import com.wqtang.system.SystemDictionaryDataService;
 import com.wqtang.system.SystemDictionaryTypeService;
 import com.wqtang.util.JsonUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +32,8 @@ public class SystemDictionaryTypeController {
 
     @Resource(name = "systemDictionaryTypeService")
     private SystemDictionaryTypeService systemDictionaryTypeService;
+    @Resource(name = "systemDictionaryDataService")
+    private SystemDictionaryDataService systemDictionaryDataService;
 
     /**
      * 获取数据字典信息
@@ -41,6 +47,7 @@ public class SystemDictionaryTypeController {
     public PageInfo<SystemDictionaryType> getPage(SystemDictionaryType request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemDictionaryType> list = systemDictionaryTypeService.listByParams(request);
         return new PageInfo<>(list);
@@ -53,12 +60,13 @@ public class SystemDictionaryTypeController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "字典类型", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemDictionaryType request) {
-        LOGGER.info("`SystemDictionaryTypeController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return systemDictionaryTypeService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `SystemDictionaryTypeController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
@@ -79,12 +87,14 @@ public class SystemDictionaryTypeController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "字典类型", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryType request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryTypeService.insert(request);
     }
 
@@ -93,12 +103,14 @@ public class SystemDictionaryTypeController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "字典类型", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryType request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDictionaryTypeService.update(request);
     }
 
@@ -108,20 +120,22 @@ public class SystemDictionaryTypeController {
      * @param dictIds
      */
     @DeleteMapping("/{dictIds}")
+    @OperationLog(title = "字典类型", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("dictIds") Long[] dictIds) {
         for (Long dictId : dictIds) {
             SystemDictionaryType dictionaryType = systemDictionaryTypeService.getByDictId(dictId);
-            if (systemDictionaryTypeService.existsByDictType(dictionaryType.getDictType())) {
+            if (systemDictionaryDataService.existsByDictType(dictionaryType.getDictType())) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "字典类型名称已分配, 不允许删除");
             }
+            systemDictionaryTypeService.deleteByDictId(dictionaryType);
         }
-        systemDictionaryTypeService.batchDeleteByDictIds(dictIds);
     }
 
     /**
      * 刷新字典类型的缓存数据
      */
     @PutMapping("/refreshCache")
+    @OperationLog(title = "字典类型", businessType = BusinessType.CLEAN, operatorType = OperatorType.ADMIN)
     public void refreshCache() {
         systemDictionaryTypeService.refreshCache();
     }
@@ -131,9 +145,9 @@ public class SystemDictionaryTypeController {
      *
      * @return
      */
-    @GetMapping("/all")
-    public List<SystemDictionaryType> getAll() {
-        return systemDictionaryTypeService.listByParams(null);
+    @GetMapping("/list")
+    public List<SystemDictionaryType> getList() {
+        return systemDictionaryTypeService.listAll();
     }
 
 }

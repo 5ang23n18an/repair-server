@@ -87,7 +87,7 @@
     </delete>
 
     <select id="listPermissionsByUserId" resultType="java.lang.String">
-        select sm.menu_id
+        select sm.perms
         from system_menu sm
                  left join system_role_menu srm on sm.menu_id = srm.menu_id
                  left join system_user_role sur on srm.role_id = sur.role_id
@@ -103,12 +103,10 @@
                  left join system_role_menu srm on sm.menu_id = srm.menu_id
                  left join system_user_role sur on srm.role_id = sur.role_id
                  left join system_role sr on sur.role_id = sr.role_id
-        <where>
-            sur.user_id = #{userId}
-            <if test="menu.menuName != null and menu.menuName !=''">and sm.menu_name like concat('%', #{menu.menuName}, '%')</if>
-            <if test="menu.visible != null and menu.visible !=''">and sm.visible = #{menu.visible}</if>
-            <if test="menu.status != null and menu.status !=''">and sm.status = #{menu.status}</if>
-        </where>
+        where sur.user_id = #{userId}
+          <if test="menu.menuName != null and menu.menuName !=''">and sm.menu_name like concat('%', #{menu.menuName}, '%')</if>
+          <if test="menu.visible != null and menu.visible !=''">and sm.visible = #{menu.visible}</if>
+          <if test="menu.status != null and menu.status !=''">and sm.status = #{menu.status}</if>
         order by sm.parent_id, sm.order_num
     </select>
 
@@ -127,15 +125,13 @@
         select sm.menu_id
         from system_menu sm
                  left join system_role_menu srm on sm.menu_id = srm.menu_id
-        <where>
-            srm.role_id = #{roleId}
-            <if test="menuCheckStrictly">
-                and sm.menu_id not in (select t_sm.parent_id
-                                       from system_menu t_sm
-                                                inner join system_role_menu t_srm
-                                                           on t_sm.menu_id = t_srm.menu_id and t_srm.role_id = #{roleId})
-            </if>
-        </where>
+        where srm.role_id = #{roleId}
+          <if test="menuCheckStrictly">
+              and sm.menu_id not in (select t_sm.parent_id
+                                     from system_menu t_sm
+                                              inner join system_role_menu t_srm
+                                                         on t_sm.menu_id = t_srm.menu_id and t_srm.role_id = #{roleId})
+          </if>
         order by sm.parent_id, sm.order_num
     </select>
 

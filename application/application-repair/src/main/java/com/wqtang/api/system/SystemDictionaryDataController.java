@@ -3,13 +3,17 @@ package com.wqtang.api.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.constant.UserConstants;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.system.SystemDictionaryData;
 import com.wqtang.system.SystemDictionaryDataService;
 import com.wqtang.util.JsonUtils;
 import com.wqtang.util.RedisUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +49,7 @@ public class SystemDictionaryDataController {
     public PageInfo<SystemDictionaryData> getPage(SystemDictionaryData request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(request);
         return new PageInfo<>(list);
@@ -57,12 +62,13 @@ public class SystemDictionaryDataController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "字典数据", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemDictionaryData request) {
-        LOGGER.info("`SystemDictionaryDataController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return systemDictionaryDataService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `SystemDictionaryDataController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
@@ -103,9 +109,11 @@ public class SystemDictionaryDataController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "字典数据", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryData request) {
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemDictionaryDataService.insert(request);
         refreshCacheByDictType(request.getDictType());
     }
@@ -115,9 +123,11 @@ public class SystemDictionaryDataController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "字典数据", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryData request) {
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemDictionaryDataService.update(request);
         refreshCacheByDictType(request.getDictType());
     }
@@ -128,18 +138,20 @@ public class SystemDictionaryDataController {
      * @param dictCodes
      */
     @DeleteMapping("/{dictCodes}")
+    @OperationLog(title = "字典数据", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("dictCodes") Long[] dictCodes) {
-        systemDictionaryDataService.batchDeleteByDictCode(dictCodes);
         for (Long dictCode : dictCodes) {
-            SystemDictionaryData dictionaryData = systemDictionaryDataService.getByDictCode(dictCode);
-            refreshCacheByDictType(dictionaryData.getDictType());
+            String dictType = systemDictionaryDataService.getByDictCode(dictCode).getDictType();
+            systemDictionaryDataService.deleteByDictCode(dictCode);
+            refreshCacheByDictType(dictType);
         }
     }
 
     private void refreshCacheByDictType(String dictType) {
-        SystemDictionaryData dictionaryData = new SystemDictionaryData();
-        dictionaryData.setDictType(dictType);
-        List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(dictionaryData);
+        SystemDictionaryData param = new SystemDictionaryData();
+        param.setDictType(dictType);
+        param.setStatus(UserConstants.NORMAL);
+        List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(param);
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType);
         redisUtils.set(redisKey, list);
     }

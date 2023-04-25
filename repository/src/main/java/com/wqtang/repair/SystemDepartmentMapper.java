@@ -15,7 +15,7 @@ public interface SystemDepartmentMapper {
 
     List<SystemDepartment> listByParams(SystemDepartment department);
 
-    SystemDepartment getById(Long deptId);
+    SystemDepartment getByDeptId(Long deptId);
 
     SystemDepartment getByDeptNameAndParentId(@Param("deptName") String deptName,
                                               @Param("parentId") Long parentId);
@@ -30,7 +30,7 @@ public interface SystemDepartmentMapper {
 
     void deleteById(Long deptId);
 
-    List<Long> listIdsByRoleId(@Param("roleId") Long roleId,
-                               @Param("deptCheckStrictly") boolean deptCheckStrictly);
+    List<Long> listDeptIdByRoleId(@Param("roleId") Long roleId,
+                                  @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
 }

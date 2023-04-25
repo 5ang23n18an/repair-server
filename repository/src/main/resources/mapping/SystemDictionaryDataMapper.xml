@@ -19,6 +19,13 @@
         where sdd.dict_code = #{dictCode}
     </select>
 
+    <select id="listByDictType" resultType="com.wqtang.object.po.system.SystemDictionaryData">
+        select sdd.*
+        from system_dictionary_data sdd
+        where sdd.status = '0'
+          and sdd.dict_type = #{dictType}
+    </select>
+
     <insert id="insert">
         insert into system_dictionary_data
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -64,12 +71,9 @@
         where dict_code = #{dictCode}
     </update>
 
-    <delete id="batchDeleteByDictCode">
+    <delete id="deleteByDictCode">
         delete from system_dictionary_data
-        where dict_code in
-        <foreach item="dictCode" collection="array" open="(" close=")" separator=",">
-            #{dictCode}
-        </foreach>
+        where dict_code = #{dictCode}
     </delete>
 
     <select id="existsByDictType" resultType="java.lang.Boolean">

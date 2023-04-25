@@ -30,7 +30,7 @@ public class ExcelUtils<T> {
      */
     public File export(List<T> list, String sheetName) {
         File file = FileUtils.fileUniquenessProcessing(rootDirectory, sheetName + ".xlsx");
-        EasyExcel.write().sheet(0, sheetName).doWrite(list);
+        EasyExcel.write(file).sheet(0, sheetName).doWrite(list);
         return file;
     }
 

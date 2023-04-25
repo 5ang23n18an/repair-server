@@ -3,7 +3,11 @@ package com.wqtang.api.repair;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.repair.RepairInfoService;
 import com.wqtang.util.JsonUtils;
@@ -50,6 +54,7 @@ public class RepairInfoController {
     public PageInfo<RepairInfo> getPage(RepairInfo request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<RepairInfo> list = repairInfoService.listByParams(request);
         return new PageInfo<>(list);
@@ -61,10 +66,12 @@ public class RepairInfoController {
      * @param request
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "道岔信息", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody RepairInfo request) {
-        RepairInfo repairInfoFromDb = repairInfoService.getBySwitchNo(request.getSwitchNo());
-        if (repairInfoFromDb != null) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        if (repairInfoService.isSwitchNoDuplicated(request.getSwitchNo())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该道岔编号已经存在");
         }
         repairInfoService.insert(request);
@@ -75,8 +82,11 @@ public class RepairInfoController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "道岔信息", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairInfo request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairInfoService.update(request);
     }
 
@@ -86,6 +96,8 @@ public class RepairInfoController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
+    @DoAspect(businessType = BusinessType.DELETE)
+    @OperationLog(title = "道岔信息", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("ids") Long[] ids) {
         repairInfoService.batchDeleteByIds(ids);
     }
@@ -97,12 +109,13 @@ public class RepairInfoController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "道岔信息", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(RepairInfo request) {
-        LOGGER.info("`RepairInfoController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return repairInfoService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RepairInfoController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
@@ -114,6 +127,7 @@ public class RepairInfoController {
      * @param updateSupport
      */
     @PostMapping("/importData")
+    @OperationLog(title = "道岔信息", businessType = BusinessType.IMPORT, operatorType = OperatorType.ADMIN)
     public void importData(MultipartFile file, boolean updateSupport) {
         repairInfoService.importData(file, updateSupport);
     }

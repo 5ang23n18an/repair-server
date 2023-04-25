@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -29,22 +28,19 @@ public class SystemRoleService {
     private SystemUserRoleMapper systemUserRoleMapper;
 
     public Set<String> getRolesByUser(SystemUser user) {
-        Set<String> roles = Sets.newHashSet();
         if (user.isAdmin()) {
-            roles.add("admin");
-        } else {
-            roles.addAll(getRolesByUserId(user.getUserId()));
+            return Sets.newHashSet("admin");
+        }
+        Set<String> roles = Sets.newHashSet();
+        List<SystemRole> roleList = systemRoleMapper.listByUserId(user.getUserId());
+        for (SystemRole role : roleList) {
+            roles.addAll(Arrays.asList(role.getRoleKey().split(",")));
         }
         return roles;
     }
 
-    private Set<String> getRolesByUserId(Long userId) {
-        List<SystemRole> roleList = systemRoleMapper.listByUserId(userId);
-        Set<String> roles = Sets.newHashSet();
-        for (SystemRole systemRole : roleList) {
-            roles.addAll(Arrays.asList(systemRole.getRoleKey().split(",")));
-        }
-        return roles;
+    public List<SystemRole> listAll() {
+        return listByParams(null);
     }
 
     public List<SystemRole> listByParams(SystemRole role) {
@@ -121,13 +117,13 @@ public class SystemRoleService {
 
     public boolean isRoleNameDuplicated(SystemRole role) {
         SystemRole roleFromDb = systemRoleMapper.getByRoleName(role.getRoleName());
-        Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
+        Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
     public boolean isRoleKeyDuplicated(SystemRole role) {
         SystemRole roleFromDb = systemRoleMapper.getByRoleKey(role.getRoleKey());
-        Long roleId = Optional.of(role.getRoleId()).orElse(-1L);
+        Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 

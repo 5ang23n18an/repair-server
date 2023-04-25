@@ -4,13 +4,19 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.system.SystemUserRole;
 import com.wqtang.system.SystemRoleService;
 import com.wqtang.system.SystemUserService;
-import com.wqtang.util.SecurityUtils;
+import com.wqtang.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +30,8 @@ import java.util.List;
 @RequestMapping("/system/role")
 public class SystemRoleController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemRoleController.class);
+
     @Resource(name = "systemRoleService")
     private SystemRoleService systemRoleService;
     @Resource(name = "systemUserService")
@@ -33,6 +41,7 @@ public class SystemRoleController {
     public PageInfo<SystemRole> getPage(SystemRole request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemRole> list = systemRoleService.listByParams(request);
         return new PageInfo<>(list);
@@ -54,15 +63,17 @@ public class SystemRoleController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "角色管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
         if (systemRoleService.isRoleKeyDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemRoleService.insert(request);
     }
 
@@ -71,8 +82,11 @@ public class SystemRoleController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
@@ -80,7 +94,6 @@ public class SystemRoleController {
         if (systemRoleService.isRoleKeyDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemRoleService.update(request);
         // 同步更新缓存中的用户权限
         systemUserService.refreshLoginUserPermissions();
@@ -92,9 +105,11 @@ public class SystemRoleController {
      * @param request
      */
     @PutMapping("/modify/status")
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyStatus(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemRoleService.updateStatus(request);
     }
 
@@ -104,7 +119,9 @@ public class SystemRoleController {
      * @param request
      */
     @PutMapping("/modify/dataScope")
+    @OperationLog(title = "角色管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyDataScope(@RequestBody SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         systemRoleService.updateDataScope(request);
     }
@@ -115,6 +132,7 @@ public class SystemRoleController {
      * @param roleIds
      */
     @DeleteMapping("/{roleIds}")
+    @OperationLog(title = "角色管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("roleIds") Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
@@ -136,42 +154,44 @@ public class SystemRoleController {
      *
      * @return
      */
-    @GetMapping("/all")
-    public List<SystemRole> getAll() {
-        return systemRoleService.listByParams(null);
+    @GetMapping("/list")
+    public List<SystemRole> getList() {
+        return systemRoleService.listAll();
     }
 
     /**
      * 查询已分配给某个用户的角色(列表)
      *
-     * @param user
+     * @param request
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @GetMapping("/allocatedRoles")
-    public PageInfo<SystemUser> getAllocatedRoles(SystemUser user,
+    public PageInfo<SystemUser> getAllocatedRoles(SystemUser request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> allocatedRoles = systemUserService.listAllocatedRolesByUser(user);
+        List<SystemUser> allocatedRoles = systemUserService.listAllocatedRolesByUser(request);
         return new PageInfo<>(allocatedRoles);
     }
 
     /**
      * 查询未分配给某个用户的角色(列表)
      *
-     * @param user
+     * @param request
      * @param pageNumber
      * @param pageSize
      * @return
      */
     @GetMapping("/unallocatedRoles")
-    public PageInfo<SystemUser> getUnallocatedRoles(SystemUser user,
+    public PageInfo<SystemUser> getUnallocatedRoles(SystemUser request,
                                                     @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                     @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(user);
+        List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(request);
         return new PageInfo<>(unallocatedRoles);
     }
 
@@ -182,6 +202,7 @@ public class SystemRoleController {
      * @param userIds
      */
     @PutMapping("/cancelAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
     public void batchCancelUserRole(Long roleId, Long[] userIds) {
         systemRoleService.batchDeleteUserRole(roleId, userIds);
     }
@@ -193,6 +214,7 @@ public class SystemRoleController {
      * @param userIds
      */
     @PutMapping("/selectAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
     public void selectUserRole(Long roleId, Long[] userIds) {
         List<SystemUserRole> list = Lists.newArrayListWithExpectedSize(userIds.length);
         for (Long userId : userIds) {

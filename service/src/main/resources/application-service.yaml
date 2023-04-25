@@ -10,6 +10,6 @@ token:
   # 有效时长(单位是分钟)
   timeout: 60
   # 令牌密钥
-  signingKey: abcdefghijklmnopqrstuvwxyz
+  signingKey: aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ
   # 续签时间(单位是分钟)
   renewThreshold: 20

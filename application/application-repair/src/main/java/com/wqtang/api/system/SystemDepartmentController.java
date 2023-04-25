@@ -1,14 +1,20 @@
 package com.wqtang.api.system;
 
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.UserConstants;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemDepartment;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
 import com.wqtang.system.SystemDepartmentService;
-import com.wqtang.util.SecurityUtils;
+import com.wqtang.util.JsonUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/system/department")
 public class SystemDepartmentController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemDepartmentController.class);
+
     @Resource(name = "systemDepartmentService")
     private SystemDepartmentService systemDepartmentService;
 
@@ -34,7 +42,8 @@ public class SystemDepartmentController {
      * @return
      */
     @GetMapping("/list")
-    public List<SystemDepartment> getPage(SystemDepartment request) {
+    public List<SystemDepartment> getList(SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return systemDepartmentService.listByParams(request);
     }
 
@@ -46,7 +55,7 @@ public class SystemDepartmentController {
      */
     @GetMapping("/list/exclude/{deptId}")
     public List<SystemDepartment> getListExclude(@PathVariable("deptId") Long deptId) {
-        List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
+        List<SystemDepartment> departmentList = systemDepartmentService.listAll();
         for (Iterator<SystemDepartment> iterator = departmentList.iterator(); iterator.hasNext(); ) {
             SystemDepartment department = iterator.next();
             boolean match = department.getDeptId().equals(deptId)
@@ -65,8 +74,8 @@ public class SystemDepartmentController {
      * @return
      */
     @GetMapping("/{deptId}")
-    public SystemDepartment getById(@PathVariable("deptId") Long deptId) {
-        return systemDepartmentService.getById(deptId);
+    public SystemDepartment getByDeptId(@PathVariable("deptId") Long deptId) {
+        return systemDepartmentService.getByDeptId(deptId);
     }
 
     /**
@@ -77,6 +86,7 @@ public class SystemDepartmentController {
      */
     @GetMapping("/tree")
     public List<TreeInfo> getTree(SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         List<SystemDepartment> departmentList = systemDepartmentService.listByParams(request);
         systemDepartmentService.refactorAsTree(departmentList);
         return departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
@@ -90,12 +100,12 @@ public class SystemDepartmentController {
      */
     @GetMapping("/tree/{roleId}")
     public TreeListInfo deptTreeListInfo(@PathVariable("roleId") Long roleId) {
-        List<Long> deptIds = systemDepartmentService.listIdsByRoleId(roleId);
-        List<SystemDepartment> departmentList = systemDepartmentService.listByParams(null);
+        List<SystemDepartment> departmentList = systemDepartmentService.listAll();
         systemDepartmentService.refactorAsTree(departmentList);
         List<TreeInfo> treeInfo = departmentList.stream().map(TreeInfo::new).collect(Collectors.toList());
         TreeListInfo treeListInfo = new TreeListInfo();
-        treeListInfo.setKeys(deptIds);
+        List<Long> deptIdList = systemDepartmentService.listDeptIdByRoleId(roleId);
+        treeListInfo.setKeys(deptIdList);
         treeListInfo.setInfo(treeInfo);
         return treeListInfo;
     }
@@ -105,12 +115,14 @@ public class SystemDepartmentController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "部门管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.insert(request);
     }
 
@@ -119,19 +131,21 @@ public class SystemDepartmentController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "部门管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDepartment request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         if (systemDepartmentService.isDeptNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门名称已经存在");
         }
-        if (!request.getDeptId().equals(request.getParentId())) {
+        if (request.getDeptId().equals(request.getParentId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级部门不能是自己");
         }
         if (UserConstants.DISABLED.equals(request.getStatus())
                 && systemDepartmentService.existsNormalChildrenDeptById(request.getDeptId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门已停用, 但仍包含未停用的子部门");
         }
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
         systemDepartmentService.update(request);
     }
 
@@ -141,6 +155,7 @@ public class SystemDepartmentController {
      * @param deptId
      */
     @DeleteMapping("/{deptId}")
+    @OperationLog(title = "部门管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("deptId") Long deptId) {
         if (systemDepartmentService.existsChildrenDeptById(deptId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在下级部门, 不允许删除");

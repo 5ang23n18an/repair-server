@@ -1,11 +1,14 @@
 package com.wqtang.api.repair;
 
 import com.wqtang.exception.BusinessException;
+import com.wqtang.object.annotation.DoAspect;
+import com.wqtang.object.annotation.OperationLog;
+import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.repair.RepairTable;
 import com.wqtang.repair.RepairTableService;
 import com.wqtang.util.JsonUtils;
-import com.wqtang.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,7 @@ public class RepairTableController {
      */
     @GetMapping("/list")
     public List<RepairTable> getList(RepairTable request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairTableService.listByParams(request);
     }
 
@@ -45,12 +49,13 @@ public class RepairTableController {
      * @return
      */
     @GetMapping("/export")
+    @OperationLog(title = "检测", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(RepairTable request) {
-        LOGGER.info("`RepairTableController.export`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return repairTableService.export(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `RepairTableController.export`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
@@ -71,9 +76,11 @@ public class RepairTableController {
      *
      * @param request
      */
-    @PostMapping("/add")
+    @PostMapping
+    @DoAspect(businessType = BusinessType.INSERT)
+    @OperationLog(title = "检测", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody RepairTable request) {
-        request.setCreateBy(SecurityUtils.getCurrentUsername());
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairTableService.insert(request);
     }
 
@@ -82,9 +89,11 @@ public class RepairTableController {
      *
      * @param request
      */
-    @PutMapping("/edit")
+    @PutMapping
+    @DoAspect(businessType = BusinessType.UPDATE)
+    @OperationLog(title = "检测", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody RepairTable request) {
-        request.setUpdateBy(SecurityUtils.getCurrentUsername());
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         repairTableService.update(request);
     }
 
@@ -94,6 +103,7 @@ public class RepairTableController {
      * @param ids
      */
     @DeleteMapping("/{ids}")
+    @OperationLog(title = "检测", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("ids") Long[] ids) {
         repairTableService.batchDeleteByIds(ids);
     }

@@ -35,11 +35,11 @@ public class FileController {
      */
     @GetMapping("/common/download")
     public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) {
-        LOGGER.info("`FileController.commonDownload`, request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         try {
             return fileService.commonDownload(request);
         } catch (Exception e) {
-            LOGGER.error("Exception occurs in `FileController.commonDownload`, error message is {}", e.getMessage(), e);
+            LOGGER.error("error message is {}", e.getMessage(), e);
             throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
         }
     }
