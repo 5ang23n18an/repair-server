@@ -60,4 +60,8 @@ public class SystemDictionaryDataService {
         systemDictionaryDataMapper.deleteByDictCode(dictCode);
     }
 
+    public boolean existsByDictType(String dictType) {
+        return systemDictionaryDataMapper.existsByDictType(dictType);
+    }
+
 }

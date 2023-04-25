@@ -18,12 +18,12 @@ public interface SystemDictionaryTypeMapper {
 
     SystemDictionaryType getByDictType(String dictType);
 
+    List<SystemDictionaryType> listByDictType(String dictType);
+
     void insert(SystemDictionaryType dictionaryType);
 
     void update(SystemDictionaryType dictionaryType);
 
-    boolean existsByDictType(String dictType);
-
-    void batchDeleteByDictIds(Long[] dictIds);
+    void deleteByDictId(Long dictId);
 
 }

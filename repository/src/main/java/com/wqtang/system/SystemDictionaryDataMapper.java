@@ -16,6 +16,8 @@ public interface SystemDictionaryDataMapper {
 
     SystemDictionaryData getByDictCode(Long dictCode);
 
+    List<SystemDictionaryData> listByDictType(String dictType);
+
     void insert(SystemDictionaryData dictionaryData);
 
     void update(SystemDictionaryData dictionaryData);

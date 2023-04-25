@@ -26,6 +26,13 @@
         where sdt.dict_type = #{dictType}
     </select>
 
+    <select id="listByDictType" resultType="com.wqtang.object.po.system.SystemDictionaryType">
+        select sdt.*
+        from system_dictionary_type sdt
+        where sdt.status = '0'
+          and sdt.dict_type = #{dictType}
+    </select>
+
     <insert id="insert">
         insert into system_dictionary_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -56,16 +63,9 @@
         where dict_id = #{dictId}
     </update>
 
-    <select id="existsByDictType" resultType="java.lang.Boolean">
-        select exists(select 1 from system_dictionary_type sdt where sdt.dict_type = #{dictType})
-    </select>
-
-    <delete id="batchDeleteByDictIds">
+    <delete id="deleteByDictId">
         delete from system_dictionary_type
-        where dict_id in
-        <foreach item="dictId" collection="array" open="(" close=")" separator=",">
-            #{dictId}
-        </foreach>
+        where dict_id = #{dictId}
     </delete>
 
 </mapper>

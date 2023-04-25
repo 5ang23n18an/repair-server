@@ -9,6 +9,7 @@ import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemDictionaryType;
+import com.wqtang.system.SystemDictionaryDataService;
 import com.wqtang.system.SystemDictionaryTypeService;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class SystemDictionaryTypeController {
 
     @Resource(name = "systemDictionaryTypeService")
     private SystemDictionaryTypeService systemDictionaryTypeService;
+    @Resource(name = "systemDictionaryDataService")
+    private SystemDictionaryDataService systemDictionaryDataService;
 
     /**
      * 获取数据字典信息
@@ -121,11 +124,11 @@ public class SystemDictionaryTypeController {
     public void delete(@PathVariable("dictIds") Long[] dictIds) {
         for (Long dictId : dictIds) {
             SystemDictionaryType dictionaryType = systemDictionaryTypeService.getByDictId(dictId);
-            if (systemDictionaryTypeService.existsByDictType(dictionaryType.getDictType())) {
+            if (systemDictionaryDataService.existsByDictType(dictionaryType.getDictType())) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "字典类型名称已分配, 不允许删除");
             }
+            systemDictionaryTypeService.deleteByDictId(dictionaryType);
         }
-        systemDictionaryTypeService.batchDeleteByDictIds(dictIds);
     }
 
     /**
