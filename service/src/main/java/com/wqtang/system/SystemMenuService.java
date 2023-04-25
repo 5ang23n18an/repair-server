@@ -2,6 +2,8 @@ package com.wqtang.system;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.wqtang.exception.BusinessException;
+import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
@@ -28,10 +30,10 @@ public class SystemMenuService {
     private SystemRoleMenuMapper systemRoleMenuMapper;
 
     public List<SystemMenu> listByUserId(Long userId) {
-        return listByParams(null, userId);
+        return listByParamsAndUserId(null, userId);
     }
 
-    public List<SystemMenu> listByParams(SystemMenu menu, Long userId) {
+    public List<SystemMenu> listByParamsAndUserId(SystemMenu menu, Long userId) {
         return SystemUser.isAdmin(userId) ? systemMenuMapper.listByParams(menu) : systemMenuMapper.listByParamsAndUserId(menu, userId);
     }
 
@@ -63,23 +65,27 @@ public class SystemMenuService {
         return permissions;
     }
 
-    public void refactorAsTree(List<SystemMenu> menuList) {
+    public List<SystemMenu> buildMenuTree(List<SystemMenu> menuList) {
+        List<SystemMenu> treeNodeList = Lists.newArrayList();
         List<Long> idList = menuList.stream().map(SystemMenu::getMenuId).collect(Collectors.toList());
         for (SystemMenu menu : menuList) {
             if (!idList.contains(menu.getParentId())) {
                 findAllChildrenRecursively(menuList, menu);
+                treeNodeList.add(menu);
             }
         }
+        // treeNodeList为空代表当前菜单树的所有节点都是独立的
+        return treeNodeList.isEmpty() ? menuList : treeNodeList;
     }
 
     private void findAllChildrenRecursively(List<SystemMenu> graph, SystemMenu current) {
         List<SystemMenu> children = findAllChildren(graph, current);
+        current.setChildren(children);
         if (children.isEmpty()) {
             return;
         }
-        current.setChildren(children);
-        for (SystemMenu node : graph) {
-            findAllChildrenRecursively(graph, node);
+        for (SystemMenu child : children) {
+            findAllChildrenRecursively(graph, child);
         }
     }
 
@@ -109,6 +115,9 @@ public class SystemMenuService {
 
     public List<Long> listMenuIdsByRoleId(Long roleId) {
         SystemRole role = systemRoleMapper.getByRoleId(roleId);
+        if (role == null) {
+            throw new BusinessException(ErrorEnum.ROLE_NOT_FOUND);
+        }
         return systemMenuMapper.listMenuIdByRoleId(roleId, role.isMenuCheckStrictly());
     }
 

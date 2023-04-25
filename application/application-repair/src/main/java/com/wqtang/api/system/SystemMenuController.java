@@ -35,57 +35,90 @@ public class SystemMenuController {
     @Resource(name = "systemMenuService")
     private SystemMenuService systemMenuService;
 
+    /**
+     * 获取菜单列表
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/list")
     public List<SystemMenu> getList(SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemMenuService.listByParams(request, SecurityUtils.getCurrentUserId());
+        return systemMenuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
     }
 
+    /**
+     * 根据菜单编号获取详细信息
+     *
+     * @param menuId
+     * @return
+     */
     @GetMapping("/{menuId}")
     public SystemMenu getById(@PathVariable("menuId") Long menuId) {
         return systemMenuService.getByMenuId(menuId);
     }
 
-    @GetMapping("/tree/{roleId}")
-    public TreeListInfo menuTreeListInfo(@PathVariable("roleId") Long roleId) {
+    /**
+     * 加载对应角色菜单列表树
+     *
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/roleMenuTree/{roleId}")
+    public TreeListInfo roleMenuTree(@PathVariable("roleId") Long roleId) {
         List<Long> menuIds = systemMenuService.listMenuIdsByRoleId(roleId);
         List<SystemMenu> menuList = systemMenuService.listByUserId(SecurityUtils.getCurrentUserId());
-        systemMenuService.refactorAsTree(menuList);
-        List<TreeInfo> treeInfo = menuList.stream().map(TreeInfo::new).collect(Collectors.toList());
+        List<SystemMenu> treeNodeList = systemMenuService.buildMenuTree(menuList);
+        List<TreeInfo> treeInfo = treeNodeList.stream().map(TreeInfo::new).collect(Collectors.toList());
         TreeListInfo treeListInfo = new TreeListInfo();
         treeListInfo.setKeys(menuIds);
         treeListInfo.setInfo(treeInfo);
         return treeListInfo;
     }
 
+    /**
+     * 获取菜单下拉树列表
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/tree")
     public List<TreeInfo> getTree(SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        List<SystemMenu> menuList = systemMenuService.listByParams(request, SecurityUtils.getCurrentUserId());
-        systemMenuService.refactorAsTree(menuList);
-        return menuList.stream().map(TreeInfo::new).collect(Collectors.toList());
+        List<SystemMenu> menuList = systemMenuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
+        List<SystemMenu> treeNodeList = systemMenuService.buildMenuTree(menuList);
+        return treeNodeList.stream().map(TreeInfo::new).collect(Collectors.toList());
     }
 
+    /**
+     * 新增菜单
+     *
+     * @param request
+     */
     @PostMapping
     @DoAspect(businessType = BusinessType.INSERT)
     @OperationLog(title = "菜单管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        if (systemMenuService.isMenuNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
-        }
-        if (UserConstants.YES_FRAME.equals(request.getIsFrame())
-                && !StringUtils.startsWithAny(request.getPath(), "http://", "https://")) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "外链菜单必须是有效的链接地址(以\"http(s)://\"开头)");
-        }
+        checkAddEditRequest(request);
         systemMenuService.insert(request);
     }
 
+    /**
+     * 修改菜单
+     *
+     * @param request
+     */
     @PutMapping
     @DoAspect(businessType = BusinessType.UPDATE)
     @OperationLog(title = "菜单管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        checkAddEditRequest(request);
+        systemMenuService.update(request);
+    }
+
+    private void checkAddEditRequest(SystemMenu request) {
         if (systemMenuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }
@@ -96,9 +129,13 @@ public class SystemMenuController {
         if (request.getMenuId().equals(request.getParentId())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "上级菜单不能是自己");
         }
-        systemMenuService.update(request);
     }
 
+    /**
+     * 删除菜单
+     *
+     * @param menuId
+     */
     @DeleteMapping("/{menuId}")
     @OperationLog(title = "菜单管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
     public void delete(@PathVariable("menuId") Long menuId) {
