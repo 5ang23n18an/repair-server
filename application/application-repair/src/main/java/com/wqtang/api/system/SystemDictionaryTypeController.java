@@ -47,7 +47,7 @@ public class SystemDictionaryTypeController {
     public PageInfo<SystemDictionaryType> getPage(SystemDictionaryType request,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemDictionaryType> list = systemDictionaryTypeService.listByParams(request);
         return new PageInfo<>(list);
