@@ -54,7 +54,7 @@ public class RepairInfoController {
     public PageInfo<RepairInfo> getPage(RepairInfo request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
         List<RepairInfo> list = repairInfoService.listByParams(request);
         return new PageInfo<>(list);

@@ -3,10 +3,18 @@ package com.wqtang.system;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.wqtang.object.po.system.*;
+import com.wqtang.util.ExcelUtils;
+import com.wqtang.util.FileUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +34,8 @@ public class SystemRoleService {
     private SystemRoleDepartmentMapper systemRoleDepartmentMapper;
     @Resource(name = "systemUserRoleMapper")
     private SystemUserRoleMapper systemUserRoleMapper;
+    @Resource(name = "excelUtils")
+    private ExcelUtils<SystemRole> excelUtils;
 
     public Set<String> getRolesByUser(SystemUser user) {
         if (user.isAdmin()) {
@@ -45,6 +55,20 @@ public class SystemRoleService {
 
     public List<SystemRole> listByParams(SystemRole role) {
         return systemRoleMapper.listByParams(role);
+    }
+
+    public ResponseEntity<byte[]> export(SystemRole role) throws Exception {
+        List<SystemRole> list = listByParams(role);
+        File file = excelUtils.export(list, "角色数据");
+        byte[] fileBytes = FileUtils.readAsBytes(file);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(fileBytes.length)
+                .body(fileBytes);
     }
 
     public SystemRole getByRoleId(Long roleId) {
@@ -67,6 +91,17 @@ public class SystemRoleService {
         insertRoleMenu(role);
     }
 
+    private void insertRoleMenu(SystemRole role) {
+        List<SystemRoleMenu> list = Lists.newArrayListWithExpectedSize(role.getMenuIds().length);
+        for (Long menuId : role.getMenuIds()) {
+            SystemRoleMenu roleMenu = new SystemRoleMenu();
+            roleMenu.setRoleId(role.getRoleId());
+            roleMenu.setMenuId(menuId);
+            list.add(roleMenu);
+        }
+        systemRoleMenuMapper.batchInsert(list);
+    }
+
     public void updateStatus(SystemRole role) {
         systemRoleMapper.update(role);
     }
@@ -78,17 +113,6 @@ public class SystemRoleService {
         systemRoleDepartmentMapper.deleteByRoleId(role.getRoleId());
         // 新增现在的角色与部门的关联关系
         insertRoleDepartment(role);
-    }
-
-    private void insertRoleMenu(SystemRole role) {
-        List<SystemRoleMenu> list = Lists.newArrayListWithExpectedSize(role.getMenuIds().length);
-        for (Long menuId : role.getMenuIds()) {
-            SystemRoleMenu roleMenu = new SystemRoleMenu();
-            roleMenu.setRoleId(role.getRoleId());
-            roleMenu.setMenuId(menuId);
-            list.add(roleMenu);
-        }
-        systemRoleMenuMapper.batchInsert(list);
     }
 
     private void insertRoleDepartment(SystemRole role) {
@@ -111,8 +135,8 @@ public class SystemRoleService {
         systemRoleMapper.batchDeleteByRoleIds(roleIds);
     }
 
-    public int countUserRoleByRoleId(Long roleId) {
-        return systemUserRoleMapper.countByRoleId(roleId);
+    public boolean existsUserRoleByRoleId(Long roleId) {
+        return systemUserRoleMapper.existsByRoleId(roleId);
     }
 
     public boolean isRoleNameDuplicated(SystemRole role) {

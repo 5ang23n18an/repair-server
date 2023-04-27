@@ -17,6 +17,7 @@ import com.wqtang.system.SystemUserService;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,14 +38,40 @@ public class SystemRoleController {
     @Resource(name = "systemUserService")
     private SystemUserService systemUserService;
 
+    /**
+     * 获取角色信息列表
+     *
+     * @param request
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/page")
     public PageInfo<SystemRole> getPage(SystemRole request,
                                         @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
-        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
         List<SystemRole> list = systemRoleService.listByParams(request);
         return new PageInfo<>(list);
+    }
+
+    /**
+     * 导出角色信息列表
+     *
+     * @param request
+     * @return
+     */
+    @GetMapping("/export")
+    @OperationLog(title = "角色管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
+    public ResponseEntity<byte[]> export(SystemRole request) {
+        LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        try {
+            return systemRoleService.export(request);
+        } catch (Exception e) {
+            LOGGER.error("error message is {}", e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
+        }
     }
 
     /**
@@ -68,12 +95,7 @@ public class SystemRoleController {
     @OperationLog(title = "角色管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        if (systemRoleService.isRoleNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
-        }
-        if (systemRoleService.isRoleKeyDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
-        }
+        checkAddEditRequest(request);
         systemRoleService.insert(request);
     }
 
@@ -88,15 +110,19 @@ public class SystemRoleController {
     public void edit(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
+        checkAddEditRequest(request);
+        systemRoleService.update(request);
+        // 同步更新缓存中的用户权限
+        systemUserService.refreshLoginUserPermissions();
+    }
+
+    private void checkAddEditRequest(SystemRole request) {
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
         if (systemRoleService.isRoleKeyDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
-        systemRoleService.update(request);
-        // 同步更新缓存中的用户权限
-        systemUserService.refreshLoginUserPermissions();
     }
 
     /**
@@ -136,7 +162,7 @@ public class SystemRoleController {
     public void delete(@PathVariable("roleIds") Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
-            if (systemRoleService.countUserRoleByRoleId(roleId) > 0) {
+            if (systemRoleService.existsUserRoleByRoleId(roleId)) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "角色已分配, 不允许删除");
             }
         }
@@ -196,18 +222,6 @@ public class SystemRoleController {
     }
 
     /**
-     * 取消用户角色授权, 支持批量userId
-     *
-     * @param roleId
-     * @param userIds
-     */
-    @PutMapping("/cancelAuth")
-    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
-    public void batchCancelUserRole(Long roleId, Long[] userIds) {
-        systemRoleService.batchDeleteUserRole(roleId, userIds);
-    }
-
-    /**
      * 批量授权用户角色, 支持批量userId
      *
      * @param roleId
@@ -224,6 +238,18 @@ public class SystemRoleController {
             list.add(userRole);
         }
         systemRoleService.batchInsertUserRole(list);
+    }
+
+    /**
+     * 取消用户角色授权, 支持批量userId
+     *
+     * @param roleId
+     * @param userIds
+     */
+    @PutMapping("/cancelAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
+    public void batchCancelUserRole(Long roleId, Long[] userIds) {
+        systemRoleService.batchDeleteUserRole(roleId, userIds);
     }
 
 }

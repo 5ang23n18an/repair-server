@@ -144,7 +144,7 @@ public class SystemDepartmentController {
         }
         if (UserConstants.DISABLED.equals(request.getStatus())
                 && systemDepartmentService.existsNormalChildrenDeptById(request.getDeptId())) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门已停用, 但仍包含未停用的子部门");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该部门仍包含未停用的子部门, 无法停用");
         }
         systemDepartmentService.update(request);
     }

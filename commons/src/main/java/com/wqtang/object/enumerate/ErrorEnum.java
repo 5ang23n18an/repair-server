@@ -23,6 +23,7 @@ public enum ErrorEnum {
 
     // 404xxx
     USER_NOT_FOUND(404000, HttpStatus.NOT_FOUND, "用户不存在"),
+    ROLE_NOT_FOUND(404001, HttpStatus.NOT_FOUND, "角色不存在"),
     ;
 
     private final int errorCode;

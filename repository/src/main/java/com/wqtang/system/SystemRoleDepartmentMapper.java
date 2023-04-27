@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface SystemRoleDepartmentMapper {
 
-    void batchInsert(List<SystemRoleDepartment> roleDepartments);
+    void batchInsert(List<SystemRoleDepartment> roleDepartmentList);
 
     void deleteByRoleId(Long roleId);
 

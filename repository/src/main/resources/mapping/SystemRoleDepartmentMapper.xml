@@ -3,15 +3,24 @@
 <mapper namespace="com.wqtang.system.SystemRoleDepartmentMapper">
 
     <insert id="batchInsert">
-
+        insert into system_role_department(role_id, dept_id)
+        values
+        <foreach item="roleDepartment" collection="list" index="index" separator=",">
+            (#{roleDepartment.roleId}, #{roleDepartment.deptId})
+        </foreach>
     </insert>
 
     <delete id="deleteByRoleId">
-
+        delete from system_role_department
+        where role_id = #{roleId}
     </delete>
 
     <delete id="batchDeleteByRoleIds">
-
+        delete from system_role_department
+        where role_id in
+        <foreach item="roleId" collection="array" open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
     </delete>
 
 </mapper>
