@@ -162,7 +162,7 @@ public class SystemRoleController {
     public void delete(@PathVariable("roleIds") Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
-            if (systemRoleService.countUserRoleByRoleId(roleId) > 0) {
+            if (systemRoleService.existsUserRoleByRoleId(roleId)) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "角色已分配, 不允许删除");
             }
         }
@@ -222,18 +222,6 @@ public class SystemRoleController {
     }
 
     /**
-     * 取消用户角色授权, 支持批量userId
-     *
-     * @param roleId
-     * @param userIds
-     */
-    @PutMapping("/cancelAuth")
-    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
-    public void batchCancelUserRole(Long roleId, Long[] userIds) {
-        systemRoleService.batchDeleteUserRole(roleId, userIds);
-    }
-
-    /**
      * 批量授权用户角色, 支持批量userId
      *
      * @param roleId
@@ -250,6 +238,18 @@ public class SystemRoleController {
             list.add(userRole);
         }
         systemRoleService.batchInsertUserRole(list);
+    }
+
+    /**
+     * 取消用户角色授权, 支持批量userId
+     *
+     * @param roleId
+     * @param userIds
+     */
+    @PutMapping("/cancelAuth")
+    @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
+    public void batchCancelUserRole(Long roleId, Long[] userIds) {
+        systemRoleService.batchDeleteUserRole(roleId, userIds);
     }
 
 }

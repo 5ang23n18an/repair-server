@@ -2,20 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wqtang.system.SystemUserRoleMapper">
 
-    <select id="listByUserId" resultType="com.wqtang.object.po.system.SystemRole">
-
-    </select>
-
-    <select id="countByRoleId" resultType="java.lang.Integer">
-
+    <select id="existsByRoleId" resultType="java.lang.Boolean">
+        select exists(select 1 from system_user_role where role_id = #{roleId})
     </select>
 
     <delete id="batchDeleteByRoleIdAndUserIds">
-
+        delete from system_user_role
+        where role_id = #{roleId}
+          and user_id in
+          <foreach item="userId" collection="array" open="(" close=")" separator=",">
+              #{userId}
+          </foreach>
     </delete>
 
     <insert id="batchInsert">
-
+        insert into system_user_role(user_id, role_id)
+        values
+        <foreach item="userRole" collection="list" index="index" separator=",">
+            (#{userRole.userId}, #{userRole.roleId})
+        </foreach>
     </insert>
 
 </mapper>

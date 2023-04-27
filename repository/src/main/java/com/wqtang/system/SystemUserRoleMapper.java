@@ -1,8 +1,8 @@
 package com.wqtang.system;
 
-import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUserRole;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,11 +13,10 @@ import java.util.List;
 @Mapper
 public interface SystemUserRoleMapper {
 
-    List<SystemRole> listByUserId(Long userId);
+    boolean existsByRoleId(Long roleId);
 
-    int countByRoleId(Long roleId);
-
-    void batchDeleteByRoleIdAndUserIds(Long roleId, Long[] userIds);
+    void batchDeleteByRoleIdAndUserIds(@Param("roleId") Long roleId,
+                                       @Param("userIds") Long[] userIds);
 
     void batchInsert(List<SystemUserRole> userRoleList);
 

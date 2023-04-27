@@ -91,6 +91,17 @@ public class SystemRoleService {
         insertRoleMenu(role);
     }
 
+    private void insertRoleMenu(SystemRole role) {
+        List<SystemRoleMenu> list = Lists.newArrayListWithExpectedSize(role.getMenuIds().length);
+        for (Long menuId : role.getMenuIds()) {
+            SystemRoleMenu roleMenu = new SystemRoleMenu();
+            roleMenu.setRoleId(role.getRoleId());
+            roleMenu.setMenuId(menuId);
+            list.add(roleMenu);
+        }
+        systemRoleMenuMapper.batchInsert(list);
+    }
+
     public void updateStatus(SystemRole role) {
         systemRoleMapper.update(role);
     }
@@ -102,17 +113,6 @@ public class SystemRoleService {
         systemRoleDepartmentMapper.deleteByRoleId(role.getRoleId());
         // 新增现在的角色与部门的关联关系
         insertRoleDepartment(role);
-    }
-
-    private void insertRoleMenu(SystemRole role) {
-        List<SystemRoleMenu> list = Lists.newArrayListWithExpectedSize(role.getMenuIds().length);
-        for (Long menuId : role.getMenuIds()) {
-            SystemRoleMenu roleMenu = new SystemRoleMenu();
-            roleMenu.setRoleId(role.getRoleId());
-            roleMenu.setMenuId(menuId);
-            list.add(roleMenu);
-        }
-        systemRoleMenuMapper.batchInsert(list);
     }
 
     private void insertRoleDepartment(SystemRole role) {
@@ -135,8 +135,8 @@ public class SystemRoleService {
         systemRoleMapper.batchDeleteByRoleIds(roleIds);
     }
 
-    public int countUserRoleByRoleId(Long roleId) {
-        return systemUserRoleMapper.countByRoleId(roleId);
+    public boolean existsUserRoleByRoleId(Long roleId) {
+        return systemUserRoleMapper.existsByRoleId(roleId);
     }
 
     public boolean isRoleNameDuplicated(SystemRole role) {
