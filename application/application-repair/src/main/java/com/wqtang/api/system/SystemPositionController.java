@@ -89,12 +89,7 @@ public class SystemPositionController {
     @OperationLog(title = "岗位管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemPosition request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        if (systemPositionService.isPostNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
-        }
-        if (systemPositionService.isPostCodeDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位编码已经存在");
-        }
+        checkAddEditRequest(request);
         systemPositionService.insert(request);
     }
 
@@ -108,13 +103,17 @@ public class SystemPositionController {
     @OperationLog(title = "岗位管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemPosition request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        checkAddEditRequest(request);
+        systemPositionService.update(request);
+    }
+
+    private void checkAddEditRequest(SystemPosition request) {
         if (systemPositionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
         }
         if (systemPositionService.isPostCodeDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位编码已经存在");
         }
-        systemPositionService.update(request);
     }
 
     /**

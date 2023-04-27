@@ -95,12 +95,7 @@ public class SystemRoleController {
     @OperationLog(title = "角色管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        if (systemRoleService.isRoleNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
-        }
-        if (systemRoleService.isRoleKeyDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
-        }
+        checkAddEditRequest(request);
         systemRoleService.insert(request);
     }
 
@@ -115,15 +110,19 @@ public class SystemRoleController {
     public void edit(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
+        checkAddEditRequest(request);
+        systemRoleService.update(request);
+        // 同步更新缓存中的用户权限
+        systemUserService.refreshLoginUserPermissions();
+    }
+
+    private void checkAddEditRequest(SystemRole request) {
         if (systemRoleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
         if (systemRoleService.isRoleKeyDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
-        systemRoleService.update(request);
-        // 同步更新缓存中的用户权限
-        systemUserService.refreshLoginUserPermissions();
     }
 
     /**

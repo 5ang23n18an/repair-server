@@ -92,9 +92,7 @@ public class SystemDictionaryTypeController {
     @OperationLog(title = "字典类型", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryType request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
-        }
+        checkAddEditRequest(request);
         systemDictionaryTypeService.insert(request);
     }
 
@@ -108,10 +106,14 @@ public class SystemDictionaryTypeController {
     @OperationLog(title = "字典类型", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryType request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
+        checkAddEditRequest(request);
+        systemDictionaryTypeService.update(request);
+    }
+
+    private void checkAddEditRequest(SystemDictionaryType request) {
         if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }
-        systemDictionaryTypeService.update(request);
     }
 
     /**
