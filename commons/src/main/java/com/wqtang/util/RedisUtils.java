@@ -217,7 +217,7 @@ public class RedisUtils {
     }
 
     public static String getRedisKey(RedisKeyEnum redisKeyEnum, String key) {
-        return redisKeyEnum.getPrefix() + ": " + key;
+        return redisKeyEnum.getPrefix() + ":" + key;
     }
 
 }

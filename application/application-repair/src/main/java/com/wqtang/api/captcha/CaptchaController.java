@@ -4,7 +4,7 @@ import com.wqtang.captcha.CaptchaService;
 import com.wqtang.system.SystemConfigService;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.enumerate.SystemConfigKeyEnum;
+import com.wqtang.object.enumerate.SystemConfigEnum;
 import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class CaptchaController {
      */
     @GetMapping("/image")
     public GetCaptchaImageResponse getCaptchaImage() {
-        if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
+        if (!systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码功能暂不可用");
         }
         try {

@@ -102,9 +102,9 @@ public class SecurityConfig {
                         .antMatchers(
                                 "/system/user/login",
                                 "/system/user/register",
-                                "/system/user/emailVerification",
+                                "/system/user/verifyByEmail",
                                 "/system/user/modifyPassword",
-                                "/system/user/getEmail",
+                                "/system/user/getEmailByUsername",
                                 "/captcha/image",
                                 "/file/upload").anonymous()
                         // 除上面以外的所有资源路径都需要在登录状态时访问
