@@ -76,8 +76,8 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null and userId != 0">user_id,</if>
             <if test="deptId != null and deptId != 0">dept_id,</if>
-            <if test="userName != null and userName != ''">username,</if>
-            <if test="nickName != null and nickName != ''">nickname,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
             <if test="email != null and email != ''">email,</if>
             <if test="avatar != null and avatar != ''">avatar,</if>
             <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>

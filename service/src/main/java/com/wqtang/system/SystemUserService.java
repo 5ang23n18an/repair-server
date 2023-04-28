@@ -1,7 +1,7 @@
 package com.wqtang.system;
 
-import com.wqtang.oauth.TokenService;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.oauth.TokenService;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.RedisKeyEnum;
@@ -55,13 +55,14 @@ public class SystemUserService {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "目前系统没有开放注册功能");
         }
         if (systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
-            validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
+            validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getEmail()));
         }
         checkRegisterRequest(request);
         SystemUser user = new SystemUser();
         user.setUsername(request.getUsername());
         user.setNickname(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
         systemUserMapper.insert(user);
     }
 
@@ -117,37 +118,39 @@ public class SystemUserService {
         return systemUserMapper.getByUsername(username);
     }
 
-    public void emailVerification(String email) {
+    public void verifyByEmail(String email) {
+        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, email);
+        if (redisUtils.get(redisKey) != null) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码已发送, 请注意查收");
+        }
         // 随机生成一个6位的验证码
         String code = RandomCodeUtils.generateRandomDigits();
         // 发送邮件
         String subject = "用户邮箱验证";
-        String text = "欢迎使用密码重置服务。您的验证码是: " + code + ", 有效期为2分钟。如非本人操作，请检查帐号安全。";
+        String text = "欢迎使用密码重置服务。您的验证码是：" + code + "，有效期为2分钟。如非本人操作，请检查帐号安全。";
         emailUtils.send(email, subject, text);
         // 在邮件发送成功后, 将该邮箱号以及对应的验证码缓存起来, 并设置好超时时间, 以此作为有效时长
-        String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, email);
         redisUtils.set(redisKey, code, captchaTimeout, TimeUnit.MINUTES);
     }
 
     public void modifyPassword(SystemUserModifyPasswordRequest request) {
-        SystemUser systemUser = getByUsername(request.getUsername());
-        if (systemUser == null) {
+        SystemUser user = getByUsername(request.getUsername());
+        if (user == null) {
             throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
         }
-        if (!systemUser.getEmail().equals(request.getEmail())) {
+        if (!user.getEmail().equals(request.getEmail())) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请输入注册时填写的邮箱号");
         }
-        validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.EMAIL, request.getEmail()));
-        String rawPassword = request.getPassword();
-        systemUserMapper.updatePasswordByUsername(request.getUsername(), passwordEncoder.encode(rawPassword));
+        validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getEmail()));
+        systemUserMapper.updatePasswordByUsername(request.getUsername(), passwordEncoder.encode(request.getPassword()));
     }
 
     private void recordLoginInfo(Long userId) {
-        SystemUser systemUser = new SystemUser();
-        systemUser.setUserId(userId);
-        systemUser.setLoginIp(IPAddressUtils.getIPAddress());
-        systemUser.setLoginDate(Calendar.getInstance().getTime());
-        systemUserMapper.update(systemUser);
+        SystemUser user = new SystemUser();
+        user.setUserId(userId);
+        user.setLoginIp(IPAddressUtils.getIPAddress());
+        user.setLoginDate(Calendar.getInstance().getTime());
+        systemUserMapper.update(user);
     }
 
     public void refreshLoginUserPermissions() {

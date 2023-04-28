@@ -8,7 +8,6 @@ public enum RedisKeyEnum {
 
     CAPTCHA("captcha"),
     SYSTEM_CONFIG("system_config"),
-    EMAIL("email"),
     LOGIN_TOKEN("login_token"),
     SYSTEM_DICTIONARY("sys_dict"),
     ;

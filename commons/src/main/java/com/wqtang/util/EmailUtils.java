@@ -18,7 +18,7 @@ public class EmailUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailUtils.class);
 
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.username}")
     private String from;
 
     @Resource

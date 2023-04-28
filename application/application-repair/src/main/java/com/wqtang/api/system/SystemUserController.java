@@ -1,10 +1,7 @@
 package com.wqtang.api.system;
 
 import com.wqtang.exception.BusinessException;
-import com.wqtang.object.annotation.OperationLog;
-import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
@@ -85,15 +82,18 @@ public class SystemUserController {
      * @param username
      * @return
      */
-    @GetMapping("/getEmail/{username}")
-    public String getEmail(@PathVariable("username") String username) {
+    @GetMapping("/getEmailByUsername")
+    public String getEmailByUsername(String username) {
+        if (StringUtils.isBlank(username)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请正确填写用户名");
+        }
         SystemUser user = systemUserService.getByUsername(username);
         if (user == null) {
             throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
         }
         String email = user.getEmail();
         if (StringUtils.isEmpty(email)) {
-            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前用户暂未绑定邮箱, 请联系管理员寻求帮助");
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前用户暂未绑定邮箱, 可联系管理员进行邮箱设置");
         }
         return email;
     }
@@ -106,9 +106,12 @@ public class SystemUserController {
      * @param email
      * @return
      */
-    @PostMapping("/emailVerification")
-    public void emailVerification(String email) {
-        systemUserService.emailVerification(email);
+    @PostMapping("/verifyByEmail")
+    public void verifyByEmail(String email) {
+        if (StringUtils.isBlank(email)) {
+            throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请正确填写邮箱号");
+        }
+        systemUserService.verifyByEmail(email);
     }
 
     /**
@@ -118,7 +121,6 @@ public class SystemUserController {
      * @return
      */
     @PostMapping("/modifyPassword")
-    @OperationLog(title = "修改密码", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void modifyPassword(@RequestBody SystemUserModifyPasswordRequest request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         systemUserService.modifyPassword(request);
