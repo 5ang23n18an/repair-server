@@ -5,7 +5,7 @@ import com.wqtang.exception.BusinessException;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.RedisKeyEnum;
-import com.wqtang.object.enumerate.SystemConfigKeyEnum;
+import com.wqtang.object.enumerate.SystemConfigEnum;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
@@ -51,10 +51,10 @@ public class SystemUserService {
     private PasswordEncoder passwordEncoder;
 
     public void register(SystemUserLoginRequest request) {
-        if (!systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.REGISTER)) {
+        if (!systemConfigService.isSystemConfigAvailable(SystemConfigEnum.REGISTER)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "目前系统没有开放注册功能");
         }
-        if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
+        if (systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
             validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
         }
         checkRegisterRequest(request);
@@ -93,7 +93,7 @@ public class SystemUserService {
             }
         } else {
             // login from web
-            if (systemConfigService.isSystemConfigAvailable(SystemConfigKeyEnum.CAPTCHA)) {
+            if (systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
                 validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
             }
         }

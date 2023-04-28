@@ -4,15 +4,18 @@ package com.wqtang.object.enumerate;
  * @author Wenqian Tang
  * @date 2023/3/9
  */
-public enum SystemConfigKeyEnum {
+public enum SystemConfigEnum {
 
     CAPTCHA("captcha"),
     REGISTER("register"),
+    DEFAULT_PASSWORD("defaultPassword"),
+    SKIN("skin"),
+    THEME("theme"),
     ;
 
     private String configKey;
 
-    SystemConfigKeyEnum(String configKey) {
+    SystemConfigEnum(String configKey) {
         this.configKey = configKey;
     }
 

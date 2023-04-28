@@ -2,7 +2,7 @@ package com.wqtang.system;
 
 import com.wqtang.AbstractCacheRefresh;
 import com.wqtang.object.enumerate.RedisKeyEnum;
-import com.wqtang.object.enumerate.SystemConfigKeyEnum;
+import com.wqtang.object.enumerate.SystemConfigEnum;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.util.RedisUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -52,7 +52,7 @@ public class SystemConfigService extends AbstractCacheRefresh {
         systemConfigMapper.batchDeleteByIds(ids);
     }
 
-    public boolean isSystemConfigAvailable(SystemConfigKeyEnum configKeyEnum) {
+    public boolean isSystemConfigAvailable(SystemConfigEnum configKeyEnum) {
         // 优先从缓存中进行查询
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_CONFIG, configKeyEnum.getConfigKey()),
                 redisValue = redisUtils.getAndCast(redisKey, String.class);
