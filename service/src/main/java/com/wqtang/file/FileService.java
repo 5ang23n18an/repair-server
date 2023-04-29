@@ -12,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 /**
  * @author Wenqian Tang
@@ -30,14 +28,15 @@ public class FileService {
     public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) throws Exception {
         String fileName = request.getFileName(), filePath = FilenameUtils.concat(rootDirectory, fileName);
         byte[] fileBytes = FileUtils.readAsBytes(filePath);
+        if (BooleanUtils.isTrue(request.getDelete())) {
+            FileUtils.delete(filePath);
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
         headers.setCacheControl("no-cache, no-store, must-revalidate");
         headers.setPragma("no-cache");
-        if (BooleanUtils.isTrue(request.getDelete())) {
-            Files.delete(new File(filePath).toPath());
-        }
+        headers.setAccessControlAllowOrigin("*");
         return ResponseEntity
                 .ok()
                 .headers(headers)
