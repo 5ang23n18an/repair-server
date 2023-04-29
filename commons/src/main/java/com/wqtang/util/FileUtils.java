@@ -1,5 +1,6 @@
 package com.wqtang.util;
 
+import com.google.common.collect.Lists;
 import com.wqtang.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import org.apache.commons.io.FilenameUtils;
@@ -8,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Wenqian Tang
@@ -136,6 +137,32 @@ public class FileUtils {
             LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
             return false;
         }
+    }
+
+    public static List<String> readFileByLine(String filePath) {
+        return readFileByLine(new File(filePath));
+    }
+
+    public static List<String> readFileByLine(File file) {
+        if (!file.exists()) {
+            return Collections.emptyList();
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> list = Lists.newArrayList();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                processEachLine(list, line);
+            }
+            return list;
+        } catch (Exception e) {
+            LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.FILE_READ_FAIL);
+        }
+    }
+
+    private static void processEachLine(List<String> list, String line) {
+        String processedLine = line.substring(1, line.length() - 1).replace(",", StringUtils.EMPTY).replace("'", StringUtils.EMPTY);
+        Collections.addAll(list, processedLine.split(StringUtils.SPACE));
     }
 
 }

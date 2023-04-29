@@ -1,15 +1,19 @@
 package com.wqtang.api.file;
 
-import com.wqtang.file.FileService;
 import com.wqtang.exception.BusinessException;
+import com.wqtang.file.FileService;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.vo.request.file.FileCommonDownloadRequest;
 import com.wqtang.object.vo.response.file.FileCommonUploadResponse;
+import com.wqtang.object.vo.response.file.FileUploadResponse;
 import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -62,8 +66,13 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload")
-    public synchronized FileCommonUploadResponse upload(MultipartFile file) {
-        return fileService.upload(file);
+    public synchronized FileUploadResponse upload(MultipartFile file) {
+        try {
+            return fileService.upload(file);
+        } catch (Exception e) {
+            LOGGER.error("error message is {}", e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.ERROR);
+        }
     }
 
 }
