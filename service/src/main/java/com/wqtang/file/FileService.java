@@ -62,7 +62,7 @@ public class FileService {
         return response;
     }
 
-    public FileUploadResponse upload(MultipartFile image) throws Exception {
+    public FileUploadResponse upload(MultipartFile image) {
         // 保存上传的图片文件, 并返回该文件的存储位置的绝对路径
         String imagePath = FileUtils.save(image, rootDirectory);
         // fixme: 调用python算法

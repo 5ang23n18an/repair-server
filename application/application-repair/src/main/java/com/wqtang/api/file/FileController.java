@@ -67,12 +67,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     public synchronized FileUploadResponse upload(MultipartFile file) {
-        try {
-            return fileService.upload(file);
-        } catch (Exception e) {
-            LOGGER.error("error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.ERROR);
-        }
+        return fileService.upload(file);
     }
 
 }
