@@ -103,11 +103,16 @@ public class FileUtils {
     }
 
     public static byte[] readAsBytes(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to read");
+            return new byte[0];
+        }
         return readAsBytes(new File(filePath));
     }
 
     public static byte[] readAsBytes(File file) {
         if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to read, filePath = {}", file.getAbsolutePath());
             return new byte[0];
         }
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
@@ -123,11 +128,16 @@ public class FileUtils {
     }
 
     public static boolean delete(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to delete");
+            return true;
+        }
         return delete(new File(filePath));
     }
 
     public static boolean delete(File file) {
         if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to delete, filePath = {}", file.getAbsolutePath());
             return true;
         }
         try {
@@ -140,11 +150,16 @@ public class FileUtils {
     }
 
     public static List<String> readFileByLine(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to read");
+            return Collections.emptyList();
+        }
         return readFileByLine(new File(filePath));
     }
 
     public static List<String> readFileByLine(File file) {
         if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to read, filePath = {}", file.getAbsolutePath());
             return Collections.emptyList();
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
