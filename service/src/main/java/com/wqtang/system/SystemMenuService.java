@@ -2,7 +2,7 @@ package com.wqtang.system;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.po.system.SystemRole;

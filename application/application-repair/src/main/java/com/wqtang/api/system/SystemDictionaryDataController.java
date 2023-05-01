@@ -2,7 +2,7 @@ package com.wqtang.api.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.UserConstants;

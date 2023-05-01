@@ -1,4 +1,4 @@
-package com.wqtang.exception;
+package com.wqtang.object.exception;
 
 import com.wqtang.object.enumerate.ErrorEnum;
 

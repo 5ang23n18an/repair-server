@@ -1,7 +1,7 @@
 package com.wqtang.util;
 
 import com.google.common.collect.Lists;
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;

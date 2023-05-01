@@ -2,7 +2,7 @@ package com.wqtang.api.captcha;
 
 import com.wqtang.captcha.CaptchaService;
 import com.wqtang.system.SystemConfigService;
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigEnum;
 import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;

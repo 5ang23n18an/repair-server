@@ -1,6 +1,6 @@
 package com.wqtang.system;
 
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.oauth.TokenService;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;

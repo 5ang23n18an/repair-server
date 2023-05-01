@@ -10,32 +10,30 @@ import org.springframework.http.HttpStatus;
 public class Response {
 
     private int code;
-    private String message;
-    private Object extraMessage;
+    private Object message;
 
     public Response() {
     }
 
-    public Response(int code, String message, Object extraMessage) {
+    public Response(int code, Object message) {
         this.code = code;
         this.message = message;
-        this.extraMessage = extraMessage;
     }
 
     public static Response success() {
         return success(null);
     }
 
-    public static Response success(Object extraMessage) {
-        return new Response(HttpStatus.OK.value(), "Success", extraMessage);
+    public static Response success(Object message) {
+        return new Response(HttpStatus.OK.value(), message);
     }
 
     public static Response error(ErrorEnum errorEnum) {
-        return error(errorEnum, null);
+        return error(errorEnum, errorEnum.getMessage());
     }
 
-    public static Response error(ErrorEnum errorEnum, Object extraMessage) {
-        return new Response(errorEnum.getHttpStatus().value(), errorEnum.getMessage(), extraMessage);
+    public static Response error(ErrorEnum errorEnum, Object message) {
+        return new Response(errorEnum.getHttpStatus().value(), message);
     }
 
     public int getCode() {
@@ -46,20 +44,12 @@ public class Response {
         this.code = code;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
-    }
-
-    public Object getExtraMessage() {
-        return extraMessage;
-    }
-
-    public void setExtraMessage(Object extraMessage) {
-        this.extraMessage = extraMessage;
     }
 
 }

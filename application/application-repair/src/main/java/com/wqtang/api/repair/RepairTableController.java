@@ -1,6 +1,6 @@
 package com.wqtang.api.repair;
 
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;

@@ -1,6 +1,6 @@
 package com.wqtang.repair;
 
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.util.ExcelUtils;
