@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class FileService {
     @Resource(name = "restTemplate")
     private RestTemplate restTemplate;
 
-    public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) throws Exception {
+    public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) {
         String fileName = request.getFileName(), filePath = FilenameUtils.concat(rootDirectory, fileName);
         byte[] fileBytes = FileUtils.readAsBytes(filePath);
         if (BooleanUtils.isTrue(request.getDelete())) {
@@ -43,7 +44,11 @@ public class FileService {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+        try {
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(e);
+        }
         headers.setCacheControl("no-cache, no-store, must-revalidate");
         headers.setPragma("no-cache");
         headers.setAccessControlAllowOrigin("*");

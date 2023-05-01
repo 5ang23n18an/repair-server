@@ -3,12 +3,12 @@ package com.wqtang.api.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemRole;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.system.SystemUserRole;
@@ -66,12 +66,7 @@ public class SystemRoleController {
     @OperationLog(title = "角色管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        try {
-            return systemRoleService.export(request);
-        } catch (Exception e) {
-            LOGGER.error("error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
-        }
+        return systemRoleService.export(request);
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.wqtang.api.file;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.file.FileService;
-import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.vo.request.file.FileCommonDownloadRequest;
 import com.wqtang.object.vo.response.file.FileCommonUploadResponse;
 import com.wqtang.object.vo.response.file.FileUploadResponse;
@@ -40,12 +38,7 @@ public class FileController {
     @GetMapping("/common/download")
     public ResponseEntity<byte[]> commonDownload(FileCommonDownloadRequest request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        try {
-            return fileService.commonDownload(request);
-        } catch (Exception e) {
-            LOGGER.error("error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
-        }
+        return fileService.commonDownload(request);
     }
 
     /**

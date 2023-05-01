@@ -2,12 +2,10 @@ package com.wqtang.api.system;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.BusinessType;
-import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.po.system.SystemDictionaryData;
@@ -65,12 +63,7 @@ public class SystemDictionaryDataController {
     @OperationLog(title = "字典数据", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemDictionaryData request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        try {
-            return systemDictionaryDataService.export(request);
-        } catch (Exception e) {
-            LOGGER.error("error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
-        }
+        return systemDictionaryDataService.export(request);
     }
 
     /**

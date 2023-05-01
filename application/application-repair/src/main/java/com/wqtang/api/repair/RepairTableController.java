@@ -1,10 +1,8 @@
 package com.wqtang.api.repair;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.enumerate.BusinessType;
-import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.repair.RepairTable;
 import com.wqtang.repair.RepairTableService;
@@ -52,12 +50,7 @@ public class RepairTableController {
     @OperationLog(title = "检测", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(RepairTable request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        try {
-            return repairTableService.export(request);
-        } catch (Exception e) {
-            LOGGER.error("error message is {}", e.getMessage(), e);
-            throw new BusinessException(ErrorEnum.FILE_DOWNLOAD_FAIL);
-        }
+        return repairTableService.export(request);
     }
 
     /**

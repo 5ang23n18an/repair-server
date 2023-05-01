@@ -1,7 +1,7 @@
 package com.wqtang.repair;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -54,13 +55,17 @@ public class RepairInfoService {
         repairInfoMapper.batchDeleteByIds(ids);
     }
 
-    public ResponseEntity<byte[]> export(RepairInfo repairInfo) throws Exception {
+    public ResponseEntity<byte[]> export(RepairInfo repairInfo) {
         List<RepairInfo> list = listByParams(repairInfo);
         File file = excelUtils.export(list, "道岔信息数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        try {
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(e);
+        }
         return ResponseEntity
                 .ok()
                 .headers(headers)
