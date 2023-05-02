@@ -97,7 +97,7 @@ public class SecurityConfig {
                                 "/**/*.css",
                                 "/**/*.js").permitAll()
                         // fixme: 仅用于测试, 需要记得事后删除!
-                        .antMatchers("/repair/**", "system/**").permitAll()
+                        .antMatchers("/repair/**", "system/**", "/monitor/**").permitAll()
                         // 以下资源路径仅允许未登录状态时访问(无需token)
                         .antMatchers(
                                 "/system/user/login",
