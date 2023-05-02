@@ -77,7 +77,7 @@ public class AspectComponent {
             operationLog.setStatus(BusinessStatus.FAIL.ordinal());
             operationLog.setErrorMsg(exception.getMessage());
         }
-        operationLog.setOperIp(IPAddressUtils.getIPAddress());
+        operationLog.setOperIp(IPAddressUtils.getIPAddressFromHttpServletRequest());
         operationLog.setOperLocation(ipAddressUtils.getLocationByIPAddress(operationLog.getOperIp()));
         operationLog.setOperName(SecurityUtils.getCurrentUsername());
         operationLog.setMethod(methodReference(joinPoint));

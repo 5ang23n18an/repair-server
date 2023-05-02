@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collections;
 
 /**
@@ -25,7 +26,7 @@ public class IPAddressUtils {
     @Resource(name = "restTemplate")
     private RestTemplate restTemplate;
 
-    public static String getIPAddress() {
+    public static String getIPAddressFromHttpServletRequest() {
         String unknownIP = "unknown", blankIP = "0:0:0:0:0:0:0:1";
         HttpServletRequest httpServletRequest = ServletUtils.getHttpServletRequest();
         String ipAddress = httpServletRequest.getHeader(com.google.common.net.HttpHeaders.X_FORWARDED_FOR);
@@ -91,6 +92,24 @@ public class IPAddressUtils {
         headers.setAccept(Collections.singletonList(MediaType.ALL));
         headers.setConnection(com.google.common.net.HttpHeaders.KEEP_ALIVE);
         return headers;
+    }
+
+    public static String getHostIP() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            LOGGER.error("error message is {}", e.getMessage(), e);
+            return "127.0.0.1";
+        }
+    }
+
+    public static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOGGER.error("error message is {}", e.getMessage(), e);
+            return "未知";
+        }
     }
 
 }
