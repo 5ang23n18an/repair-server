@@ -11,6 +11,7 @@ public class BusinessException extends RuntimeException {
     private ErrorEnum errorEnum;
 
     public BusinessException() {
+        this(ErrorEnum.ERROR);
     }
 
     public BusinessException(ErrorEnum errorEnum) {
