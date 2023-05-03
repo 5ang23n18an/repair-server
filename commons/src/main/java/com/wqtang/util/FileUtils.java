@@ -1,6 +1,7 @@
 package com.wqtang.util;
 
-import com.wqtang.exception.BusinessException;
+import com.google.common.collect.Lists;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Wenqian Tang
@@ -43,17 +44,13 @@ public class FileUtils {
             LOGGER.warn("multipartFile is null or empty, so don't need to save");
             return StringUtils.EMPTY;
         }
-        try {
-            File file = fileUniquenessProcessing(targetDirPath, multipartFile.getOriginalFilename());
-            try (InputStream inputStream = multipartFile.getInputStream(); OutputStream outputStream = Files.newOutputStream(file.toPath())) {
-                byte[] writeBuffer = new byte[WRITE_BUFFER_SIZE];
-                int byteRead;
-                while ((byteRead = inputStream.read(writeBuffer, 0, WRITE_BUFFER_SIZE)) != -1) {
-                    outputStream.write(writeBuffer, 0, byteRead);
-                }
-            } catch (Exception e) {
-                LOGGER.error("error message is {}", e.getMessage(), e);
-                throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
+        File file = createFileUniquely(targetDirPath, multipartFile.getOriginalFilename());
+        try (InputStream inputStream = multipartFile.getInputStream();
+             OutputStream outputStream = Files.newOutputStream(file.toPath())) {
+            byte[] writeBuffer = new byte[WRITE_BUFFER_SIZE];
+            int byteRead;
+            while ((byteRead = inputStream.read(writeBuffer, 0, WRITE_BUFFER_SIZE)) != -1) {
+                outputStream.write(writeBuffer, 0, byteRead);
             }
             return file.getCanonicalPath();
         } catch (Exception e) {
@@ -65,16 +62,17 @@ public class FileUtils {
     /**
      * <p>1. 对目标文件夹进行判断, 如果该文件夹不存在会先进行创建</p>
      * <p>2. 对原文件名进行唯一化处理, 使得不会因"重名"等原因导致保存失败</p>
+     * <p>注意: 此方法仅在内存中创建了一个File对象, 实际并未创建在磁盘上!</p>
      *
      * @param targetDirPath
      * @param originalFileName
      * @return 唯一化处理后的File对象
      */
-    public static File fileUniquenessProcessing(String targetDirPath, String originalFileName) {
+    public static File createFileUniquely(String targetDirPath, String originalFileName) {
         File targetDir = new File(targetDirPath);
         if (!targetDir.exists() && !targetDir.mkdirs()) {
             LOGGER.error("target directory is not exist and fail to create, targetDirPath = {}", targetDirPath);
-            throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL);
+            throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL, "文件夹创建失败");
         }
         String processedFileName = fileNameUniquenessProcessing(originalFileName);
         return new File(FilenameUtils.concat(targetDirPath, processedFileName));
@@ -100,15 +98,21 @@ public class FileUtils {
                 .append(FilenameUtils.EXTENSION_SEPARATOR)
                 // test_1680421924166.txt
                 .append(FilenameUtils.getExtension(originalFileName));
+        // 最终返回的文件名: test_1680421924166.txt
         return STRING_BUFFER.toString();
     }
 
     public static byte[] readAsBytes(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to read");
+            return new byte[0];
+        }
         return readAsBytes(new File(filePath));
     }
 
     public static byte[] readAsBytes(File file) {
         if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to read, filePath = {}", file.getAbsolutePath());
             return new byte[0];
         }
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
@@ -124,11 +128,16 @@ public class FileUtils {
     }
 
     public static boolean delete(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to delete");
+            return true;
+        }
         return delete(new File(filePath));
     }
 
     public static boolean delete(File file) {
         if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to delete, filePath = {}", file.getAbsolutePath());
             return true;
         }
         try {
@@ -138,6 +147,37 @@ public class FileUtils {
             LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
             return false;
         }
+    }
+
+    public static List<String> readFileByLine(String filePath) {
+        if (StringUtils.isEmpty(filePath)) {
+            LOGGER.info("filePath is null or empty, so don't need to read");
+            return Collections.emptyList();
+        }
+        return readFileByLine(new File(filePath));
+    }
+
+    public static List<String> readFileByLine(File file) {
+        if (!file.exists()) {
+            LOGGER.warn("file is not exist, so don't need to read, filePath = {}", file.getAbsolutePath());
+            return Collections.emptyList();
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> list = Lists.newArrayList();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                processEachLine(list, line);
+            }
+            return list;
+        } catch (Exception e) {
+            LOGGER.error("filePath = {}, error message is {}", file.getPath(), e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.FILE_READ_FAIL);
+        }
+    }
+
+    private static void processEachLine(List<String> list, String line) {
+        String processedLine = line.substring(1, line.length() - 1).replace(",", StringUtils.EMPTY).replace("'", StringUtils.EMPTY);
+        Collections.addAll(list, processedLine.split(StringUtils.SPACE));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.wqtang.system;
 
-import com.wqtang.exception.BusinessException;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.oauth.TokenService;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
@@ -148,7 +148,7 @@ public class SystemUserService {
     private void recordLoginInfo(Long userId) {
         SystemUser user = new SystemUser();
         user.setUserId(userId);
-        user.setLoginIp(IPAddressUtils.getIPAddress());
+        user.setLoginIp(IPAddressUtils.getIPAddressFromHttpServletRequest());
         user.setLoginDate(Calendar.getInstance().getTime());
         systemUserMapper.update(user);
     }

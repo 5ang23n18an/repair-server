@@ -101,7 +101,7 @@ public class TokenService {
         HttpServletRequest servletRequest = ServletUtils.getHttpServletRequest();
         String userAgentString = servletRequest.getHeader(HttpHeaders.USER_AGENT);
         UserAgent userAgent = UserAgent.parseUserAgentString(userAgentString);
-        String ip = IPAddressUtils.getIPAddress();
+        String ip = IPAddressUtils.getIPAddressFromHttpServletRequest();
         loginUser.setIpAddr(ip);
         loginUser.setLoginLocation(ipAddressUtils.getLocationByIPAddress(ip));
         loginUser.setBrowser(userAgent.getBrowser().getName());

@@ -34,4 +34,4 @@ logging:
 # 文件服务
 file:
   # 存储文件的根目录
-  rootDirectory: E:/Download/root
+  rootDirectory: E:/Download/repair

@@ -1,5 +1,6 @@
 package com.wqtang.system;
 
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemDictionaryData;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -30,13 +32,17 @@ public class SystemDictionaryDataService {
         return systemDictionaryDataMapper.listByParams(dictionaryData);
     }
 
-    public ResponseEntity<byte[]> export(SystemDictionaryData dictionaryData) throws Exception {
+    public ResponseEntity<byte[]> export(SystemDictionaryData dictionaryData) {
         List<SystemDictionaryData> list = listByParams(dictionaryData);
         File file = excelUtils.export(list, "字典数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        try {
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(e);
+        }
         return ResponseEntity
                 .ok()
                 .headers(headers)

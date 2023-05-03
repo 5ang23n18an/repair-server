@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorEnum {
 
     // 500xxx
-    ERROR(500000, HttpStatus.INTERNAL_SERVER_ERROR, "啊哦...看起来服务器产生了异常"),
+    ERROR(500000, HttpStatus.INTERNAL_SERVER_ERROR, "服务器异常"),
     FILE_WRITE_FAIL(500100, HttpStatus.INTERNAL_SERVER_ERROR, "文件写入失败"),
     FILE_READ_FAIL(500101, HttpStatus.INTERNAL_SERVER_ERROR, "文件读取失败"),
     FILE_DOWNLOAD_FAIL(500101, HttpStatus.INTERNAL_SERVER_ERROR, "文件下载失败"),

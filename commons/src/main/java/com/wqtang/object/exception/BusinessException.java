@@ -1,4 +1,4 @@
-package com.wqtang.exception;
+package com.wqtang.object.exception;
 
 import com.wqtang.object.enumerate.ErrorEnum;
 
@@ -11,6 +11,7 @@ public class BusinessException extends RuntimeException {
     private ErrorEnum errorEnum;
 
     public BusinessException() {
+        this(ErrorEnum.ERROR);
     }
 
     public BusinessException(ErrorEnum errorEnum) {
@@ -20,6 +21,11 @@ public class BusinessException extends RuntimeException {
     public BusinessException(ErrorEnum errorEnum, String message) {
         super(message);
         this.errorEnum = errorEnum;
+    }
+
+    public BusinessException(Exception e) {
+        super(e.getMessage());
+        this.errorEnum = ErrorEnum.ERROR;
     }
 
     public ErrorEnum getErrorEnum() {

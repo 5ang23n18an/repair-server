@@ -7,7 +7,6 @@
     <artifactId>application</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>application-task</module>
         <module>application-repair</module>
     </modules>
 

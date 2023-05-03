@@ -5,12 +5,15 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.connection.RedisServerCommands;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -218,6 +221,33 @@ public class RedisUtils {
 
     public static String getRedisKey(RedisKeyEnum redisKeyEnum, String key) {
         return redisKeyEnum.getPrefix() + ":" + key;
+    }
+
+    /**
+     * 获取Redis详细信息
+     *
+     * @return
+     */
+    public Properties getDetailedInfo() {
+        return redisTemplate.execute((RedisCallback<Properties>) RedisServerCommands::info);
+    }
+
+    /**
+     * 获取Redis命令统计信息
+     *
+     * @return
+     */
+    public Properties getCommandStaticsInfo() {
+        return redisTemplate.execute((RedisCallback<Properties>) connection -> connection.info("commandstats"));
+    }
+
+    /**
+     * 获取Redis中可用key的总量
+     *
+     * @return
+     */
+    public Long getDbSize() {
+        return redisTemplate.execute(RedisServerCommands::dbSize);
     }
 
 }

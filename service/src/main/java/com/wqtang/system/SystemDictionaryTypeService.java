@@ -2,6 +2,7 @@ package com.wqtang.system;
 
 import com.wqtang.AbstractCacheRefresh;
 import com.wqtang.object.enumerate.RedisKeyEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemDictionaryData;
 import com.wqtang.object.po.system.SystemDictionaryType;
 import com.wqtang.util.ExcelUtils;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -43,13 +45,17 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
         return systemDictionaryTypeMapper.listByParams(dictionaryType);
     }
 
-    public ResponseEntity<byte[]> export(SystemDictionaryType dictionaryType) throws Exception {
+    public ResponseEntity<byte[]> export(SystemDictionaryType dictionaryType) {
         List<SystemDictionaryType> list = listByParams(dictionaryType);
         File file = excelUtils.export(list, "字典类型");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        try {
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(e);
+        }
         return ResponseEntity
                 .ok()
                 .headers(headers)
