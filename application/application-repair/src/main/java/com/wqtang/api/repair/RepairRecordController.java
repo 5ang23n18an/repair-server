@@ -82,8 +82,8 @@ public class RepairRecordController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public RepairRecord getById(@PathVariable("id") Long id) {
+    @GetMapping("/getInfo")
+    public RepairRecord getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairRecordService.getById(id);
     }
 
@@ -214,9 +214,9 @@ public class RepairRecordController {
      *
      * @param ids
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping
     @OperationLog(title = "检修记录", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("ids") Long[] ids) {
+    public void delete(@RequestBody Long[] ids) {
         repairRecordService.batchDeleteByIds(ids);
     }
 

@@ -40,9 +40,9 @@ public class RepairInfoController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public RepairInfo getById(@PathVariable("id") Long id) {
-        return repairInfoService.getById(id);
+    @GetMapping("/getInfo")
+    public RepairInfo getInfo(@RequestParam(required = false, value = "id") Long id) {
+        return id == null ? null : repairInfoService.getById(id);
     }
 
     /**
@@ -96,10 +96,10 @@ public class RepairInfoController {
      *
      * @param ids
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping
     @DoAspect(businessType = BusinessType.DELETE)
     @OperationLog(title = "道岔信息", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("ids") Long[] ids) {
+    public void delete(@RequestBody Long[] ids) {
         repairInfoService.batchDeleteByIds(ids);
     }
 
