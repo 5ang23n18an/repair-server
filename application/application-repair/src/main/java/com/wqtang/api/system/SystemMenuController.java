@@ -1,12 +1,12 @@
 package com.wqtang.api.system;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemMenu;
 import com.wqtang.object.vo.TreeInfo;
 import com.wqtang.object.vo.TreeListInfo;
@@ -33,7 +33,7 @@ public class SystemMenuController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemMenuController.class);
 
     @Resource(name = "systemMenuService")
-    private SystemMenuService systemMenuService;
+    private SystemMenuService menuService;
 
     /**
      * 获取菜单列表
@@ -44,7 +44,7 @@ public class SystemMenuController {
     @GetMapping("/list")
     public List<SystemMenu> getList(SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemMenuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
+        return menuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
     }
 
     /**
@@ -53,9 +53,9 @@ public class SystemMenuController {
      * @param menuId
      * @return
      */
-    @GetMapping("/{menuId}")
-    public SystemMenu getById(@PathVariable("menuId") Long menuId) {
-        return systemMenuService.getByMenuId(menuId);
+    @GetMapping("/getInfo")
+    public SystemMenu getInfo(@RequestParam(required = false, value = "menuId") Long menuId) {
+        return menuId == null ? null : menuService.getByMenuId(menuId);
     }
 
     /**
@@ -66,9 +66,9 @@ public class SystemMenuController {
      */
     @GetMapping("/roleMenuTree/{roleId}")
     public TreeListInfo roleMenuTree(@PathVariable("roleId") Long roleId) {
-        List<Long> menuIds = systemMenuService.listMenuIdsByRoleId(roleId);
-        List<SystemMenu> menuList = systemMenuService.listByUserId(SecurityUtils.getCurrentUserId());
-        List<SystemMenu> treeNodeList = systemMenuService.buildMenuTree(menuList);
+        List<Long> menuIds = menuService.listMenuIdsByRoleId(roleId);
+        List<SystemMenu> menuList = menuService.listByUserId(SecurityUtils.getCurrentUserId());
+        List<SystemMenu> treeNodeList = menuService.buildMenuTree(menuList);
         List<TreeInfo> treeInfo = treeNodeList.stream().map(TreeInfo::new).collect(Collectors.toList());
         TreeListInfo treeListInfo = new TreeListInfo();
         treeListInfo.setKeys(menuIds);
@@ -85,8 +85,8 @@ public class SystemMenuController {
     @GetMapping("/tree")
     public List<TreeInfo> getTree(SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        List<SystemMenu> menuList = systemMenuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
-        List<SystemMenu> treeNodeList = systemMenuService.buildMenuTree(menuList);
+        List<SystemMenu> menuList = menuService.listByParamsAndUserId(request, SecurityUtils.getCurrentUserId());
+        List<SystemMenu> treeNodeList = menuService.buildMenuTree(menuList);
         return treeNodeList.stream().map(TreeInfo::new).collect(Collectors.toList());
     }
 
@@ -101,7 +101,7 @@ public class SystemMenuController {
     public void add(@RequestBody SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemMenuService.insert(request);
+        menuService.insert(request);
     }
 
     /**
@@ -115,11 +115,11 @@ public class SystemMenuController {
     public void edit(@RequestBody SystemMenu request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemMenuService.update(request);
+        menuService.update(request);
     }
 
     private void checkAddEditRequest(SystemMenu request) {
-        if (systemMenuService.isMenuNameDuplicated(request)) {
+        if (menuService.isMenuNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该菜单名称已经存在");
         }
         if (UserConstants.YES_FRAME.equals(request.getIsFrame())
@@ -136,16 +136,16 @@ public class SystemMenuController {
      *
      * @param menuId
      */
-    @DeleteMapping("/{menuId}")
+    @DeleteMapping
     @OperationLog(title = "菜单管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("menuId") Long menuId) {
-        if (systemMenuService.existsChildrenMenuByMenuId(menuId)) {
+    public void delete(@RequestBody Long menuId) {
+        if (menuService.existsChildrenMenuByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单仍存在子菜单, 不允许删除");
         }
-        if (systemMenuService.existsRoleByMenuId(menuId)) {
+        if (menuService.existsRoleByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单已被分配, 不允许删除");
         }
-        systemMenuService.deleteByMenuId(menuId);
+        menuService.deleteByMenuId(menuId);
     }
 
 }

@@ -20,6 +20,7 @@ public enum ErrorEnum {
 
     // 403xxx
     BUSINESS_REFUSE(403000, HttpStatus.FORBIDDEN, "由于业务原因，您的操作被拒绝了"),
+    INVALID_REQUEST(403001, HttpStatus.FORBIDDEN, "非法的请求参数"),
 
     // 404xxx
     USER_NOT_FOUND(404000, HttpStatus.NOT_FOUND, "用户不存在"),

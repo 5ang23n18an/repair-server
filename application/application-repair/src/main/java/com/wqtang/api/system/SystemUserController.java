@@ -30,11 +30,11 @@ public class SystemUserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemUserController.class);
 
     @Resource(name = "systemUserService")
-    private SystemUserService systemUserService;
+    private SystemUserService userService;
     @Resource(name = "systemRoleService")
-    private SystemRoleService systemRoleService;
+    private SystemRoleService roleService;
     @Resource(name = "systemMenuService")
-    private SystemMenuService systemMenuService;
+    private SystemMenuService menuService;
 
     /**
      * 用户注册
@@ -44,7 +44,7 @@ public class SystemUserController {
     @PostMapping("/register")
     public void register(@RequestBody SystemUserLoginRequest request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemUserService.register(request);
+        userService.register(request);
     }
 
     /**
@@ -56,7 +56,7 @@ public class SystemUserController {
     @PostMapping("/login")
     public String login(@RequestBody SystemUserLoginRequest request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemUserService.login(request);
+        return userService.login(request);
     }
 
     /**
@@ -67,8 +67,8 @@ public class SystemUserController {
     @GetMapping("/getInfo")
     public GetSystemUserInfoResponse getInfo() {
         SystemUser user = SecurityUtils.getCurrentUser();
-        Set<String> roles = systemRoleService.getRolesByUser(user);
-        Set<String> permissions = systemMenuService.getPermissionsByUser(user);
+        Set<String> roles = roleService.getRolesByUser(user);
+        Set<String> permissions = menuService.getPermissionsByUser(user);
         GetSystemUserInfoResponse response = new GetSystemUserInfoResponse();
         response.setUser(user);
         response.setRoles(roles);
@@ -87,7 +87,7 @@ public class SystemUserController {
         if (StringUtils.isBlank(username)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请正确填写用户名");
         }
-        SystemUser user = systemUserService.getByUsername(username);
+        SystemUser user = userService.getByUsername(username);
         if (user == null) {
             throw new BusinessException(ErrorEnum.USER_NOT_FOUND);
         }
@@ -111,7 +111,7 @@ public class SystemUserController {
         if (StringUtils.isBlank(email)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请正确填写邮箱号");
         }
-        systemUserService.verifyByEmail(email);
+        userService.verifyByEmail(email);
     }
 
     /**
@@ -123,7 +123,7 @@ public class SystemUserController {
     @PostMapping("/modifyPassword")
     public void modifyPassword(@RequestBody SystemUserModifyPasswordRequest request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemUserService.modifyPassword(request);
+        userService.modifyPassword(request);
     }
 
 }

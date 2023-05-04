@@ -24,12 +24,12 @@ import java.util.List;
 public class SystemDictionaryDataService {
 
     @Resource(name = "systemDictionaryDataMapper")
-    private SystemDictionaryDataMapper systemDictionaryDataMapper;
+    private SystemDictionaryDataMapper dictionaryDataMapper;
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemDictionaryData> excelUtils;
 
     public List<SystemDictionaryData> listByParams(SystemDictionaryData dictionaryData) {
-        return systemDictionaryDataMapper.listByParams(dictionaryData);
+        return dictionaryDataMapper.listByParams(dictionaryData);
     }
 
     public ResponseEntity<byte[]> export(SystemDictionaryData dictionaryData) {
@@ -51,23 +51,27 @@ public class SystemDictionaryDataService {
     }
 
     public SystemDictionaryData getByDictCode(Long dictCode) {
-        return systemDictionaryDataMapper.getByDictCode(dictCode);
+        return dictionaryDataMapper.getByDictCode(dictCode);
     }
 
     public void insert(SystemDictionaryData dictionaryData) {
-        systemDictionaryDataMapper.insert(dictionaryData);
+        dictionaryDataMapper.insert(dictionaryData);
     }
 
     public void update(SystemDictionaryData dictionaryData) {
-        systemDictionaryDataMapper.update(dictionaryData);
+        dictionaryDataMapper.update(dictionaryData);
     }
 
     public void deleteByDictCode(Long dictCode) {
-        systemDictionaryDataMapper.deleteByDictCode(dictCode);
+        dictionaryDataMapper.deleteByDictCode(dictCode);
     }
 
     public boolean existsByDictType(String dictType) {
-        return systemDictionaryDataMapper.existsByDictType(dictType);
+        return dictionaryDataMapper.existsByDictType(dictType);
+    }
+
+    public List<SystemDictionaryData> listByDictType(String dictType) {
+        return dictionaryDataMapper.listByDictType(dictType);
     }
 
 }

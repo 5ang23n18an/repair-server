@@ -20,16 +20,16 @@ import java.util.Set;
 public class SystemConfigService extends AbstractCacheRefresh {
 
     @Resource(name = "systemConfigMapper")
-    private SystemConfigMapper systemConfigMapper;
+    private SystemConfigMapper configMapper;
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
 
-    public SystemConfig getById(Long id) {
-        return systemConfigMapper.getById(id);
+    public SystemConfig getByConfigId(Long configId) {
+        return configMapper.getByConfigId(configId);
     }
 
-    public SystemConfig getByConfigKey(String key) {
-        return systemConfigMapper.getByConfigKey(key);
+    public SystemConfig getByConfigKey(String configKey) {
+        return configMapper.getByConfigKey(configKey);
     }
 
     public List<SystemConfig> listAll() {
@@ -37,19 +37,19 @@ public class SystemConfigService extends AbstractCacheRefresh {
     }
 
     public List<SystemConfig> listByParams(SystemConfig config) {
-        return systemConfigMapper.listByParams(config);
+        return configMapper.listByParams(config);
     }
 
-    public void insert(SystemConfig request) {
-        systemConfigMapper.insert(request);
+    public void insert(SystemConfig config) {
+        configMapper.insert(config);
     }
 
-    public void update(SystemConfig request) {
-        systemConfigMapper.update(request);
+    public void update(SystemConfig config) {
+        configMapper.update(config);
     }
 
-    public void batchDeleteByIds(Long[] ids) {
-        systemConfigMapper.batchDeleteByIds(ids);
+    public void batchDeleteByConfigIds(Long[] configIds) {
+        configMapper.batchDeleteByConfigIds(configIds);
     }
 
     public boolean isSystemConfigAvailable(SystemConfigEnum configKeyEnum) {

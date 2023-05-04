@@ -34,9 +34,9 @@ public class SystemRoleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemRoleController.class);
 
     @Resource(name = "systemRoleService")
-    private SystemRoleService systemRoleService;
+    private SystemRoleService roleService;
     @Resource(name = "systemUserService")
-    private SystemUserService systemUserService;
+    private SystemUserService userService;
 
     /**
      * 获取角色信息列表
@@ -52,7 +52,7 @@ public class SystemRoleController {
                                         @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemRole> list = systemRoleService.listByParams(request);
+        List<SystemRole> list = roleService.listByParams(request);
         return new PageInfo<>(list);
     }
 
@@ -66,7 +66,7 @@ public class SystemRoleController {
     @OperationLog(title = "角色管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemRoleService.export(request);
+        return roleService.export(request);
     }
 
     /**
@@ -75,9 +75,9 @@ public class SystemRoleController {
      * @param roleId
      * @return
      */
-    @GetMapping("/{roleId}")
-    public SystemRole getById(@PathVariable("roleId") Long roleId) {
-        return systemRoleService.getByRoleId(roleId);
+    @GetMapping("/getInfo")
+    public SystemRole getInfo(@RequestParam(required = false, value = "roleId") Long roleId) {
+        return roleId == null ? null : roleService.getByRoleId(roleId);
     }
 
     /**
@@ -91,7 +91,7 @@ public class SystemRoleController {
     public void add(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemRoleService.insert(request);
+        roleService.insert(request);
     }
 
     /**
@@ -106,16 +106,16 @@ public class SystemRoleController {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
         checkAddEditRequest(request);
-        systemRoleService.update(request);
+        roleService.update(request);
         // 同步更新缓存中的用户权限
-        systemUserService.refreshLoginUserPermissions();
+        userService.refreshLoginUserPermissions();
     }
 
     private void checkAddEditRequest(SystemRole request) {
-        if (systemRoleService.isRoleNameDuplicated(request)) {
+        if (roleService.isRoleNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色名称已经存在");
         }
-        if (systemRoleService.isRoleKeyDuplicated(request)) {
+        if (roleService.isRoleKeyDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该角色权限已经存在");
         }
     }
@@ -131,7 +131,7 @@ public class SystemRoleController {
     public void modifyStatus(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
-        systemRoleService.updateStatus(request);
+        roleService.updateStatus(request);
     }
 
     /**
@@ -144,7 +144,7 @@ public class SystemRoleController {
     public void modifyDataScope(@RequestBody SystemRole request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkRoleAllowed(request.getRoleId());
-        systemRoleService.updateDataScope(request);
+        roleService.updateDataScope(request);
     }
 
     /**
@@ -152,16 +152,16 @@ public class SystemRoleController {
      *
      * @param roleIds
      */
-    @DeleteMapping("/{roleIds}")
+    @DeleteMapping
     @OperationLog(title = "角色管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("roleIds") Long[] roleIds) {
+    public void delete(@RequestBody Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
-            if (systemRoleService.existsUserRoleByRoleId(roleId)) {
+            if (roleService.existsUserRoleByRoleId(roleId)) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "角色已分配, 不允许删除");
             }
         }
-        systemRoleService.deleteByRoleIds(roleIds);
+        roleService.batchDeleteByRoleIds(roleIds);
     }
 
     private void checkRoleAllowed(Long roleId) {
@@ -177,7 +177,7 @@ public class SystemRoleController {
      */
     @GetMapping("/list")
     public List<SystemRole> getList() {
-        return systemRoleService.listAll();
+        return roleService.listAll();
     }
 
     /**
@@ -194,7 +194,7 @@ public class SystemRoleController {
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> allocatedRoles = systemUserService.listAllocatedRolesByUser(request);
+        List<SystemUser> allocatedRoles = userService.listAllocatedRolesByUser(request);
         return new PageInfo<>(allocatedRoles);
     }
 
@@ -212,7 +212,7 @@ public class SystemRoleController {
                                                     @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemUser> unallocatedRoles = systemUserService.listUnallocatedRolesByUser(request);
+        List<SystemUser> unallocatedRoles = userService.listUnallocatedRolesByUser(request);
         return new PageInfo<>(unallocatedRoles);
     }
 
@@ -232,7 +232,7 @@ public class SystemRoleController {
             userRole.setUserId(userId);
             list.add(userRole);
         }
-        systemRoleService.batchInsertUserRole(list);
+        roleService.batchInsertUserRole(list);
     }
 
     /**
@@ -244,7 +244,7 @@ public class SystemRoleController {
     @PutMapping("/cancelAuth")
     @OperationLog(title = "角色管理", businessType = BusinessType.GRANT, operatorType = OperatorType.ADMIN)
     public void batchCancelUserRole(Long roleId, Long[] userIds) {
-        systemRoleService.batchDeleteUserRole(roleId, userIds);
+        roleService.batchDeleteUserRole(roleId, userIds);
     }
 
 }

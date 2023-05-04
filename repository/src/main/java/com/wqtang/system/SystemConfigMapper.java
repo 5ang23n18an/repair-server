@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface SystemConfigMapper {
 
-    SystemConfig getById(Long id);
+    SystemConfig getByConfigId(Long configId);
 
     SystemConfig getByConfigKey(String configKey);
 
@@ -22,6 +22,6 @@ public interface SystemConfigMapper {
 
     void update(SystemConfig config);
 
-    void batchDeleteByIds(Long[] ids);
+    void batchDeleteByConfigIds(Long[] configIds);
 
 }

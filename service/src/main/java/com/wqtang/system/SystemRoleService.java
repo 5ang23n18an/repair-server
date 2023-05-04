@@ -29,13 +29,13 @@ import java.util.Set;
 public class SystemRoleService {
 
     @Resource(name = "systemRoleMapper")
-    private SystemRoleMapper systemRoleMapper;
+    private SystemRoleMapper roleMapper;
     @Resource(name = "systemRoleMenuMapper")
-    private SystemRoleMenuMapper systemRoleMenuMapper;
+    private SystemRoleMenuMapper roleMenuMapper;
     @Resource(name = "systemRoleDepartmentMapper")
-    private SystemRoleDepartmentMapper systemRoleDepartmentMapper;
+    private SystemRoleDepartmentMapper roleDepartmentMapper;
     @Resource(name = "systemUserRoleMapper")
-    private SystemUserRoleMapper systemUserRoleMapper;
+    private SystemUserRoleMapper userRoleMapper;
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemRole> excelUtils;
 
@@ -44,7 +44,7 @@ public class SystemRoleService {
             return Sets.newHashSet("admin");
         }
         Set<String> roles = Sets.newHashSet();
-        List<SystemRole> roleList = systemRoleMapper.listByUserId(user.getUserId());
+        List<SystemRole> roleList = roleMapper.listByUserId(user.getUserId());
         for (SystemRole role : roleList) {
             roles.addAll(Arrays.asList(role.getRoleKey().split(",")));
         }
@@ -56,7 +56,7 @@ public class SystemRoleService {
     }
 
     public List<SystemRole> listByParams(SystemRole role) {
-        return systemRoleMapper.listByParams(role);
+        return roleMapper.listByParams(role);
     }
 
     public ResponseEntity<byte[]> export(SystemRole role) {
@@ -78,21 +78,21 @@ public class SystemRoleService {
     }
 
     public SystemRole getByRoleId(Long roleId) {
-        return systemRoleMapper.getByRoleId(roleId);
+        return roleMapper.getByRoleId(roleId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void insert(SystemRole role) {
-        systemRoleMapper.insert(role);
+        roleMapper.insert(role);
         // 新增现在的角色与菜单的关联关系
         insertRoleMenu(role);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void update(SystemRole role) {
-        systemRoleMapper.update(role);
+        roleMapper.update(role);
         // 删除原先的角色与菜单的关联关系
-        systemRoleMenuMapper.deleteByRoleId(role.getRoleId());
+        roleMenuMapper.deleteByRoleId(role.getRoleId());
         // 新增现在的角色与菜单的关联关系
         insertRoleMenu(role);
     }
@@ -105,18 +105,18 @@ public class SystemRoleService {
             roleMenu.setMenuId(menuId);
             list.add(roleMenu);
         }
-        systemRoleMenuMapper.batchInsert(list);
+        roleMenuMapper.batchInsert(list);
     }
 
     public void updateStatus(SystemRole role) {
-        systemRoleMapper.update(role);
+        roleMapper.update(role);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void updateDataScope(SystemRole role) {
-        systemRoleMapper.update(role);
+        roleMapper.update(role);
         // 删除原先的角色与部门的关联关系
-        systemRoleDepartmentMapper.deleteByRoleId(role.getRoleId());
+        roleDepartmentMapper.deleteByRoleId(role.getRoleId());
         // 新增现在的角色与部门的关联关系
         insertRoleDepartment(role);
     }
@@ -129,40 +129,40 @@ public class SystemRoleService {
             roleDepartment.setDeptId(deptId);
             list.add(roleDepartment);
         }
-        systemRoleDepartmentMapper.batchInsert(list);
+        roleDepartmentMapper.batchInsert(list);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteByRoleIds(Long[] roleIds) {
+    public void batchDeleteByRoleIds(Long[] roleIds) {
         // 批量删除角色与菜单的关联关系
-        systemRoleMenuMapper.batchDeleteByRoleIds(roleIds);
+        roleMenuMapper.batchDeleteByRoleIds(roleIds);
         // 批量删除角色与部门的关联关系
-        systemRoleDepartmentMapper.batchDeleteByRoleIds(roleIds);
-        systemRoleMapper.batchDeleteByRoleIds(roleIds);
+        roleDepartmentMapper.batchDeleteByRoleIds(roleIds);
+        roleMapper.batchDeleteByRoleIds(roleIds);
     }
 
     public boolean existsUserRoleByRoleId(Long roleId) {
-        return systemUserRoleMapper.existsByRoleId(roleId);
+        return userRoleMapper.existsByRoleId(roleId);
     }
 
     public boolean isRoleNameDuplicated(SystemRole role) {
-        SystemRole roleFromDb = systemRoleMapper.getByRoleName(role.getRoleName());
+        SystemRole roleFromDb = roleMapper.getByRoleName(role.getRoleName());
         Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
     public boolean isRoleKeyDuplicated(SystemRole role) {
-        SystemRole roleFromDb = systemRoleMapper.getByRoleKey(role.getRoleKey());
+        SystemRole roleFromDb = roleMapper.getByRoleKey(role.getRoleKey());
         Long roleId = role.getRoleId() == null ? -1L : role.getRoleId();
         return roleFromDb != null && !roleId.equals(roleFromDb.getRoleId());
     }
 
     public void batchDeleteUserRole(Long roleId, Long[] userIds) {
-        systemUserRoleMapper.batchDeleteByRoleIdAndUserIds(roleId, userIds);
+        userRoleMapper.batchDeleteByRoleIdAndUserIds(roleId, userIds);
     }
 
     public void batchInsertUserRole(List<SystemUserRole> userRoleList) {
-        systemUserRoleMapper.batchInsert(userRoleList);
+        userRoleMapper.batchInsert(userRoleList);
     }
 
 }

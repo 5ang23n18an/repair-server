@@ -31,7 +31,7 @@ public class SystemDictionaryDataController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemDictionaryDataController.class);
 
     @Resource(name = "systemDictionaryDataService")
-    private SystemDictionaryDataService systemDictionaryDataService;
+    private SystemDictionaryDataService dictionaryDataService;
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
 
@@ -49,7 +49,7 @@ public class SystemDictionaryDataController {
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(request);
+        List<SystemDictionaryData> list = dictionaryDataService.listByParams(request);
         return new PageInfo<>(list);
     }
 
@@ -63,7 +63,7 @@ public class SystemDictionaryDataController {
     @OperationLog(title = "字典数据", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
     public ResponseEntity<byte[]> export(SystemDictionaryData request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemDictionaryDataService.export(request);
+        return dictionaryDataService.export(request);
     }
 
     /**
@@ -72,9 +72,9 @@ public class SystemDictionaryDataController {
      * @param dictCode
      * @return
      */
-    @GetMapping("/{dictCode}")
-    public SystemDictionaryData getByDictCode(@PathVariable("dictCode") Long dictCode) {
-        return systemDictionaryDataService.getByDictCode(dictCode);
+    @GetMapping("/getInfo")
+    public SystemDictionaryData getInfo(@RequestParam(required = false, value = "dictCode") Long dictCode) {
+        return dictCode == null ? null : dictionaryDataService.getByDictCode(dictCode);
     }
 
     /**
@@ -83,16 +83,14 @@ public class SystemDictionaryDataController {
      * @param dictType
      * @return
      */
-    @GetMapping("/list/{dictType}")
-    public List<SystemDictionaryData> getListByDictType(@PathVariable("dictType") String dictType) {
+    @GetMapping("/listByDictType")
+    public List<SystemDictionaryData> getListByDictType(@RequestParam String dictType) {
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType);
         List<SystemDictionaryData> cacheList = redisUtils.getAndCast(redisKey, List.class);
         if (cacheList != null) {
             return cacheList;
         }
-        SystemDictionaryData dictionaryData = new SystemDictionaryData();
-        dictionaryData.setDictType(dictType);
-        List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(dictionaryData);
+        List<SystemDictionaryData> list = dictionaryDataService.listByDictType(dictType);
         redisUtils.set(redisKey, list);
         return list;
     }
@@ -107,7 +105,7 @@ public class SystemDictionaryDataController {
     @OperationLog(title = "字典数据", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemDictionaryData request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemDictionaryDataService.insert(request);
+        dictionaryDataService.insert(request);
         refreshCacheByDictType(request.getDictType());
     }
 
@@ -121,7 +119,7 @@ public class SystemDictionaryDataController {
     @OperationLog(title = "字典数据", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemDictionaryData request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemDictionaryDataService.update(request);
+        dictionaryDataService.update(request);
         refreshCacheByDictType(request.getDictType());
     }
 
@@ -130,12 +128,12 @@ public class SystemDictionaryDataController {
      *
      * @param dictCodes
      */
-    @DeleteMapping("/{dictCodes}")
+    @DeleteMapping
     @OperationLog(title = "字典数据", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("dictCodes") Long[] dictCodes) {
+    public void delete(@RequestBody Long[] dictCodes) {
         for (Long dictCode : dictCodes) {
-            String dictType = systemDictionaryDataService.getByDictCode(dictCode).getDictType();
-            systemDictionaryDataService.deleteByDictCode(dictCode);
+            String dictType = dictionaryDataService.getByDictCode(dictCode).getDictType();
+            dictionaryDataService.deleteByDictCode(dictCode);
             refreshCacheByDictType(dictType);
         }
     }
@@ -144,7 +142,7 @@ public class SystemDictionaryDataController {
         SystemDictionaryData param = new SystemDictionaryData();
         param.setDictType(dictType);
         param.setStatus(UserConstants.NORMAL);
-        List<SystemDictionaryData> list = systemDictionaryDataService.listByParams(param);
+        List<SystemDictionaryData> list = dictionaryDataService.listByParams(param);
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType);
         redisUtils.set(redisKey, list);
     }

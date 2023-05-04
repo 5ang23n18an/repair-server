@@ -29,9 +29,9 @@ import java.util.Set;
 public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     @Resource(name = "systemDictionaryTypeMapper")
-    private SystemDictionaryTypeMapper systemDictionaryTypeMapper;
+    private SystemDictionaryTypeMapper dictionaryTypeMapper;
     @Resource(name = "systemDictionaryDataMapper")
-    private SystemDictionaryDataMapper systemDictionaryDataMapper;
+    private SystemDictionaryDataMapper dictionaryDataMapper;
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemDictionaryType> excelUtils;
     @Resource(name = "redisUtils")
@@ -42,7 +42,7 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
     }
 
     public List<SystemDictionaryType> listByParams(SystemDictionaryType dictionaryType) {
-        return systemDictionaryTypeMapper.listByParams(dictionaryType);
+        return dictionaryTypeMapper.listByParams(dictionaryType);
     }
 
     public ResponseEntity<byte[]> export(SystemDictionaryType dictionaryType) {
@@ -64,33 +64,33 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
     }
 
     public SystemDictionaryType getByDictId(Long dictId) {
-        return systemDictionaryTypeMapper.getByDictId(dictId);
+        return dictionaryTypeMapper.getByDictId(dictId);
     }
 
     public boolean isDictNameDuplicated(SystemDictionaryType dictionaryType) {
-        SystemDictionaryType dictionaryTypeFromDb = systemDictionaryTypeMapper.getByDictType(dictionaryType.getDictType());
+        SystemDictionaryType dictionaryTypeFromDb = dictionaryTypeMapper.getByDictType(dictionaryType.getDictType());
         Long dictId = dictionaryType.getDictId() == null ? -1L : dictionaryType.getDictId();
         return dictionaryTypeFromDb != null && !dictId.equals(dictionaryTypeFromDb.getDictId());
     }
 
     public void insert(SystemDictionaryType dictionaryType) {
-        systemDictionaryTypeMapper.insert(dictionaryType);
+        dictionaryTypeMapper.insert(dictionaryType);
         loadIntoCache(dictionaryType.getDictType());
     }
 
     public void update(SystemDictionaryType dictionaryType) {
-        systemDictionaryTypeMapper.update(dictionaryType);
+        dictionaryTypeMapper.update(dictionaryType);
         loadIntoCache(dictionaryType.getDictType());
     }
 
     private void loadIntoCache(String dictType) {
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictType);
-        List<SystemDictionaryData> dictDataList = systemDictionaryDataMapper.listByDictType(dictType);
+        List<SystemDictionaryData> dictDataList = dictionaryDataMapper.listByDictType(dictType);
         redisUtils.set(redisKey, dictDataList);
     }
 
     public void deleteByDictId(SystemDictionaryType dictionaryType) {
-        systemDictionaryTypeMapper.deleteByDictId(dictionaryType.getDictId());
+        dictionaryTypeMapper.deleteByDictId(dictionaryType.getDictId());
         String redisKey = RedisUtils.getRedisKey(RedisKeyEnum.SYSTEM_DICTIONARY, dictionaryType.getDictType());
         redisUtils.delete(redisKey);
     }

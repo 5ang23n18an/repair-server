@@ -24,7 +24,7 @@ import java.util.List;
 public class SystemPositionService {
 
     @Resource(name = "systemPositionMapper")
-    private SystemPositionMapper systemPositionMapper;
+    private SystemPositionMapper positionMapper;
     @Resource(name = "excelUtils")
     private ExcelUtils<SystemPosition> excelUtils;
 
@@ -33,7 +33,7 @@ public class SystemPositionService {
     }
 
     public List<SystemPosition> listByParams(SystemPosition position) {
-        return systemPositionMapper.listByParams(position);
+        return positionMapper.listByParams(position);
     }
 
     public ResponseEntity<byte[]> export(SystemPosition position) {
@@ -55,31 +55,31 @@ public class SystemPositionService {
     }
 
     public SystemPosition getByPostId(Long postId) {
-        return systemPositionMapper.getByPostId(postId);
+        return positionMapper.getByPostId(postId);
     }
 
     public boolean isPostNameDuplicated(SystemPosition position) {
-        SystemPosition positionFromDb = systemPositionMapper.getByPostName(position.getPostName());
+        SystemPosition positionFromDb = positionMapper.getByPostName(position.getPostName());
         Long postId = position.getPostId() == null ? -1L : position.getPostId();
         return positionFromDb != null && !postId.equals(positionFromDb.getPostId());
     }
 
     public boolean isPostCodeDuplicated(SystemPosition position) {
-        SystemPosition positionFromDb = systemPositionMapper.getByPostCode(position.getPostCode());
+        SystemPosition positionFromDb = positionMapper.getByPostCode(position.getPostCode());
         Long postId = position.getPostId() == null ? -1L : position.getPostId();
         return positionFromDb != null && !postId.equals(positionFromDb.getPostId());
     }
 
     public void insert(SystemPosition position) {
-        systemPositionMapper.insert(position);
+        positionMapper.insert(position);
     }
 
     public void update(SystemPosition position) {
-        systemPositionMapper.update(position);
+        positionMapper.update(position);
     }
 
-    public void batchDeleteByPostId(Long[] postIds) {
-        systemPositionMapper.batchDeleteByPostId(postIds);
+    public void batchDeleteByPostIds(Long[] postIds) {
+        positionMapper.batchDeleteByPostIds(postIds);
     }
 
 }
