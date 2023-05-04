@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class SystemRoleController {
      */
     @GetMapping("/export")
     @OperationLog(title = "角色管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(SystemRole request) {
+    public ResponseEntity<byte[]> export(SystemRole request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return roleService.export(request);
     }

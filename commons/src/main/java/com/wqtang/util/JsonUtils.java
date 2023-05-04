@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.commons.lang3.StringUtils;
+import com.wqtang.object.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +22,18 @@ public class JsonUtils {
             .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-    /** null fields will be removed when serializing */
+    /**
+     * null fields will be removed when serializing
+     */
     private static final ObjectMapper OBJECT_MAPPER_NOT_NULL = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)
             .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    /** null or empty fields will be removed when serializing */
+    /**
+     * null or empty fields will be removed when serializing
+     */
     private static final ObjectMapper OBJECT_MAPPER_NOT_EMPTY = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)
             .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
@@ -41,7 +45,7 @@ public class JsonUtils {
             return OBJECT_MAPPER.writer().writeValueAsString(object);
         } catch (Exception e) {
             LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
-            return StringUtils.EMPTY;
+            throw new BusinessException(e);
         }
     }
 
@@ -50,7 +54,7 @@ public class JsonUtils {
             return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
             LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
-            return StringUtils.EMPTY;
+            throw new BusinessException(e);
         }
     }
 
@@ -59,7 +63,7 @@ public class JsonUtils {
             return OBJECT_MAPPER_NOT_NULL.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
             LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
-            return StringUtils.EMPTY;
+            throw new BusinessException(e);
         }
     }
 
@@ -68,7 +72,7 @@ public class JsonUtils {
             return OBJECT_MAPPER_NOT_EMPTY.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (Exception e) {
             LOGGER.error("object = {}, error message is {}", object, e.getMessage(), e);
-            return StringUtils.EMPTY;
+            throw new BusinessException(e);
         }
     }
 
@@ -77,7 +81,7 @@ public class JsonUtils {
             return OBJECT_MAPPER.readValue(jsonStr, clazz);
         } catch (Exception e) {
             LOGGER.error("jsonStr = {}, class = {}, error message is {}", jsonStr, clazz.getName(), e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }
     }
 
@@ -86,7 +90,7 @@ public class JsonUtils {
             return OBJECT_MAPPER.readValue(jsonStr, type);
         } catch (Exception e) {
             LOGGER.error("jsonStr = {}, error message is {}", jsonStr, e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }
     }
 
@@ -95,7 +99,7 @@ public class JsonUtils {
             return OBJECT_MAPPER.convertValue(object, clazz);
         } catch (Exception e) {
             LOGGER.error("object = {}, class = {}, error message is {}", object, clazz.getName(), e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new BusinessException(e);
         }
     }
 

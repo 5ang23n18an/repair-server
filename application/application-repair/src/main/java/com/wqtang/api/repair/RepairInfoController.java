@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -110,7 +111,7 @@ public class RepairInfoController {
      */
     @GetMapping("/export")
     @OperationLog(title = "道岔信息", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(RepairInfo request) {
+    public ResponseEntity<byte[]> export(RepairInfo request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairInfoService.export(request);
     }

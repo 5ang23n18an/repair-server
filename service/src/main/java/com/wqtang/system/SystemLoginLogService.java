@@ -1,6 +1,5 @@
 package com.wqtang.system;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemLoginLog;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -32,17 +31,13 @@ public class SystemLoginLogService {
         return loginLogMapper.listByParams(loginLog);
     }
 
-    public ResponseEntity<byte[]> export(SystemLoginLog loginLog) {
+    public ResponseEntity<byte[]> export(SystemLoginLog loginLog) throws UnsupportedEncodingException {
         List<SystemLoginLog> list = listByParams(loginLog);
         File file = excelUtils.export(list, "登录日志");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BusinessException(e);
-        }
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)

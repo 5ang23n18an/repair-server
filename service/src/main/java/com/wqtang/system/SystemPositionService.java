@@ -1,6 +1,5 @@
 package com.wqtang.system;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemPosition;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -36,17 +35,13 @@ public class SystemPositionService {
         return positionMapper.listByParams(position);
     }
 
-    public ResponseEntity<byte[]> export(SystemPosition position) {
+    public ResponseEntity<byte[]> export(SystemPosition position) throws UnsupportedEncodingException {
         List<SystemPosition> list = listByParams(position);
         File file = excelUtils.export(list, "岗位数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BusinessException(e);
-        }
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)

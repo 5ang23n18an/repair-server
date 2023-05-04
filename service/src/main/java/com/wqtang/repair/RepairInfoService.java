@@ -55,17 +55,13 @@ public class RepairInfoService {
         repairInfoMapper.batchDeleteByIds(ids);
     }
 
-    public ResponseEntity<byte[]> export(RepairInfo repairInfo) {
+    public ResponseEntity<byte[]> export(RepairInfo repairInfo) throws UnsupportedEncodingException {
         List<RepairInfo> list = listByParams(repairInfo);
         File file = excelUtils.export(list, "道岔信息数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BusinessException(e);
-        }
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)

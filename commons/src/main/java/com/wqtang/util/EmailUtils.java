@@ -1,5 +1,7 @@
 package com.wqtang.util;
 
+import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,7 @@ public class EmailUtils {
             mailSender.send(mailMessage);
         } catch (Exception e) {
             LOGGER.error("error message is {}", e.getMessage(), e);
+            throw new BusinessException(ErrorEnum.ERROR, "邮件发送失败");
         }
     }
 

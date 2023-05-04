@@ -2,7 +2,6 @@ package com.wqtang.system;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.*;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -59,17 +58,13 @@ public class SystemRoleService {
         return roleMapper.listByParams(role);
     }
 
-    public ResponseEntity<byte[]> export(SystemRole role) {
+    public ResponseEntity<byte[]> export(SystemRole role) throws UnsupportedEncodingException {
         List<SystemRole> list = listByParams(role);
         File file = excelUtils.export(list, "角色数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BusinessException(e);
-        }
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)

@@ -1,6 +1,5 @@
 package com.wqtang.repair;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.repair.RepairTable;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -32,17 +31,13 @@ public class RepairTableService {
         return repairTableMapper.listByParams(repairTable);
     }
 
-    public ResponseEntity<byte[]> export(RepairTable repairTable) {
+    public ResponseEntity<byte[]> export(RepairTable repairTable) throws UnsupportedEncodingException {
         List<RepairTable> list = listByParams(repairTable);
         File file = excelUtils.export(list, "检测数据");
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        try {
-            headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-            throw new BusinessException(e);
-        }
+        headers.setContentDispositionFormData("attachment", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8.name()));
         return ResponseEntity
                 .ok()
                 .headers(headers)
