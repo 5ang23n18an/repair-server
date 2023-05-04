@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class SystemPositionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemPositionController.class);
 
     @Resource(name = "systemPositionService")
-    private SystemPositionService systemPositionService;
+    private SystemPositionService positionService;
 
     /**
      * 获取岗位列表
@@ -46,7 +47,7 @@ public class SystemPositionController {
                                             @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemPosition> list = systemPositionService.listByParams(request);
+        List<SystemPosition> list = positionService.listByParams(request);
         return new PageInfo<>(list);
     }
 
@@ -58,9 +59,9 @@ public class SystemPositionController {
      */
     @GetMapping("/export")
     @OperationLog(title = "岗位管理", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(SystemPosition request) {
+    public ResponseEntity<byte[]> export(SystemPosition request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemPositionService.export(request);
+        return positionService.export(request);
     }
 
     /**
@@ -69,9 +70,9 @@ public class SystemPositionController {
      * @param postId
      * @return
      */
-    @GetMapping("/{postId}")
-    public SystemPosition getById(@PathVariable("postId") Long postId) {
-        return systemPositionService.getByPostId(postId);
+    @GetMapping("/getInfo")
+    public SystemPosition getInfo(@RequestParam(required = false, value = "postId") Long postId) {
+        return postId == null ? null : positionService.getByPostId(postId);
     }
 
     /**
@@ -85,7 +86,7 @@ public class SystemPositionController {
     public void add(@RequestBody SystemPosition request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemPositionService.insert(request);
+        positionService.insert(request);
     }
 
     /**
@@ -99,14 +100,14 @@ public class SystemPositionController {
     public void edit(@RequestBody SystemPosition request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemPositionService.update(request);
+        positionService.update(request);
     }
 
     private void checkAddEditRequest(SystemPosition request) {
-        if (systemPositionService.isPostNameDuplicated(request)) {
+        if (positionService.isPostNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位名称已经存在");
         }
-        if (systemPositionService.isPostCodeDuplicated(request)) {
+        if (positionService.isPostCodeDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该岗位编码已经存在");
         }
     }
@@ -116,10 +117,10 @@ public class SystemPositionController {
      *
      * @param postIds
      */
-    @DeleteMapping("/{postIds}")
+    @DeleteMapping
     @OperationLog(title = "岗位管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("postIds") Long[] postIds) {
-        systemPositionService.batchDeleteByPostId(postIds);
+    public void delete(@RequestBody Long[] postIds) {
+        positionService.batchDeleteByPostIds(postIds);
     }
 
     /**
@@ -129,7 +130,7 @@ public class SystemPositionController {
      */
     @GetMapping("/list")
     public List<SystemPosition> getList() {
-        return systemPositionService.listAll();
+        return positionService.listAll();
     }
 
 }

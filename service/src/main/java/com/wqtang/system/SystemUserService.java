@@ -38,11 +38,11 @@ public class SystemUserService {
     @Resource(name = "tokenService")
     private TokenService tokenService;
     @Resource(name = "systemMenuService")
-    private SystemMenuService systemMenuService;
+    private SystemMenuService menuService;
     @Resource(name = "systemConfigService")
-    private SystemConfigService systemConfigService;
+    private SystemConfigService configService;
     @Resource(name = "systemUserMapper")
-    private SystemUserMapper systemUserMapper;
+    private SystemUserMapper userMapper;
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
     @Resource(name = "emailUtils")
@@ -51,10 +51,10 @@ public class SystemUserService {
     private PasswordEncoder passwordEncoder;
 
     public void register(SystemUserLoginRequest request) {
-        if (!systemConfigService.isSystemConfigAvailable(SystemConfigEnum.REGISTER)) {
+        if (!configService.isSystemConfigAvailable(SystemConfigEnum.REGISTER)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "目前系统没有开放注册功能");
         }
-        if (systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
+        if (configService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
             validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getEmail()));
         }
         checkRegisterRequest(request);
@@ -63,7 +63,7 @@ public class SystemUserService {
         user.setNickname(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
-        systemUserMapper.insert(user);
+        userMapper.insert(user);
     }
 
     private void checkRegisterRequest(SystemUserLoginRequest request) {
@@ -94,7 +94,7 @@ public class SystemUserService {
             }
         } else {
             // login from web
-            if (systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
+            if (configService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
                 validateCaptcha(request.getCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getUuid()));
             }
         }
@@ -115,7 +115,7 @@ public class SystemUserService {
     }
 
     public SystemUser getByUsername(String username) {
-        return systemUserMapper.getByUsername(username);
+        return userMapper.getByUsername(username);
     }
 
     public void verifyByEmail(String email) {
@@ -142,7 +142,7 @@ public class SystemUserService {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "请输入注册时填写的邮箱号");
         }
         validateCaptcha(request.getVerificationCode(), RedisUtils.getRedisKey(RedisKeyEnum.CAPTCHA, request.getEmail()));
-        systemUserMapper.updatePasswordByUsername(request.getUsername(), passwordEncoder.encode(request.getPassword()));
+        userMapper.updatePasswordByUsername(request.getUsername(), passwordEncoder.encode(request.getPassword()));
     }
 
     private void recordLoginInfo(Long userId) {
@@ -150,24 +150,24 @@ public class SystemUserService {
         user.setUserId(userId);
         user.setLoginIp(IPAddressUtils.getIPAddressFromHttpServletRequest());
         user.setLoginDate(Calendar.getInstance().getTime());
-        systemUserMapper.update(user);
+        userMapper.update(user);
     }
 
     public void refreshLoginUserPermissions() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         if (loginUser.getUser() != null && !loginUser.getUser().isAdmin()) {
-            loginUser.setPermissions(systemMenuService.getPermissionsByUser(loginUser.getUser()));
+            loginUser.setPermissions(menuService.getPermissionsByUser(loginUser.getUser()));
             loginUser.setUser(getByUsername(loginUser.getUser().getUsername()));
             tokenService.setLoginUser(loginUser);
         }
     }
 
     public List<SystemUser> listAllocatedRolesByUser(SystemUser user) {
-        return systemUserMapper.listAllocatedRolesByUser(user);
+        return userMapper.listAllocatedRolesByUser(user);
     }
 
     public List<SystemUser> listUnallocatedRolesByUser(SystemUser user) {
-        return systemUserMapper.listUnallocatedRolesByUser(user);
+        return userMapper.listUnallocatedRolesByUser(user);
     }
 
 }

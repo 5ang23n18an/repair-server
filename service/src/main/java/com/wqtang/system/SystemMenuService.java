@@ -23,34 +23,34 @@ import java.util.stream.Collectors;
 public class SystemMenuService {
 
     @Resource(name = "systemMenuMapper")
-    private SystemMenuMapper systemMenuMapper;
+    private SystemMenuMapper menuMapper;
     @Resource(name = "systemRoleMapper")
-    private SystemRoleMapper systemRoleMapper;
+    private SystemRoleMapper roleMapper;
     @Resource(name = "systemRoleMenuMapper")
-    private SystemRoleMenuMapper systemRoleMenuMapper;
+    private SystemRoleMenuMapper roleMenuMapper;
 
     public List<SystemMenu> listByUserId(Long userId) {
         return listByParamsAndUserId(null, userId);
     }
 
     public List<SystemMenu> listByParamsAndUserId(SystemMenu menu, Long userId) {
-        return SystemUser.isAdmin(userId) ? systemMenuMapper.listByParams(menu) : systemMenuMapper.listByParamsAndUserId(menu, userId);
+        return SystemUser.isAdmin(userId) ? menuMapper.listByParams(menu) : menuMapper.listByParamsAndUserId(menu, userId);
     }
 
     public SystemMenu getByMenuId(Long menuId) {
-        return systemMenuMapper.getByMenuId(menuId);
+        return menuMapper.getByMenuId(menuId);
     }
 
     public void insert(SystemMenu menu) {
-        systemMenuMapper.insert(menu);
+        menuMapper.insert(menu);
     }
 
     public void update(SystemMenu menu) {
-        systemMenuMapper.update(menu);
+        menuMapper.update(menu);
     }
 
     public void deleteByMenuId(Long menuId) {
-        systemMenuMapper.deleteByMenuId(menuId);
+        menuMapper.deleteByMenuId(menuId);
     }
 
     public Set<String> getPermissionsByUser(SystemUser user) {
@@ -58,7 +58,7 @@ public class SystemMenuService {
             return Sets.newHashSet("*:*:*");
         }
         Set<String> permissions = Sets.newHashSet();
-        List<String> permsList = systemMenuMapper.listPermissionsByUserId(user.getUserId());
+        List<String> permsList = menuMapper.listPermissionsByUserId(user.getUserId());
         for (String perms : permsList) {
             permissions.addAll(Arrays.asList(perms.split(",")));
         }
@@ -100,25 +100,25 @@ public class SystemMenuService {
     }
 
     public boolean isMenuNameDuplicated(SystemMenu menu) {
-        SystemMenu menuFromDb = systemMenuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
+        SystemMenu menuFromDb = menuMapper.getByMenuNameAndParentId(menu.getMenuName(), menu.getParentId());
         Long menuId = menu.getMenuId() == null ? -1L : menu.getMenuId();
         return menuFromDb != null && !menuId.equals(menuFromDb.getMenuId());
     }
 
     public boolean existsChildrenMenuByMenuId(Long menuId) {
-        return systemMenuMapper.existsByParentId(menuId);
+        return menuMapper.existsByParentId(menuId);
     }
 
     public boolean existsRoleByMenuId(Long menuId) {
-        return systemRoleMenuMapper.existsByMenuId(menuId);
+        return roleMenuMapper.existsByMenuId(menuId);
     }
 
     public List<Long> listMenuIdsByRoleId(Long roleId) {
-        SystemRole role = systemRoleMapper.getByRoleId(roleId);
+        SystemRole role = roleMapper.getByRoleId(roleId);
         if (role == null) {
             throw new BusinessException(ErrorEnum.ROLE_NOT_FOUND);
         }
-        return systemMenuMapper.listMenuIdByRoleId(roleId, role.isMenuCheckStrictly());
+        return menuMapper.listMenuIdByRoleId(roleId, role.isMenuCheckStrictly());
     }
 
 }

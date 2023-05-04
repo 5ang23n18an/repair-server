@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -31,9 +32,9 @@ public class SystemDictionaryTypeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemDictionaryTypeController.class);
 
     @Resource(name = "systemDictionaryTypeService")
-    private SystemDictionaryTypeService systemDictionaryTypeService;
+    private SystemDictionaryTypeService dictionaryTypeService;
     @Resource(name = "systemDictionaryDataService")
-    private SystemDictionaryDataService systemDictionaryDataService;
+    private SystemDictionaryDataService dictionaryDataService;
 
     /**
      * 获取数据字典信息
@@ -49,7 +50,7 @@ public class SystemDictionaryTypeController {
                                                   @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemDictionaryType> list = systemDictionaryTypeService.listByParams(request);
+        List<SystemDictionaryType> list = dictionaryTypeService.listByParams(request);
         return new PageInfo<>(list);
     }
 
@@ -61,9 +62,9 @@ public class SystemDictionaryTypeController {
      */
     @GetMapping("/export")
     @OperationLog(title = "字典类型", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(SystemDictionaryType request) {
+    public ResponseEntity<byte[]> export(SystemDictionaryType request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        return systemDictionaryTypeService.export(request);
+        return dictionaryTypeService.export(request);
     }
 
     /**
@@ -72,9 +73,9 @@ public class SystemDictionaryTypeController {
      * @param dictId
      * @return
      */
-    @GetMapping("/{dictId}")
-    public SystemDictionaryType getById(@PathVariable("dictId") Long dictId) {
-        return systemDictionaryTypeService.getByDictId(dictId);
+    @GetMapping("/getInfo")
+    public SystemDictionaryType getInfo(@RequestParam(required = false, value = "dictId") Long dictId) {
+        return dictId == null ? null : dictionaryTypeService.getByDictId(dictId);
     }
 
     /**
@@ -88,7 +89,7 @@ public class SystemDictionaryTypeController {
     public void add(@RequestBody SystemDictionaryType request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemDictionaryTypeService.insert(request);
+        dictionaryTypeService.insert(request);
     }
 
     /**
@@ -102,11 +103,11 @@ public class SystemDictionaryTypeController {
     public void edit(@RequestBody SystemDictionaryType request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         checkAddEditRequest(request);
-        systemDictionaryTypeService.update(request);
+        dictionaryTypeService.update(request);
     }
 
     private void checkAddEditRequest(SystemDictionaryType request) {
-        if (systemDictionaryTypeService.isDictNameDuplicated(request)) {
+        if (dictionaryTypeService.isDictNameDuplicated(request)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "该字典类型名称已经存在");
         }
     }
@@ -116,15 +117,15 @@ public class SystemDictionaryTypeController {
      *
      * @param dictIds
      */
-    @DeleteMapping("/{dictIds}")
+    @DeleteMapping
     @OperationLog(title = "字典类型", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("dictIds") Long[] dictIds) {
+    public void delete(@RequestBody Long[] dictIds) {
         for (Long dictId : dictIds) {
-            SystemDictionaryType dictionaryType = systemDictionaryTypeService.getByDictId(dictId);
-            if (systemDictionaryDataService.existsByDictType(dictionaryType.getDictType())) {
+            SystemDictionaryType dictionaryType = dictionaryTypeService.getByDictId(dictId);
+            if (dictionaryDataService.existsByDictType(dictionaryType.getDictType())) {
                 throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "字典类型名称已分配, 不允许删除");
             }
-            systemDictionaryTypeService.deleteByDictId(dictionaryType);
+            dictionaryTypeService.deleteByDictId(dictionaryType);
         }
     }
 
@@ -134,7 +135,7 @@ public class SystemDictionaryTypeController {
     @PutMapping("/refreshCache")
     @OperationLog(title = "字典类型", businessType = BusinessType.CLEAN, operatorType = OperatorType.ADMIN)
     public void refreshCache() {
-        systemDictionaryTypeService.refreshCache();
+        dictionaryTypeService.refreshCache();
     }
 
     /**
@@ -144,7 +145,7 @@ public class SystemDictionaryTypeController {
      */
     @GetMapping("/list")
     public List<SystemDictionaryType> getList() {
-        return systemDictionaryTypeService.listAll();
+        return dictionaryTypeService.listAll();
     }
 
 }

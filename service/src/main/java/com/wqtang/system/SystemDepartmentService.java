@@ -19,22 +19,22 @@ import java.util.stream.Collectors;
 public class SystemDepartmentService {
 
     @Resource(name = "systemDepartmentMapper")
-    private SystemDepartmentMapper systemDepartmentMapper;
+    private SystemDepartmentMapper departmentMapper;
     @Resource(name = "systemUserMapper")
-    private SystemUserMapper systemUserMapper;
+    private SystemUserMapper userMapper;
     @Resource(name = "systemRoleMapper")
-    private SystemRoleMapper systemRoleMapper;
+    private SystemRoleMapper roleMapper;
 
     public List<SystemDepartment> listAll() {
         return listByParams(null);
     }
 
     public List<SystemDepartment> listByParams(SystemDepartment department) {
-        return systemDepartmentMapper.listByParams(department);
+        return departmentMapper.listByParams(department);
     }
 
     public SystemDepartment getByDeptId(Long deptId) {
-        return systemDepartmentMapper.getByDeptId(deptId);
+        return departmentMapper.getByDeptId(deptId);
     }
 
     public void refactorAsTree(List<SystemDepartment> departmentList) {
@@ -69,38 +69,38 @@ public class SystemDepartmentService {
     }
 
     public boolean isDeptNameDuplicated(SystemDepartment department) {
-        SystemDepartment departmentFromDb = systemDepartmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
+        SystemDepartment departmentFromDb = departmentMapper.getByDeptNameAndParentId(department.getDeptName(), department.getParentId());
         Long deptId = department.getDeptId() == null ? -1L : department.getDeptId();
         return departmentFromDb != null && !deptId.equals(departmentFromDb.getDeptId());
     }
 
     public void insert(SystemDepartment department) {
-        systemDepartmentMapper.insert(department);
+        departmentMapper.insert(department);
     }
 
     public void update(SystemDepartment department) {
-        systemDepartmentMapper.update(department);
+        departmentMapper.update(department);
     }
 
     public boolean existsChildrenDeptById(Long deptId) {
-        return systemDepartmentMapper.existsChildrenDeptById(deptId);
+        return departmentMapper.existsChildrenDeptById(deptId);
     }
 
     public boolean existsNormalChildrenDeptById(Long deptId) {
-        return systemDepartmentMapper.existsNormalChildrenDeptById(deptId);
+        return departmentMapper.existsNormalChildrenDeptById(deptId);
     }
 
     public boolean existsDeptUserById(Long deptId) {
-        return systemUserMapper.existsByDeptIdAndDelFlag(deptId, UserConstants.NORMAL);
+        return userMapper.existsByDeptIdAndDelFlag(deptId, UserConstants.NORMAL);
     }
 
     public void deleteById(Long deptId) {
-        systemDepartmentMapper.deleteById(deptId);
+        departmentMapper.deleteById(deptId);
     }
 
     public List<Long> listDeptIdByRoleId(Long roleId) {
-        SystemRole role = systemRoleMapper.getByRoleId(roleId);
-        return systemDepartmentMapper.listDeptIdByRoleId(roleId, role.isDeptCheckStrictly());
+        SystemRole role = roleMapper.getByRoleId(roleId);
+        return departmentMapper.listDeptIdByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
 }

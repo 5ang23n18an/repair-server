@@ -9,6 +9,7 @@ import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemConfig;
 import com.wqtang.system.SystemConfigService;
 import com.wqtang.util.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -27,17 +28,25 @@ public class SystemConfigController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemConfigController.class);
 
     @Resource(name = "systemConfigService")
-    private SystemConfigService systemConfigService;
+    private SystemConfigService configService;
 
     /**
-     * 根据参数id获取参数详细信息
+     * 根据参数id或参数键名key获取参数详细信息
      *
-     * @param id
+     * @param configId
      * @return
      */
-    @GetMapping("/{id}")
-    public SystemConfig getById(@PathVariable("id") Long id) {
-        return systemConfigService.getById(id);
+    @GetMapping("/getInfo")
+    public SystemConfig getInfo(@RequestParam(required = false, value = "id") Long configId,
+                                @RequestParam(required = false, value = "key") String configKey) {
+        if (configId == null && StringUtils.isBlank(configKey)) {
+            return null;
+        }
+        if (configId != null && StringUtils.isNotBlank(configKey)) {
+            SystemConfig config = configService.getByConfigId(configId);
+            return configKey.equals(config.getConfigKey()) ? config : null;
+        }
+        return configId != null ? configService.getByConfigId(configId) : configService.getByConfigKey(configKey);
     }
 
     /**
@@ -52,19 +61,8 @@ public class SystemConfigController {
                                           @RequestParam(required = false, defaultValue = "20", value = "pageSize") int pageSize) {
         LOGGER.info("request = {},\r\npageNumber = {}, pageSize = {}", JsonUtils.getPrettyJson(request), pageNumber, pageSize);
         PageHelper.startPage(pageNumber, pageSize);
-        List<SystemConfig> list = systemConfigService.listByParams(request);
+        List<SystemConfig> list = configService.listByParams(request);
         return new PageInfo<>(list);
-    }
-
-    /**
-     * 根据参数键名key获取参数详细信息
-     *
-     * @param key
-     * @return
-     */
-    @GetMapping("/key/{key}")
-    public SystemConfig getByKey(@PathVariable("key") String key) {
-        return systemConfigService.getByConfigKey(key);
     }
 
     /**
@@ -75,7 +73,7 @@ public class SystemConfigController {
     @OperationLog(title = "参数管理", businessType = BusinessType.INSERT, operatorType = OperatorType.ADMIN)
     public void add(@RequestBody SystemConfig request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemConfigService.insert(request);
+        configService.insert(request);
     }
 
     /**
@@ -86,18 +84,18 @@ public class SystemConfigController {
     @OperationLog(title = "参数管理", businessType = BusinessType.UPDATE, operatorType = OperatorType.ADMIN)
     public void edit(@RequestBody SystemConfig request) {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
-        systemConfigService.update(request);
+        configService.update(request);
     }
 
     /**
      * 删除参数配置信息
      *
-     * @param ids
+     * @param configIds
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping
     @OperationLog(title = "参数管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("ids") Long[] ids) {
-        systemConfigService.batchDeleteByIds(ids);
+    public void delete(@RequestBody Long[] configIds) {
+        configService.batchDeleteByConfigIds(configIds);
     }
 
     /**
@@ -106,7 +104,7 @@ public class SystemConfigController {
     @PutMapping("/refreshCache")
     @OperationLog(title = "参数管理", businessType = BusinessType.CLEAN, operatorType = OperatorType.ADMIN)
     public void refreshCache() {
-        systemConfigService.refreshCache();
+        configService.refreshCache();
     }
 
 }

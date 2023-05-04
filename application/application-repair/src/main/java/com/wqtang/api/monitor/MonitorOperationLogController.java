@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class MonitorOperationLogController {
      */
     @GetMapping("/export")
     @OperationLog(title = "操作日志", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(SystemOperationLog request) {
+    public ResponseEntity<byte[]> export(SystemOperationLog request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return operationLogService.export(request);
     }

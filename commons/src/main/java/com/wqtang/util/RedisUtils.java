@@ -1,6 +1,7 @@
 package com.wqtang.util;
 
 import com.wqtang.object.enumerate.RedisKeyEnum;
+import com.wqtang.object.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -91,7 +92,7 @@ public class RedisUtils {
             return redisTemplate.opsForValue().get(key);
         } catch (Exception e) {
             LOGGER.error("key = {}, error message is {}", key, e.getMessage(), e);
-            return null;
+            throw new BusinessException(e);
         }
     }
 
@@ -115,7 +116,7 @@ public class RedisUtils {
             return ((T) value);
         } catch (Exception e) {
             LOGGER.error("key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
-            return null;
+            throw new BusinessException(e);
         }
     }
 
@@ -140,7 +141,7 @@ public class RedisUtils {
             return StringUtils.isBlank(valueStr) ? null : JsonUtils.readValue(valueStr, clazz);
         } catch (Exception e) {
             LOGGER.error("key = {}, class = {}, error message is {}", key, clazz.getName(), e.getMessage(), e);
-            return null;
+            throw new BusinessException(e);
         }
     }
 
@@ -155,7 +156,7 @@ public class RedisUtils {
             return redisTemplate.keys(prefix + "*");
         } catch (Exception e) {
             LOGGER.error("prefix = {}, error message is {}", prefix, e.getMessage(), e);
-            return null;
+            throw new BusinessException(e);
         }
     }
 
@@ -170,7 +171,7 @@ public class RedisUtils {
             return redisTemplate.keys("*" + suffix);
         } catch (Exception e) {
             LOGGER.error("suffix = {}, error message is {}", suffix, e.getMessage(), e);
-            return null;
+            throw new BusinessException(e);
         }
     }
 

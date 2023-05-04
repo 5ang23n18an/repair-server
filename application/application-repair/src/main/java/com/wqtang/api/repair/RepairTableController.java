@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public class RepairTableController {
      */
     @GetMapping("/export")
     @OperationLog(title = "检测", businessType = BusinessType.EXPORT, operatorType = OperatorType.ADMIN)
-    public ResponseEntity<byte[]> export(RepairTable request) {
+    public ResponseEntity<byte[]> export(RepairTable request) throws UnsupportedEncodingException {
         LOGGER.info("request = {}", JsonUtils.getPrettyJson(request));
         return repairTableService.export(request);
     }

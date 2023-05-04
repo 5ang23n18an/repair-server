@@ -20,7 +20,7 @@ public interface SystemPositionMapper {
 
     void update(SystemPosition position);
 
-    void batchDeleteByPostId(Long[] postIds);
+    void batchDeleteByPostIds(Long[] postIds);
 
     SystemPosition getByPostName(String postName);
 
