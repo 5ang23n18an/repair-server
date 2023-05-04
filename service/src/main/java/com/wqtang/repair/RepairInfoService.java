@@ -1,7 +1,5 @@
 package com.wqtang.repair;
 
-import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -16,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -69,28 +68,24 @@ public class RepairInfoService {
                 .body(fileBytes);
     }
 
-    public void importData(MultipartFile file, boolean updateSupport) {
-        List<RepairInfo> list;
-        try {
-            list = excelUtils.resolve(file.getInputStream(), RepairInfo.class);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorEnum.FILE_READ_FAIL);
-        }
-        String username = SecurityUtils.getCurrentUsername();
+    public void importData(MultipartFile file, boolean updateSupport) throws IOException {
+        List<RepairInfo> list = excelUtils.resolve(file.getInputStream(), RepairInfo.class);
         for (RepairInfo repairInfo : list) {
             RepairInfo repairInfoFromDb = getBySwitchNo(repairInfo.getSwitchNo());
             if (repairInfoFromDb == null) {
                 LOGGER.info("repairInfo will be inserted, switchNo = {}", repairInfo.getSwitchNo());
-                repairInfo.setCreateBy(username);
+                repairInfo.setCreateBy(SecurityUtils.getCurrentUsername());
                 insert(repairInfo);
-            } else if (updateSupport) {
-                LOGGER.info("repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
-                repairInfo.setId(repairInfoFromDb.getId());
-                repairInfo.setUpdateBy(username);
-                update(repairInfo);
-            } else {
-                LOGGER.info("repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
+                continue;
             }
+            if (!updateSupport) {
+                LOGGER.info("repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
+                continue;
+            }
+            LOGGER.info("repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
+            repairInfo.setId(repairInfoFromDb.getId());
+            repairInfo.setUpdateBy(SecurityUtils.getCurrentUsername());
+            update(repairInfo);
         }
     }
 
