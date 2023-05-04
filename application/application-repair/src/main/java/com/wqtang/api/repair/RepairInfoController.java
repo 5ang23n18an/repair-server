@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -125,7 +124,7 @@ public class RepairInfoController {
      */
     @PostMapping("/importData")
     @OperationLog(title = "道岔信息", businessType = BusinessType.IMPORT, operatorType = OperatorType.ADMIN)
-    public void importData(MultipartFile file, boolean updateSupport) throws IOException {
+    public void importData(MultipartFile file, boolean updateSupport) {
         repairInfoService.importData(file, updateSupport);
     }
 

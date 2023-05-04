@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -68,8 +67,8 @@ public class RepairInfoService {
                 .body(fileBytes);
     }
 
-    public void importData(MultipartFile file, boolean updateSupport) throws IOException {
-        List<RepairInfo> list = excelUtils.resolve(file.getInputStream(), RepairInfo.class);
+    public void importData(MultipartFile file, boolean updateSupport) {
+        List<RepairInfo> list = excelUtils.resolve(file, RepairInfo.class);
         for (RepairInfo repairInfo : list) {
             RepairInfo repairInfoFromDb = getBySwitchNo(repairInfo.getSwitchNo());
             if (repairInfoFromDb == null) {

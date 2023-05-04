@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -49,26 +49,26 @@ public class ExcelUtils<T> {
      * 对Excel文件中的数据, 转换为指定类型的List集合.
      * 可以指定读取某个Excel Sheet, 如果未指定, 则默认读取第一个表单Sheet
      *
-     * @param excelInputStream
+     * @param excelFile
      * @param clazz
      * @return
      */
-    public List<T> resolve(InputStream excelInputStream, Class<T> clazz) {
-        return resolve(excelInputStream, 0, clazz);
+    public List<T> resolve(MultipartFile excelFile, Class<T> clazz) {
+        return resolve(excelFile, 0, clazz);
     }
 
     /**
      * 对Excel文件中的某个Sheet中的数据, 转换为指定类型的List集合.
      *
-     * @param excelInputStream
+     * @param excelFile
      * @param sheetNo
      * @param clazz
      * @return
      */
-    public List<T> resolve(InputStream excelInputStream, Integer sheetNo, Class<T> clazz) {
+    public List<T> resolve(MultipartFile excelFile, Integer sheetNo, Class<T> clazz) {
         try {
             ExcelReader excelReader = new ExcelReader();
-            EasyExcel.read(excelInputStream, clazz, excelReader).sheet(sheetNo).doRead();
+            EasyExcel.read(excelFile.getInputStream(), clazz, excelReader).sheet(sheetNo).doRead();
             return excelReader.getList();
         } catch (Exception e) {
             LOGGER.error("error message is {}", e.getMessage(), e);
