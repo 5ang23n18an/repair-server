@@ -12,7 +12,6 @@
             <if test="beginTime != null and beginTime != ''">and login_time >= #{beginTime}</if>
             <if test="endTime != null and endTime != ''">and login_time &lt;= #{endTime}</if>
         </where>
-        where
         order by log_id desc
     </select>
 
