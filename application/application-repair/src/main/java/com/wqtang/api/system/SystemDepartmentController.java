@@ -156,7 +156,7 @@ public class SystemDepartmentController {
      */
     @DeleteMapping
     @OperationLog(title = "部门管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long deptId) {
+    public void delete(@RequestParam(required = false, value = "deptId") Long deptId) {
         if (departmentService.existsChildrenDeptById(deptId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前部门仍存在下级部门, 不允许删除");
         }

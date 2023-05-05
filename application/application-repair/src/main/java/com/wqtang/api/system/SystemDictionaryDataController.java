@@ -131,7 +131,7 @@ public class SystemDictionaryDataController {
      */
     @DeleteMapping
     @OperationLog(title = "字典数据", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] dictCodes) {
+    public void delete(@RequestParam(required = false, value = "dictCodes") Long[] dictCodes) {
         for (Long dictCode : dictCodes) {
             String dictType = dictionaryDataService.getByDictCode(dictCode).getDictType();
             dictionaryDataService.deleteByDictCode(dictCode);

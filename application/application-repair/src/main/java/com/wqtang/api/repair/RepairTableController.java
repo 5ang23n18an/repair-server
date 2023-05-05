@@ -98,7 +98,7 @@ public class RepairTableController {
      */
     @DeleteMapping
     @OperationLog(title = "检测", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] ids) {
+    public void delete(@RequestParam(required = false, value = "ids") Long[] ids) {
         repairTableService.batchDeleteByIds(ids);
     }
 

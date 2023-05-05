@@ -99,7 +99,7 @@ public class RepairInfoController {
     @DeleteMapping
     @DoAspect(businessType = BusinessType.DELETE)
     @OperationLog(title = "道岔信息", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] ids) {
+    public void delete(@RequestParam(required = false, value = "ids") Long[] ids) {
         repairInfoService.batchDeleteByIds(ids);
     }
 

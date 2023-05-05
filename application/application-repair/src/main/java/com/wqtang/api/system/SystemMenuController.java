@@ -138,7 +138,7 @@ public class SystemMenuController {
      */
     @DeleteMapping
     @OperationLog(title = "菜单管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long menuId) {
+    public void delete(@RequestParam(required = false, value = "menuId") Long menuId) {
         if (menuService.existsChildrenMenuByMenuId(menuId)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "当前菜单仍存在子菜单, 不允许删除");
         }

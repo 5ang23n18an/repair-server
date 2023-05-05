@@ -119,7 +119,7 @@ public class SystemPositionController {
      */
     @DeleteMapping
     @OperationLog(title = "岗位管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] postIds) {
+    public void delete(@RequestParam(required = false, value = "postIds") Long[] postIds) {
         positionService.batchDeleteByPostIds(postIds);
     }
 
