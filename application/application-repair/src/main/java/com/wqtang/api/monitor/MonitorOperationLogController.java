@@ -8,6 +8,7 @@ import com.wqtang.object.enumerate.OperatorType;
 import com.wqtang.object.po.system.SystemOperationLog;
 import com.wqtang.system.SystemOperationLogService;
 import com.wqtang.util.JsonUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -66,10 +67,12 @@ public class MonitorOperationLogController {
      *
      * @param operIds
      */
-    @DeleteMapping("/{operIds}")
+    @DeleteMapping
     @OperationLog(title = "操作日志", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("operIds") Long[] operIds) {
-        operationLogService.batchDeleteByOperIds(operIds);
+    public void delete(@RequestParam(required = false, value = "operIds") Long[] operIds) {
+        if (ArrayUtils.isNotEmpty(operIds)) {
+            operationLogService.batchDeleteByOperIds(operIds);
+        }
     }
 
     /**

@@ -10,8 +10,8 @@ import com.wqtang.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -38,8 +38,8 @@ public class RepairPlaceController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public RepairPlace getById(@PathVariable("id") Long id) {
+    @GetMapping
+    public RepairPlace getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairPlaceService.getById(id);
     }
 

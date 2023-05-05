@@ -3,13 +3,13 @@ package com.wqtang.api.repair;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.annotation.DoAspect;
 import com.wqtang.object.annotation.OperationLog;
 import com.wqtang.object.constant.RepairConstants;
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.OperatorType;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.repair.RepairFileResult;
 import com.wqtang.object.po.repair.RepairRecord;
 import com.wqtang.object.po.repair.RepairTest;
@@ -82,8 +82,8 @@ public class RepairRecordController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public RepairRecord getById(@PathVariable("id") Long id) {
+    @GetMapping
+    public RepairRecord getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairRecordService.getById(id);
     }
 
@@ -214,9 +214,9 @@ public class RepairRecordController {
      *
      * @param ids
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping
     @OperationLog(title = "检修记录", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("ids") Long[] ids) {
+    public void delete(@RequestParam(required = false, value = "ids") Long[] ids) {
         repairRecordService.batchDeleteByIds(ids);
     }
 

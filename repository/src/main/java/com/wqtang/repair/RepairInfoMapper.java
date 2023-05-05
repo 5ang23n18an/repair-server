@@ -16,9 +16,9 @@ public interface RepairInfoMapper {
 
     List<RepairInfo> listByParams(RepairInfo repairInfo);
 
-    void insert(RepairInfo request);
+    void insert(RepairInfo repairInfo);
 
-    void update(RepairInfo request);
+    void update(RepairInfo repairInfo);
 
     void batchDeleteByIds(Long[] ids);
 

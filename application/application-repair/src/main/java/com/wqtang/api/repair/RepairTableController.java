@@ -60,8 +60,8 @@ public class RepairTableController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
-    public RepairTable getById(@PathVariable("id") Long id) {
+    @GetMapping
+    public RepairTable getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairTableService.getById(id);
     }
 
@@ -96,9 +96,9 @@ public class RepairTableController {
      *
      * @param ids
      */
-    @DeleteMapping("/{ids}")
+    @DeleteMapping
     @OperationLog(title = "检测", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("ids") Long[] ids) {
+    public void delete(@RequestParam(required = false, value = "ids") Long[] ids) {
         repairTableService.batchDeleteByIds(ids);
     }
 

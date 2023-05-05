@@ -76,7 +76,7 @@ public class SystemRoleController {
      * @param roleId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemRole getInfo(@RequestParam(required = false, value = "roleId") Long roleId) {
         return roleId == null ? null : roleService.getByRoleId(roleId);
     }
@@ -155,7 +155,7 @@ public class SystemRoleController {
      */
     @DeleteMapping
     @OperationLog(title = "角色管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] roleIds) {
+    public void delete(@RequestParam(required = false, value = "roleIds") Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(roleId);
             if (roleService.existsUserRoleByRoleId(roleId)) {

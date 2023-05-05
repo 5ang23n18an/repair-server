@@ -1,11 +1,11 @@
 package com.wqtang.api.captcha;
 
 import com.wqtang.captcha.CaptchaService;
-import com.wqtang.system.SystemConfigService;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.SystemConfigEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.vo.response.captcha.GetCaptchaImageResponse;
+import com.wqtang.system.SystemConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class CaptchaController {
     @Resource(name = "captchaService")
     private CaptchaService captchaService;
     @Resource(name = "systemConfigService")
-    private SystemConfigService systemConfigService;
+    private SystemConfigService configService;
 
     /**
      * 获取验证码图片
@@ -36,7 +36,7 @@ public class CaptchaController {
      */
     @GetMapping("/image")
     public GetCaptchaImageResponse getCaptchaImage() {
-        if (!systemConfigService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
+        if (!configService.isSystemConfigAvailable(SystemConfigEnum.CAPTCHA)) {
             throw new BusinessException(ErrorEnum.BUSINESS_REFUSE, "验证码功能暂不可用");
         }
         try {

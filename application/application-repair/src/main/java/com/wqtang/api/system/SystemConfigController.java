@@ -36,7 +36,7 @@ public class SystemConfigController {
      * @param configId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemConfig getInfo(@RequestParam(required = false, value = "id") Long configId,
                                 @RequestParam(required = false, value = "key") String configKey) {
         if (configId == null && StringUtils.isBlank(configKey)) {
@@ -94,7 +94,7 @@ public class SystemConfigController {
      */
     @DeleteMapping
     @OperationLog(title = "参数管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] configIds) {
+    public void delete(@RequestParam(required = false, value = "configIds") Long[] configIds) {
         configService.batchDeleteByConfigIds(configIds);
     }
 

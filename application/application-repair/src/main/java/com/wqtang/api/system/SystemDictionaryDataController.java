@@ -73,7 +73,7 @@ public class SystemDictionaryDataController {
      * @param dictCode
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemDictionaryData getInfo(@RequestParam(required = false, value = "dictCode") Long dictCode) {
         return dictCode == null ? null : dictionaryDataService.getByDictCode(dictCode);
     }
@@ -131,7 +131,7 @@ public class SystemDictionaryDataController {
      */
     @DeleteMapping
     @OperationLog(title = "字典数据", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] dictCodes) {
+    public void delete(@RequestParam(required = false, value = "dictCodes") Long[] dictCodes) {
         for (Long dictCode : dictCodes) {
             String dictType = dictionaryDataService.getByDictCode(dictCode).getDictType();
             dictionaryDataService.deleteByDictCode(dictCode);

@@ -70,7 +70,7 @@ public class SystemPositionController {
      * @param postId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemPosition getInfo(@RequestParam(required = false, value = "postId") Long postId) {
         return postId == null ? null : positionService.getByPostId(postId);
     }
@@ -119,7 +119,7 @@ public class SystemPositionController {
      */
     @DeleteMapping
     @OperationLog(title = "岗位管理", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@RequestBody Long[] postIds) {
+    public void delete(@RequestParam(required = false, value = "postIds") Long[] postIds) {
         positionService.batchDeleteByPostIds(postIds);
     }
 

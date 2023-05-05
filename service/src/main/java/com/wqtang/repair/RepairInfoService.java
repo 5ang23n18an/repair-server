@@ -1,7 +1,5 @@
 package com.wqtang.repair;
 
-import com.wqtang.object.enumerate.ErrorEnum;
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.repair.RepairInfo;
 import com.wqtang.util.ExcelUtils;
 import com.wqtang.util.FileUtils;
@@ -70,27 +68,23 @@ public class RepairInfoService {
     }
 
     public void importData(MultipartFile file, boolean updateSupport) {
-        List<RepairInfo> list;
-        try {
-            list = excelUtils.resolve(file.getInputStream(), RepairInfo.class);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorEnum.FILE_READ_FAIL);
-        }
-        String username = SecurityUtils.getCurrentUsername();
+        List<RepairInfo> list = excelUtils.resolve(file, RepairInfo.class);
         for (RepairInfo repairInfo : list) {
             RepairInfo repairInfoFromDb = getBySwitchNo(repairInfo.getSwitchNo());
             if (repairInfoFromDb == null) {
                 LOGGER.info("repairInfo will be inserted, switchNo = {}", repairInfo.getSwitchNo());
-                repairInfo.setCreateBy(username);
+                repairInfo.setCreateBy(SecurityUtils.getCurrentUsername());
                 insert(repairInfo);
-            } else if (updateSupport) {
-                LOGGER.info("repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
-                repairInfo.setId(repairInfoFromDb.getId());
-                repairInfo.setUpdateBy(username);
-                update(repairInfo);
-            } else {
-                LOGGER.info("repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
+                continue;
             }
+            if (!updateSupport) {
+                LOGGER.info("repairInfo is already existed and doesn't support update, switchNo = {}", repairInfo.getSwitchNo());
+                continue;
+            }
+            LOGGER.info("repairInfo will be updated, switchNo = {}", repairInfo.getSwitchNo());
+            repairInfo.setId(repairInfoFromDb.getId());
+            repairInfo.setUpdateBy(SecurityUtils.getCurrentUsername());
+            update(repairInfo);
         }
     }
 

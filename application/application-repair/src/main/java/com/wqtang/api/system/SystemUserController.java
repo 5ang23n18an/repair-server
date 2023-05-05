@@ -1,7 +1,7 @@
 package com.wqtang.api.system;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;
 import com.wqtang.object.vo.request.system.SystemUserModifyPasswordRequest;
@@ -64,7 +64,7 @@ public class SystemUserController {
      *
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public GetSystemUserInfoResponse getInfo() {
         SystemUser user = SecurityUtils.getCurrentUser();
         Set<String> roles = roleService.getRolesByUser(user);

@@ -25,7 +25,7 @@ public class MonitorCacheController {
     private RedisUtils redisUtils;
 
     @GetMapping
-    public Cache getCacheInfo() {
+    public Cache getInfo() {
         Cache cache = new Cache();
         Properties info = redisUtils.getDetailedInfo(), commandStatics = redisUtils.getCommandStaticsInfo();
         Long dbSize = redisUtils.getDbSize();
