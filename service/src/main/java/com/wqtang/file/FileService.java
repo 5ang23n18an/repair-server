@@ -1,7 +1,7 @@
 package com.wqtang.file;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.vo.request.file.FileCommonDownloadRequest;
 import com.wqtang.object.vo.response.file.FileCommonUploadResponse;
 import com.wqtang.object.vo.response.file.FileUploadResponse;

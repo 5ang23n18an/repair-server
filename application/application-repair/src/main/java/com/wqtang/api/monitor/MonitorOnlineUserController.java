@@ -24,7 +24,7 @@ import java.util.List;
  * @date 2023/5/2
  */
 @RestController
-@RequestMapping("/monitor/online")
+@RequestMapping("/monitor/onlineUser")
 public class MonitorOnlineUserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitorOnlineUserController.class);

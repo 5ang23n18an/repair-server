@@ -2,7 +2,6 @@ package com.wqtang.object.annotation;
 
 import com.wqtang.object.enumerate.BusinessType;
 import com.wqtang.object.enumerate.OperatorType;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

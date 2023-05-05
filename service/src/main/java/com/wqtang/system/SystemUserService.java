@@ -1,11 +1,11 @@
 package com.wqtang.system;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.oauth.TokenService;
 import com.wqtang.object.constant.UserConstants;
 import com.wqtang.object.enumerate.ErrorEnum;
 import com.wqtang.object.enumerate.RedisKeyEnum;
 import com.wqtang.object.enumerate.SystemConfigEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.po.system.SystemUser;
 import com.wqtang.object.po.user.LoginUser;
 import com.wqtang.object.vo.request.system.SystemUserLoginRequest;

@@ -66,9 +66,9 @@ public class MonitorOperationLogController {
      *
      * @param operIds
      */
-    @DeleteMapping("/{operIds}")
+    @DeleteMapping
     @OperationLog(title = "操作日志", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("operIds") Long[] operIds) {
+    public void delete(@RequestBody Long[] operIds) {
         operationLogService.batchDeleteByOperIds(operIds);
     }
 

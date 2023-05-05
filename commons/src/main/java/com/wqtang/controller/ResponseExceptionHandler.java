@@ -1,7 +1,7 @@
 package com.wqtang.controller;
 
-import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.enumerate.ErrorEnum;
+import com.wqtang.object.exception.BusinessException;
 import com.wqtang.object.vo.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Response handleException(Exception e) {
         LOGGER.error("error message is {}", e.getMessage(), e);
-        return Response.error(ErrorEnum.ERROR, e.getMessage());
+        return Response.error(ErrorEnum.ERROR);
     }
 
 }

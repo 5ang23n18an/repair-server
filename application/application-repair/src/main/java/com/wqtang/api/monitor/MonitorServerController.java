@@ -19,7 +19,7 @@ public class MonitorServerController {
      * @return
      */
     @GetMapping
-    public Server getServerInfo() {
+    public Server getInfo() {
         Server server = new Server();
         server.enrichFields();
         return server;

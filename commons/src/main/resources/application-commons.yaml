@@ -25,8 +25,8 @@ spring:
 # 日志打印设置
 logging:
   pattern:
-#    level: "%5p [${spring.zipkin.service.name:${spring.application.name:-}},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}][%X{clientId}:%X{username}:%X{realRemoteAddr}]"
-#    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:${logging.pattern.level}} [%t] %logger{39}:%L - %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+    #    level: "%5p [${spring.zipkin.service.name:${spring.application.name:-}},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}][%X{clientId}:%X{username}:%X{realRemoteAddr}]"
+    #    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:${logging.pattern.level}} [%t] %logger{39}:%L - %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
     console: "${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:${logging.pattern.level}}) %clr([%t]){faint} %clr(%logger{39}){cyan}:%L %clr(-){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}"
   level:
     root: info

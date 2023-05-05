@@ -66,9 +66,9 @@ public class MonitorLoginLogController {
      *
      * @param logIds
      */
-    @DeleteMapping("/{logIds}")
+    @DeleteMapping
     @OperationLog(title = "登录日志", businessType = BusinessType.DELETE, operatorType = OperatorType.ADMIN)
-    public void delete(@PathVariable("logIds") Long[] logIds) {
+    public void delete(@RequestBody Long[] logIds) {
         loginLogService.batchDeleteByLogIds(logIds);
     }
 
