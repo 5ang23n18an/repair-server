@@ -73,7 +73,7 @@ public class SystemDepartmentController {
      * @param deptId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemDepartment getInfo(@RequestParam(required = false, value = "deptId") Long deptId) {
         return deptId == null ? null : departmentService.getByDeptId(deptId);
     }

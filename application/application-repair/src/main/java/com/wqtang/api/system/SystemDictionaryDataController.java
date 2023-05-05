@@ -73,7 +73,7 @@ public class SystemDictionaryDataController {
      * @param dictCode
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemDictionaryData getInfo(@RequestParam(required = false, value = "dictCode") Long dictCode) {
         return dictCode == null ? null : dictionaryDataService.getByDictCode(dictCode);
     }

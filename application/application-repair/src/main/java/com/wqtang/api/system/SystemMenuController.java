@@ -53,7 +53,7 @@ public class SystemMenuController {
      * @param menuId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemMenu getInfo(@RequestParam(required = false, value = "menuId") Long menuId) {
         return menuId == null ? null : menuService.getByMenuId(menuId);
     }

@@ -70,7 +70,7 @@ public class SystemPositionController {
      * @param postId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemPosition getInfo(@RequestParam(required = false, value = "postId") Long postId) {
         return postId == null ? null : positionService.getByPostId(postId);
     }

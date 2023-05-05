@@ -38,7 +38,7 @@ public class RepairPlaceController {
      * @param id
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public RepairPlace getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairPlaceService.getById(id);
     }

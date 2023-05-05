@@ -36,7 +36,7 @@ public class SystemConfigController {
      * @param configId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemConfig getInfo(@RequestParam(required = false, value = "id") Long configId,
                                 @RequestParam(required = false, value = "key") String configKey) {
         if (configId == null && StringUtils.isBlank(configKey)) {

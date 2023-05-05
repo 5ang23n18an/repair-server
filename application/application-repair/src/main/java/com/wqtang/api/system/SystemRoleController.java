@@ -76,7 +76,7 @@ public class SystemRoleController {
      * @param roleId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemRole getInfo(@RequestParam(required = false, value = "roleId") Long roleId) {
         return roleId == null ? null : roleService.getByRoleId(roleId);
     }

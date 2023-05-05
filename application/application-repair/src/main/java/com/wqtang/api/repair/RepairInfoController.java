@@ -40,7 +40,7 @@ public class RepairInfoController {
      * @param id
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public RepairInfo getInfo(@RequestParam(required = false, value = "id") Long id) {
         return id == null ? null : repairInfoService.getById(id);
     }

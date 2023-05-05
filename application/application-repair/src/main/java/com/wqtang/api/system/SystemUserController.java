@@ -64,7 +64,7 @@ public class SystemUserController {
      *
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public GetSystemUserInfoResponse getInfo() {
         SystemUser user = SecurityUtils.getCurrentUser();
         Set<String> roles = roleService.getRolesByUser(user);

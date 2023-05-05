@@ -60,7 +60,7 @@ public class RepairTableController {
      * @param id
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public RepairTable getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairTableService.getById(id);
     }

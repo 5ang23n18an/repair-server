@@ -82,7 +82,7 @@ public class RepairRecordController {
      * @param id
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public RepairRecord getInfo(@RequestParam(required = false, value = "id") Long id) {
         return repairRecordService.getById(id);
     }

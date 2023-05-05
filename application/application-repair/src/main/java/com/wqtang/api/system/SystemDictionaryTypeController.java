@@ -73,7 +73,7 @@ public class SystemDictionaryTypeController {
      * @param dictId
      * @return
      */
-    @GetMapping("/getInfo")
+    @GetMapping
     public SystemDictionaryType getInfo(@RequestParam(required = false, value = "dictId") Long dictId) {
         return dictId == null ? null : dictionaryTypeService.getByDictId(dictId);
     }
