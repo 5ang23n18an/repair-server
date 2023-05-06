@@ -33,7 +33,7 @@ public class SystemLoginLogService {
 
     public ResponseEntity<byte[]> export(SystemLoginLog loginLog) throws UnsupportedEncodingException {
         List<SystemLoginLog> list = listByParams(loginLog);
-        File file = excelUtils.export(list, "登录日志");
+        File file = excelUtils.export(list, "登录日志", SystemLoginLog.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

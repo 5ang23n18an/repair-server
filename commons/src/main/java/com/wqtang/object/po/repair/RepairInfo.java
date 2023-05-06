@@ -1,6 +1,7 @@
 package com.wqtang.object.po.repair;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wqtang.object.po.BaseEntity;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * @author Wenqian Tang
  * @date 2023/3/12
  */
+@ColumnWidth(20)
 public class RepairInfo extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

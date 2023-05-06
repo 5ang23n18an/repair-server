@@ -37,7 +37,7 @@ public class SystemOperationLogService {
 
     public ResponseEntity<byte[]> export(SystemOperationLog operationLog) throws UnsupportedEncodingException {
         List<SystemOperationLog> list = listByParams(operationLog);
-        File file = excelUtils.export(list, "操作日志");
+        File file = excelUtils.export(list, "操作日志", SystemOperationLog.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

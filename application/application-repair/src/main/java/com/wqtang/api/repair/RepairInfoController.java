@@ -124,7 +124,8 @@ public class RepairInfoController {
      */
     @PostMapping("/importData")
     @OperationLog(title = "道岔信息", businessType = BusinessType.IMPORT, operatorType = OperatorType.ADMIN)
-    public void importData(MultipartFile file, boolean updateSupport) {
+    public void importData(MultipartFile file,
+                           @RequestParam(required = false, value = "updateSupport", defaultValue = "false") boolean updateSupport) {
         repairInfoService.importData(file, updateSupport);
     }
 

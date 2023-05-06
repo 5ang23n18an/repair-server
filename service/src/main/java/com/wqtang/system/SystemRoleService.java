@@ -60,7 +60,7 @@ public class SystemRoleService {
 
     public ResponseEntity<byte[]> export(SystemRole role) throws UnsupportedEncodingException {
         List<SystemRole> list = listByParams(role);
-        File file = excelUtils.export(list, "角色数据");
+        File file = excelUtils.export(list, "角色数据", SystemRole.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

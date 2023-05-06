@@ -34,10 +34,10 @@ public class ExcelUtils<T> {
      * @param sheetName
      * @return
      */
-    public File export(List<T> list, String sheetName) {
+    public File export(List<T> list, String sheetName, Class<T> clazz) {
         try {
             File file = FileUtils.createFileUniquely(rootDirectory, sheetName + ".xlsx");
-            EasyExcel.write(file).sheet(0, sheetName).doWrite(list);
+            EasyExcel.write(file, clazz).sheet(sheetName).doWrite(list);
             return file;
         } catch (Exception e) {
             LOGGER.error("error message is {}", e.getMessage(), e);

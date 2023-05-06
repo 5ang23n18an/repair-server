@@ -37,7 +37,7 @@ public class SystemPositionService {
 
     public ResponseEntity<byte[]> export(SystemPosition position) throws UnsupportedEncodingException {
         List<SystemPosition> list = listByParams(position);
-        File file = excelUtils.export(list, "岗位数据");
+        File file = excelUtils.export(list, "岗位数据", SystemPosition.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

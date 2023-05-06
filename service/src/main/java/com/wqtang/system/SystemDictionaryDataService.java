@@ -33,7 +33,7 @@ public class SystemDictionaryDataService {
 
     public ResponseEntity<byte[]> export(SystemDictionaryData dictionaryData) throws UnsupportedEncodingException {
         List<SystemDictionaryData> list = listByParams(dictionaryData);
-        File file = excelUtils.export(list, "字典数据");
+        File file = excelUtils.export(list, "字典数据", SystemDictionaryData.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

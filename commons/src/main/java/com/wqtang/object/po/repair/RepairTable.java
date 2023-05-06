@@ -1,12 +1,14 @@
 package com.wqtang.object.po.repair;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.wqtang.object.po.BaseEntity;
 
 /**
  * @author Wenqian Tang
  * @date 2023/4/14
  */
+@ColumnWidth(20)
 public class RepairTable extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

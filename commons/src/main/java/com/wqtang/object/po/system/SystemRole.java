@@ -1,5 +1,7 @@
 package com.wqtang.object.po.system;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wqtang.object.po.BaseEntity;
 
@@ -7,6 +9,7 @@ import com.wqtang.object.po.BaseEntity;
  * @author Wenqian Tang
  * @date 2023/3/14
  */
+@ColumnWidth(20)
 public class SystemRole extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -14,26 +17,31 @@ public class SystemRole extends BaseEntity {
     /**
      * 角色ID
      */
+    @ExcelProperty("角色序号")
     private Long roleId;
 
     /**
      * 角色名称
      */
+    @ExcelProperty("角色名称")
     private String roleName;
 
     /**
      * 角色权限
      */
+    @ExcelProperty("角色权限")
     private String roleKey;
 
     /**
      * 角色排序
      */
+    @ExcelProperty("角色排序")
     private String roleSort;
 
     /**
      * 数据范围（1：所有数据权限；2：自定义数据权限；3：本部门数据权限；4：本部门及以下数据权限；5：仅本人数据权限）
      */
+    @ExcelProperty("数据范围")
     private String dataScope;
 
     /**
@@ -49,6 +57,7 @@ public class SystemRole extends BaseEntity {
     /**
      * 角色状态（0正常 1停用）
      */
+    @ExcelProperty("角色状态")
     private String status;
 
     /**

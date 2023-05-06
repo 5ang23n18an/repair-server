@@ -46,7 +46,7 @@ public class SystemDictionaryTypeService extends AbstractCacheRefresh {
 
     public ResponseEntity<byte[]> export(SystemDictionaryType dictionaryType) throws UnsupportedEncodingException {
         List<SystemDictionaryType> list = listByParams(dictionaryType);
-        File file = excelUtils.export(list, "字典类型");
+        File file = excelUtils.export(list, "字典类型", SystemDictionaryType.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

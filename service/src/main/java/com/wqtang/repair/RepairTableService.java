@@ -33,7 +33,7 @@ public class RepairTableService {
 
     public ResponseEntity<byte[]> export(RepairTable repairTable) throws UnsupportedEncodingException {
         List<RepairTable> list = listByParams(repairTable);
-        File file = excelUtils.export(list, "检测数据");
+        File file = excelUtils.export(list, "检测数据", RepairTable.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
