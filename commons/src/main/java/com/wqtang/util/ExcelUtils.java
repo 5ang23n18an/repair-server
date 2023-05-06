@@ -35,12 +35,13 @@ public class ExcelUtils<T> {
      * @return
      */
     public File export(List<T> list, String sheetName, Class<T> clazz) {
+        File file = FileUtils.createFileUniquely(rootDirectory, sheetName + ".xlsx");
         try {
-            File file = FileUtils.createFileUniquely(rootDirectory, sheetName + ".xlsx");
             EasyExcel.write(file, clazz).sheet(sheetName).doWrite(list);
             return file;
         } catch (Exception e) {
             LOGGER.error("error message is {}", e.getMessage(), e);
+            FileUtils.delete(file);
             throw new BusinessException(ErrorEnum.FILE_WRITE_FAIL, "Excel文件导出失败");
         }
     }
