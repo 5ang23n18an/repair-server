@@ -1,5 +1,6 @@
 package com.wqtang.object.po.repair;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,6 +20,7 @@ public class RepairInfo extends BaseEntity {
     /**
      * 主键id
      */
+    @ExcelIgnore
     private Long id;
 
     /**

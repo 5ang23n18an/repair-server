@@ -1,5 +1,6 @@
 package com.wqtang.object.po.system;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.wqtang.object.po.BaseEntity;
@@ -46,11 +47,13 @@ public class SystemDictionaryData extends BaseEntity {
     /**
      * 样式属性（其他样式扩展）
      */
+    @ExcelIgnore
     private String cssClass;
 
     /**
      * 表格字典样式
      */
+    @ExcelIgnore
     private String listClass;
 
     /**

@@ -1,5 +1,6 @@
 package com.wqtang.object.po.system;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.wqtang.object.po.BaseEntity;
@@ -46,6 +47,7 @@ public class SystemPosition extends BaseEntity {
     /**
      * 用户是否存在此岗位标识 默认不存在
      */
+    @ExcelIgnore
     private boolean flag;
 
     public Long getPostId() {

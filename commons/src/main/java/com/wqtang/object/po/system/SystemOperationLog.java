@@ -1,5 +1,6 @@
 package com.wqtang.object.po.system;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,6 +38,7 @@ public class SystemOperationLog extends BaseEntity {
     /**
      * 业务类型数组
      */
+    @ExcelIgnore
     private Integer[] businessTypes;
 
     /**

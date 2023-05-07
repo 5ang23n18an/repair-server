@@ -1,5 +1,6 @@
 package com.wqtang.object.po.system;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -47,11 +48,13 @@ public class SystemRole extends BaseEntity {
     /**
      * 菜单树选择项是否关联显示（ 0：父子不互相关联显示 1：父子互相关联显示）
      */
+    @ExcelIgnore
     private Boolean menuCheckStrictly;
 
     /**
      * 部门树选择项是否关联显示（0：父子不互相关联显示 1：父子互相关联显示 ）
      */
+    @ExcelIgnore
     private Boolean deptCheckStrictly;
 
     /**
@@ -63,21 +66,25 @@ public class SystemRole extends BaseEntity {
     /**
      * 删除标志（0代表存在 2代表删除）
      */
+    @ExcelIgnore
     private String delFlag;
 
     /**
      * 用户是否存在此角色标识
      */
+    @ExcelIgnore
     private boolean flag;
 
     /**
      * 菜单组
      */
+    @ExcelIgnore
     private Long[] menuIds;
 
     /**
      * 部门组（数据权限）
      */
+    @ExcelIgnore
     private Long[] deptIds;
 
     public Long getRoleId() {
