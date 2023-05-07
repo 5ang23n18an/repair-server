@@ -55,7 +55,7 @@ public class RepairInfoService {
 
     public ResponseEntity<byte[]> export(RepairInfo repairInfo) throws UnsupportedEncodingException {
         List<RepairInfo> list = listByParams(repairInfo);
-        File file = excelUtils.export(list, "道岔信息数据");
+        File file = excelUtils.export(list, "道岔信息数据", RepairInfo.class);
         byte[] fileBytes = FileUtils.readAsBytes(file);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);

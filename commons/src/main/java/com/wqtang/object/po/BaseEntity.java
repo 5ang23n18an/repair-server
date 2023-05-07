@@ -1,5 +1,6 @@
 package com.wqtang.object.po;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,16 +18,19 @@ public class BaseEntity implements Serializable {
     /**
      * 搜索值
      */
+    @ExcelIgnore
     private String searchValue;
 
     /**
      * 创建者
      */
+    @ExcelIgnore
     private String createBy;
 
     /**
      * 创建时间
      */
+    @ExcelIgnore
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
@@ -34,11 +38,13 @@ public class BaseEntity implements Serializable {
     /**
      * 更新者
      */
+    @ExcelIgnore
     private String updateBy;
 
     /**
      * 更新时间
      */
+    @ExcelIgnore
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
@@ -46,12 +52,15 @@ public class BaseEntity implements Serializable {
     /**
      * 备注
      */
+    @ExcelIgnore
     private String remark;
 
     /**
      * 请求参数
      */
+    @ExcelIgnore
     private String beginTime;
+    @ExcelIgnore
     private String endTime;
 
     public String getSearchValue() {
