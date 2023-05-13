@@ -24,6 +24,11 @@ public class MonitorCacheController {
     @Resource(name = "redisUtils")
     private RedisUtils redisUtils;
 
+    /**
+     * 获取Redis服务的详细信息
+     *
+     * @return
+     */
     @GetMapping
     public Cache getInfo() {
         Cache cache = new Cache();
