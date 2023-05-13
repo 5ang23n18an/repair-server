@@ -12,7 +12,7 @@ public class System {
     private String computerName;
 
     /**
-     * 服务器Ip
+     * 服务器IP
      */
     private String computerIp;
 
